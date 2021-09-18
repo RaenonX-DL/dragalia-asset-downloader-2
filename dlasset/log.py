@@ -32,7 +32,7 @@ _GROUP_CURRENT_NAME: Optional[str] = None
 
 logging.basicConfig(
     level=logging.DEBUG,
-    format="{asctime}.{msecs:.0f} [{levelname:>8}]: {message}",
+    format="{asctime}.{msecs:0.0f} [{levelname:>8}]: {message}",
     datefmt="%Y-%m-%d %H:%M:%S",
     style="{",
     stream=sys.stdout,

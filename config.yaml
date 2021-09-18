@@ -1,2 +1,3 @@
 paths:
   downloaded: .exclude
+  lib: lib

@@ -15,6 +15,10 @@ Replaces [dragalia-asset-downloader].
 
 - Python 3.9
 
+- .NET Core 3.1+
+  - Download here: https://dotnet.microsoft.com/download/dotnet-core/3.1.
+  - Run `dotnet` to ensure it's working.
+
 - Dependencies listed in `requirements.txt`
   - Run `pip install -r requirements.txt` to install required dependencies.
   - Run `pip install -r requirements-dev.txt` to install required and development dependencies.

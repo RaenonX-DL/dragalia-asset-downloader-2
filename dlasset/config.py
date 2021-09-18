@@ -1,7 +1,6 @@
 """Implementations to load the config file."""
 import json
 import os.path
-import typing
 from dataclasses import InitVar, dataclass, field
 from typing import Any, cast
 
@@ -15,12 +14,19 @@ __all__ = ("load_config", "Config")
 class Paths:
     """Various paths for different types of data."""
 
-    json_obj: InitVar[dict[Any, Any]]  # type: ignore
+    json_obj: InitVar[dict[Any, Any]]
 
     downloaded: str = field(init=False)
+    lib: str = field(init=False)
 
-    def __post_init__(self, json_obj: dict[Any, Any]) -> None:  # type: ignore
-        self.downloaded = cast(str, os.path.normpath(json_obj["downloaded"]))  # type: ignore
+    def __post_init__(self, json_obj: dict[Any, Any]) -> None:
+        self.downloaded = cast(str, os.path.normpath(json_obj["downloaded"]))
+        self.lib = cast(str, os.path.normpath(json_obj["lib"]))
+
+    @property
+    def lib_decrypt_dll_path(self) -> str:
+        """Path of the DLL for decryption."""
+        return os.path.join(self.lib, "decrypt", "Decrypt.dll")
 
 
 @dataclass
@@ -30,7 +36,6 @@ class Config:
     paths: Paths
 
 
-@typing.no_type_check
 def load_config(path: str) -> Config:
     """
     Load and validate the config.

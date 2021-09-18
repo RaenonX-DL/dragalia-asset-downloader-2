@@ -5,7 +5,7 @@ from functools import wraps
 from dlasset.args import get_cli_args
 from dlasset.config import load_config
 from dlasset.env import init_env
-from dlasset.manifest import download_manifest_all_locale
+from dlasset.manifest import decrypt_manifest_all_locale, download_manifest_all_locale
 
 
 def time_exec(title: str):
@@ -31,6 +31,7 @@ async def main():
     env.print_info()
 
     await download_manifest_all_locale(env)
+    await decrypt_manifest_all_locale(env)
 
 
 if __name__ == '__main__':

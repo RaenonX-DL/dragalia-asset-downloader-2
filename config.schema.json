@@ -11,10 +11,15 @@
         "downloaded": {
           "type": "string",
           "description": "Path for storing the downloaded/unextracted assets."
+        },
+        "lib": {
+          "type": "string",
+          "description": "Path for external libraries."
         }
       },
       "required": [
-        "downloaded"
+        "downloaded",
+        "lib"
       ]
     }
   },

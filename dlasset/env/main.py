@@ -22,6 +22,10 @@ class Environment:
         """Get the manifest asset path of ``locale``."""
         return os.path.join(self.manifest_asset_dir, MANIFEST_NAMES[locale])
 
+    def manifest_asset_decrypted_path(self, locale: Locale) -> str:
+        """Get the decrypted manifest asset path of ``locale``."""
+        return f"{self.manifest_asset_path_of_locale(locale)}.decrypted"
+
     @property
     def manifest_asset_dir(self) -> str:
         """Directory of the encrypted manifest assets."""
@@ -32,7 +36,8 @@ class Environment:
         """Directory of the assets."""
         return os.path.join(self.config.paths.downloaded, "assets")
 
-    def print_info(self):
+    def print_info(self) -> None:
+        """Print the info about the current environment."""
         log_group_start("Environment info")
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
         log("INFO", f"Downloaded assets directory: {self.assets_dir}")

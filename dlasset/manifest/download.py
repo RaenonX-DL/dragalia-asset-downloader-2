@@ -32,5 +32,5 @@ async def download_manifest_all_locale(env: Environment) -> None:
     Downloaded asset needs decryption.
     """
     log_group_start("Manifest downloading")
-    await asyncio.gather(*(download_manifest_of_locale(env, locale) for locale in Locale), return_exceptions=True)
+    await asyncio.gather(*(download_manifest_of_locale(env, locale) for locale in Locale))
     log_group_end()
