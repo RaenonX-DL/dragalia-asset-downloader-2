@@ -1,3 +1,4 @@
 paths:
-  downloaded: .exclude
+  downloaded: .exclude/downloaded
   lib: lib
+  export: .exclude/media

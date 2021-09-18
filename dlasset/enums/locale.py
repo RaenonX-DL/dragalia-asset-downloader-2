@@ -11,3 +11,8 @@ class Locale(Enum):
     CHS = "cn"
     EN = "en"
     JP = "jp"
+
+    @property
+    def is_master(self) -> bool:
+        """Check if the locale is the master locale (JP)."""
+        return self == Locale.JP

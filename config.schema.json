@@ -14,12 +14,17 @@
         },
         "lib": {
           "type": "string",
-          "description": "Path for external libraries."
+          "description": "Path for the external libraries."
+        },
+        "export": {
+          "type": "string",
+          "description": "Path for the exported assets."
         }
       },
       "required": [
         "downloaded",
-        "lib"
+        "lib",
+        "export"
       ]
     }
   },
