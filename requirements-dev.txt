@@ -1,0 +1,13 @@
+-r requirements.txt
+
+# Security Check
+bandit
+
+# Testing
+pytest
+
+# Code Quality
+mypy
+pylint
+pydocstyle
+flake8

@@ -1,0 +1,62 @@
+# `flake8` does not support pyproject.toml as of 2021/09/11.
+# ************************************************************
+
+# -------------------------- pylint --------------------------
+
+[tool.pylint.BASIC]
+# Reason of the good names:
+# - _
+#   often used as dummy variable during unpacking
+# - T
+#   often used to for TypeVar
+# - f
+#   often used as a file stream name
+# - i, j, k
+#   often used in for loops
+# - s
+#   often used to represent "string"
+# - v
+#   often used to represent "value"
+# - dt, tz
+#   often used in datetime handling (dt for datetime, tz for timezone)
+# - ex
+#   often used as the var name of exception caught by try..except
+# - fn
+#   often used to represent a function
+good-names = "_,T,f,i,j,k,s,v,dt,ex,fn,tz"
+
+[tool.pylint.FORMAT]
+max-line-length = 119
+
+[tool.pylint."MESSAGES CONTROL"]
+# fixme:                         Search for todo tags and manually manage them instead
+# cyclic-import:                 Just let it crash during runtime
+# arguments-differ:              Let it checked by IDE or flake8
+disable = "fixme, too-many-instance-attributes, cyclic-import, arguments-differ"
+
+# -------------------------- pydocstyle --------------------------
+
+[tool.pydocstyle]
+# D102: Public method missing docstring - `pylint` will check if there's really missing the docstring
+# D105: Magic method missing docstring - no need for it
+# D107: __init__ missing docstring - optional. add details to class docstring
+# D203: Blank line required before docstring - mutually exclusive to D204
+# D212: Multi-line docstring summary should start at the first line - mutually exclusive to D213
+# D215: Section underline is over-indented
+# D401: First line should be in imperative mood
+# D407: Missing dashed underline after section
+# D408: Section underline should be in the line following the section's name
+# D409: Section underline should match the length of its name
+# D412: No blank lines allowed between a section header and its content
+# D413: Missing blank line after last section
+ignore = "D102, D105, D107, D203, D212, D215, D401, D407, D408, D409, D412, D413"
+
+# -------------------------- mypy --------------------------
+
+[tool.mypy]
+follow_imports = "skip"
+exclude = "(tests/|script_*)"
+show_error_codes = true
+disallow_untyped_defs = true
+disallow_untyped_decorators = true
+disallow_any_expr = true

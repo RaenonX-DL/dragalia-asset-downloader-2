@@ -1,0 +1,62 @@
+name: CI
+
+on: [ push ]
+
+jobs:
+  check:
+    name: Code Quality / Security Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+
+      - name: Install required packages
+        run: |
+          pip install -r requirements-dev.txt
+
+      - name: pylint
+        run: |
+          pylint dlasset
+
+      - name: mypy
+        run: |
+          mypy dlasset
+
+      - name: pydocstyle
+        run: |
+          pydocstyle dlasset --count
+
+      - name: flake8
+        run: |
+          flake8 dlasset --count
+
+      - name: bandit
+        run: |
+          bandit -r dlasset
+
+  tests:
+    name: Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+
+      - name: Install required dev packages
+        run: |
+          pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: |
+          pytest

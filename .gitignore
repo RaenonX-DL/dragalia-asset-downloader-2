@@ -1,0 +1,12 @@
+# Environment
+venv/
+
+# Cache
+.mypy_cache
+.pytest_cache
+
+# Project files
+.idea/
+
+# Misc
+.wakatime-project
