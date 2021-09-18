@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 import time
-from typing import Any, Literal, Optional, cast, no_type_check
+from typing import Any, Literal, Optional, cast
 
 __all__ = ("log", "log_group_start", "log_group_end")
 
@@ -39,10 +39,9 @@ logging.basicConfig(
 )
 
 
-@no_type_check
 def log(level: LogLevel, message: Any) -> None:
     """Log ``message`` at ``level``."""
-    logging.log(_LOG_LEVEL_NUM[level], _LOG_LEVEL_COLOR[level], message, _COLOR_RESET)
+    logging.log(_LOG_LEVEL_NUM[level], "%s%s%s", _LOG_LEVEL_COLOR[level], message, _COLOR_RESET)
 
 
 def log_group_start(name: str) -> None:

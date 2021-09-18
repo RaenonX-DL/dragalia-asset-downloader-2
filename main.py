@@ -1,4 +1,6 @@
 import asyncio
+import time
+from functools import wraps
 
 from dlasset.args import get_cli_args
 from dlasset.config import load_config
@@ -13,6 +15,21 @@ def print_config(env):
     log_group_end()
 
 
+def time_exec(title: str):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            _start = time.time()
+            ret = fn(*args, **kwargs)
+            print(f"{title} completed in {time.time() - _start:.3f} secs")
+            return ret
+
+        return wrapper
+
+    return decorator
+
+
+@time_exec("Download & preprocess assets")
 async def main():
     args = get_cli_args()
     config = load_config(args.config_path)
