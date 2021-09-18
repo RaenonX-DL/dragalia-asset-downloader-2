@@ -1,2 +1,9 @@
+# Asset processing
 UnityPy
+
+# Image processing
 Pillow
+
+# Config
+pyyaml
+jsonschema

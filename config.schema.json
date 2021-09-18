@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/RaenonX-DL/dragalia-asset-downloader-2/main/config.schema.json",
+  "title": "Dragalia Lost Asset Downloader Config Schema",
+  "description": "JSON Schema for the asset downloader config.",
+  "type": "object"
+}

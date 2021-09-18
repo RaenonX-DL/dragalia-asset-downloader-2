@@ -12,3 +12,6 @@ pylint
 pylint-quotes
 pydocstyle
 flake8
+
+# Typings
+types-PyYAML
