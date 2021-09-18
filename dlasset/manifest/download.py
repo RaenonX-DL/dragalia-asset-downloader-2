@@ -9,6 +9,8 @@ from dlasset.enums import Locale
 from dlasset.env import Environment
 from dlasset.log import log, log_group_end, log_group_start
 
+__all__ = ("download_manifest_all_locale",)
+
 
 async def download_manifest_of_locale(env: Environment, locale: Locale) -> None:
     """
