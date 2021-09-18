@@ -9,5 +9,6 @@ pytest
 # Code Quality
 mypy
 pylint
+pylint-quotes
 pydocstyle
 flake8

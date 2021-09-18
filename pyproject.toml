@@ -3,6 +3,12 @@
 
 # -------------------------- pylint --------------------------
 
+[tool.pylint.MASTER]
+load-plugins = "pylint_quotes"
+string-quote = "double"
+triple-quote = "double"
+docstring-quote = "double"
+
 [tool.pylint.BASIC]
 # Reason of the good names:
 # - _
