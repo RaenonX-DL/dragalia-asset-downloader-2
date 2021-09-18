@@ -32,13 +32,19 @@ class Environment:
         """Directory of the assets."""
         return os.path.join(self.config.paths.downloaded, "assets")
 
+    def print_info(self):
+        log_group_start("Environment info")
+        log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
+        log("INFO", f"Downloaded assets directory: {self.assets_dir}")
+        log_group_end()
+
 
 def init_env(args: CliArgs, config: Config) -> Environment:
     """Initializes the environment."""
     log_group_start("Environment initialization")
     env = Environment(args, config)
 
-    # Make directory for the assets if not made yet
+    # Make directories needed if not made yet
     log("INFO", "Making directory for manifest...")
     os.makedirs(env.manifest_asset_dir, exist_ok=True)
     log("INFO", "Making directory for assets...")

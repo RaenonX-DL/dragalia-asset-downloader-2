@@ -1,4 +1,4 @@
-"""Implementations related to manifest asset."""
+"""Implementations to download manifest assets."""
 import asyncio
 
 import aiofiles
@@ -6,10 +6,8 @@ import aiohttp
 
 from dlasset.const import CDN_BASE_URL, MANIFEST_NAMES
 from dlasset.enums import Locale
+from dlasset.env import Environment
 from dlasset.log import log, log_group_end, log_group_start
-from .main import Environment
-
-__all__ = ("download_manifest_all_locale",)
 
 
 async def download_manifest_of_locale(env: Environment, locale: Locale) -> None:
