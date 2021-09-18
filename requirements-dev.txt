@@ -15,3 +15,4 @@ flake8
 
 # Typings
 types-PyYAML
+types-aiofiles

@@ -7,3 +7,7 @@ Pillow
 # Config
 pyyaml
 jsonschema
+
+# Data downloading
+aiohttp
+aiofiles

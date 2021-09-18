@@ -3,7 +3,10 @@ count = True
 
 ignore =
     # As of PEP 8, W503 is yielded in old-style
-    W503
+    W503,
+    # Let `pylint` check this because `pyflake` (used by `flake8`) checks
+    # if the items in `__init__.py` are listed as `__all__` or not
+    F401
 
 max-complexity = 10
 

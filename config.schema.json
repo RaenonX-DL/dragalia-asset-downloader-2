@@ -3,5 +3,22 @@
   "$id": "https://raw.githubusercontent.com/RaenonX-DL/dragalia-asset-downloader-2/main/config.schema.json",
   "title": "Dragalia Lost Asset Downloader Config Schema",
   "description": "JSON Schema for the asset downloader config.",
-  "type": "object"
+  "type": "object",
+  "properties": {
+    "paths": {
+      "type": "object",
+      "properties": {
+        "downloaded": {
+          "type": "string",
+          "description": "Path for storing the downloaded/unextracted assets."
+        }
+      },
+      "required": [
+        "downloaded"
+      ]
+    }
+  },
+  "required": [
+    "paths"
+  ]
 }

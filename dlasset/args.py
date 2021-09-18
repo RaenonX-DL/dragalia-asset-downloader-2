@@ -2,7 +2,7 @@
 import argparse
 from dataclasses import dataclass
 
-__all__ = ("get_cli_args",)
+__all__ = ("get_cli_args", "CliArgs")
 
 from typing import cast
 

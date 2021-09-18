@@ -12,14 +12,14 @@ function Invoke-Check([string]$command, [string]$taskName)
     }
 }
 
-Write-Host "Checking with pydocstyle..." -Fore Cyan
-Invoke-Check "pydocstyle dlasset --count" "pydocstyle"
+Write-Host "Checking with mypy..." -Fore Cyan
+Invoke-Check "mypy dlasset" "mypy"
 
 Write-Host "Checking with pylint..." -Fore Cyan
 Invoke-Check "pylint dlasset" "pylint"
 
-Write-Host "Checking with mypy..." -Fore Cyan
-Invoke-Check "mypy dlasset" "mypy"
+Write-Host "Checking with pydocstyle..." -Fore Cyan
+Invoke-Check "pydocstyle dlasset --count" "pydocstyle"
 
 Write-Host "Checking with bandit..." -Fore Cyan
 Invoke-Check "bandit -r dlasset" "bandit"

@@ -1,0 +1,38 @@
+"""Implementations related to manifest asset."""
+import asyncio
+
+import aiofiles
+import aiohttp
+
+from dlasset.const import CDN_BASE_URL, MANIFEST_NAMES
+from dlasset.enums import Locale
+from dlasset.log import log, log_group_end, log_group_start
+from .main import Environment
+
+__all__ = ("download_manifest_all_locale",)
+
+
+async def download_manifest_of_locale(env: Environment, locale: Locale) -> None:
+    """
+    Download and store the manifest asset of ``locale``.
+
+    Downloaded asset needs decryption.
+    """
+    log("INFO", f"Downloading manifest of {locale}...")
+    manifest_url = f"{CDN_BASE_URL}/manifests/Android/{env.args.version_code}/{MANIFEST_NAMES[locale]}"
+
+    async with aiohttp.ClientSession() as session, \
+            session.get(manifest_url) as response, \
+            aiofiles.open(env.manifest_asset_path_of_locale(locale), mode="wb+") as f:
+        await f.write(await response.read())
+
+
+async def download_manifest_all_locale(env: Environment) -> None:
+    """
+    Download and store the manifest asset of all possible ``locale``.
+
+    Downloaded asset needs decryption.
+    """
+    log_group_start("Manifest downloading")
+    await asyncio.gather(*(download_manifest_of_locale(env, locale) for locale in Locale), return_exceptions=True)
+    log_group_end()

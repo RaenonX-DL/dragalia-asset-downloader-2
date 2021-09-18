@@ -1,18 +1,33 @@
 """Implementations to load the config file."""
 import json
+import os.path
 import typing
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass, field
 from typing import Any, cast
 
 import yaml
 from jsonschema import ValidationError, validate  # type: ignore
 
-__all__ = ("load_config",)
+__all__ = ("load_config", "Config")
+
+
+@dataclass
+class Paths:
+    """Various paths for different types of data."""
+
+    json_obj: InitVar[dict[Any, Any]]  # type: ignore
+
+    downloaded: str = field(init=False)
+
+    def __post_init__(self, json_obj: dict[Any, Any]) -> None:  # type: ignore
+        self.downloaded = cast(str, os.path.normpath(json_obj["downloaded"]))  # type: ignore
 
 
 @dataclass
 class Config:
     """Asset downloader config."""
+
+    paths: Paths
 
 
 @typing.no_type_check
@@ -33,4 +48,4 @@ def load_config(path: str) -> Config:
     except ValidationError as ex:
         raise ValueError("Config validation failed") from ex
 
-    return Config()
+    return Config(paths=Paths(config["paths"]))
