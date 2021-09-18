@@ -25,8 +25,8 @@ async def decrypt_manifest_of_locale(env: Environment, locale: Locale) -> None:
             env.config.paths.lib_decrypt_dll_path,
             path_encrypted,
             path_decrypted,
+            env.args.key,
             env.args.iv,
-            env.args.key
         ],
         check=True
     )
