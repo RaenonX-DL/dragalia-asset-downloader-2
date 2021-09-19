@@ -5,11 +5,11 @@ paths:
   index: .exclude/index
 
 assets:
-#  - task: Master Assets (all)
-#    name: master
-#    type: MonoBehaviour
-#    filter:
-#      - container: /resources/master/
+  - task: Master Assets (all)
+    name: master
+    type: MonoBehaviour
+    filter:
+      - container: /resources/master/
 #
 #  - task: Master Assets (text label)
 #    name: master
@@ -44,10 +44,10 @@ assets:
 #      - container: /resources/images/icon/
 #    isMultiLocale: true
 
-  - task: Unit image
-    name: images/outgame/unitdetail/(amulet|chara|dragon)
-    type: Texture2D
-    filter:
-      - container: /resources/images/outgame/unitdetail
+#  - task: Unit image
+#    name: images/outgame/unitdetail/(amulet|chara|dragon)
+#    type: Texture2D
+#    filter:
+#      - container: /resources/images/outgame/unitdetail
 
-raw: []
+raw: [ ]

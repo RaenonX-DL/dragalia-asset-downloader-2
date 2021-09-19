@@ -51,7 +51,7 @@
           },
           "type": {
             "type": "string",
-            "description": "Asset type to export. Not all asset types are supported. Name with `-` has special actions.",
+            "description": "Type of the export task.",
             "enum": [
               "MonoBehaviour",
               "GameObject",
