@@ -1,5 +1,5 @@
 """Type definitions for exporting the assets."""
-from typing import Callable, Literal
+from typing import Callable, Literal, TypeVar
 
 from UnityPy.classes import Object
 
@@ -7,4 +7,6 @@ __all__ = ("ObjectType", "ExportFunction")
 
 ObjectType = Literal["MonoBehaviour"]
 
-ExportFunction = Callable[[Object, str], None]
+T = TypeVar("T", bound=Object)
+
+ExportFunction = Callable[[T, str], None]
