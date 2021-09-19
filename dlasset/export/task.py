@@ -21,8 +21,6 @@ def export_from_manifest(env: Environment, locale: Locale, entry: "ManifestEntry
     with asset_stream(env, entry) as f:
         export_asset(f, task.types, env.config.paths.export_asset_dir_of_locale(locale), filters=task.conditions)
 
-    env.index.update_entry(locale, entry)
-
 
 def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> None:
     """Export the assets according to ``task``."""
@@ -39,5 +37,10 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
     log("INFO", f"{len(asset_entries)} assets matching the criteria. {len(args_list)} assets updated.")
 
     concurrent_run_no_return(export_from_manifest, args_list)
+
+    # MUST update outside of the concurrent run
+    # Otherwise the index will not update because of the separated memory space
+    for locale, entry in asset_entries:
+        env.index.update_entry(locale, entry)
 
     log_group_end()
