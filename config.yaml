@@ -16,7 +16,7 @@ assets:
     name: master
     type: MonoBehaviour
     filter:
-      - container: /resources/master/textlabel.asset
+      - container: /resources/master/textlabel
     isMultiLocale: true
 
   - task: Action Scripts
@@ -29,13 +29,25 @@ assets:
     name: actions
     type: MonoBehaviour
     filter:
-      - container: /resources/actions/actionpartslist.asset
+      - container: /resources/actions/actionpartslist
+
+  - task: Animation Data (Base Controller)
+    name: ((characters|dragon)/motion/|meshes/dragon)
+    type: AnimatorController
+    filter:
+      - container: /resources/characters/motion/(.*)\.controller
+
+  - task: Animation Data (Override Controller)
+    name: ((characters|dragon)/motion/|meshes/dragon)
+    type: AnimatorOverrideController
+    filter:
+      - container: /resources/characters/motion/(.*)\.overridecontroller
 
   - task: UI Sprites
     name: images/ingame/ui
     type: Sprite
     filter:
-      - container: /resources/images/ingame/ui/atlas/ui.png
+      - container: /resources/images/ingame/ui/atlas/ui
     isMultiLocale: true
 
   - task: Icons
@@ -56,5 +68,11 @@ assets:
     type: Texture2D-Story
     filter:
       - container: /resources/emotion/story
+
+  - task: Story Content
+    name: story/(unit|castle|quest)story/
+    type: MonoBehaviour
+    filter:
+      - container: /resources/story
 
 raw: [ ]

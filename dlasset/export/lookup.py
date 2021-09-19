@@ -11,6 +11,9 @@ EXPORT_FUNCTIONS: dict[ExportType, ExportFunction] = {
     "Texture2D-Alpha": export_image_alpha,
     "Texture2D-Story": export_image_story,
     "Sprite": export_image,
+    "GameObject": export_mono_behaviour,
+    "AnimatorController": export_mono_behaviour,
+    "AnimatorOverrideController": export_mono_behaviour,
 }
 
 TYPES_TO_INCLUDE: dict[ExportType, tuple[UnityType, ...]] = {
@@ -18,5 +21,8 @@ TYPES_TO_INCLUDE: dict[ExportType, tuple[UnityType, ...]] = {
     "Texture2D": ("Texture2D",),
     "Texture2D-Alpha": ("Texture2D", "Material"),
     "Texture2D-Story": ("Texture2D", "Material", "MonoBehaviour"),
-    "Sprite": ("Sprite",)
+    "Sprite": ("Sprite",),
+    "GameObject": ("GameObject",),
+    "AnimatorController": ("AnimatorController",),
+    "AnimatorOverrideController": ("AnimatorOverrideController",),
 }
