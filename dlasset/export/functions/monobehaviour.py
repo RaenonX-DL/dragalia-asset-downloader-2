@@ -7,25 +7,25 @@ from dlasset.export.types import MonoBehaviourTree
 from dlasset.log import log
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfoPathDict
+    from dlasset.export import ExportInfo
 
 __all__ = ("export_mono_behaviour",)
 
 
-def export_mono_behaviour(info_path_dict: "ExportInfoPathDict") -> list[MonoBehaviourTree]:
+def export_mono_behaviour(export_info: "ExportInfo") -> list[MonoBehaviourTree]:
     """
-    Export ``MonoBehaviour`` objects in ``ExportInfoPathDict``.
+    Export ``MonoBehaviour`` objects in ``export_info``.
 
     Returns the exported mono behaviour trees.
     """
     trees: list[MonoBehaviourTree] = []
 
-    for export_info in info_path_dict.values():
-        obj = export_info.obj
+    for obj_info in export_info.objects:
+        obj = obj_info.obj
 
-        log("INFO", f"Exporting {obj.name} ({export_info.container})...")
+        log("INFO", f"Exporting {obj.name} ({obj_info.container})...")
 
-        export_path: str = os.path.join(export_info.export_dir, f"{obj.name}.json")
+        export_path: str = os.path.join(export_info.get_export_dir_of_obj(obj_info), f"{obj.name}.json")
 
         if not obj.serialized_type.nodes:
             log("WARNING", f"No exportable data for {obj.name}")

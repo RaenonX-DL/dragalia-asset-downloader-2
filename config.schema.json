@@ -52,7 +52,7 @@
           },
           "name": {
             "type": "string",
-            "description": "Regex of the asset name to export. This has to be a full match."
+            "description": "Regex of the asset name to export. This has to be a full match. Note that the dependency assets of a main asset selected by a task always pass this test."
           },
           "type": {
             "type": "string",

@@ -9,7 +9,7 @@ from dlasset.log import log
 from dlasset.utils import crop_image, merge_y_cb_cr_a
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfoPathDict
+    from dlasset.export import ExportInfo
 
 __all__ = ("export_image_story",)
 
@@ -17,17 +17,14 @@ __all__ = ("export_image_story",)
 _parts_image_size = (256, 256)
 
 
-def get_y_cb_cr_a_from_material(
-        material: Material,
-        info_path_dict: "ExportInfoPathDict"
-) -> tuple[Image, Image, Image, Image]:
+def get_y_cb_cr_a_from_material(material: Material, export_info: "ExportInfo") -> tuple[Image, Image, Image, Image]:
     """Get a tuple containing Y, Cb, Cr, alpha image object in order of the material."""
     texture_envs = dict(material.read_typetree()["m_SavedProperties"]["m_TexEnvs"])
 
-    obj_y = cast(Image, info_path_dict[texture_envs["_TexY"]["m_Texture"]["m_PathID"]].obj.image)
-    obj_cb = cast(Image, info_path_dict[texture_envs["_TexCb"]["m_Texture"]["m_PathID"]].obj.image)
-    obj_cr = cast(Image, info_path_dict[texture_envs["_TexCr"]["m_Texture"]["m_PathID"]].obj.image)
-    obj_a = cast(Image, info_path_dict[texture_envs["_TexA"]["m_Texture"]["m_PathID"]].obj.image)
+    obj_y = cast(Image, export_info.get_obj_info(texture_envs["_TexY"]["m_Texture"]["m_PathID"]).obj.image)
+    obj_cb = cast(Image, export_info.get_obj_info(texture_envs["_TexCb"]["m_Texture"]["m_PathID"]).obj.image)
+    obj_cr = cast(Image, export_info.get_obj_info(texture_envs["_TexCr"]["m_Texture"]["m_PathID"]).obj.image)
+    obj_a = cast(Image, export_info.get_obj_info(texture_envs["_TexA"]["m_Texture"]["m_PathID"]).obj.image)
 
     return obj_y, obj_cb, obj_cr, obj_a
 
@@ -64,9 +61,9 @@ def crop_parts_image(
     return img
 
 
-def export_image_story(info_path_dict: "ExportInfoPathDict") -> None:
+def export_image_story(export_info: "ExportInfo") -> None:
     """Export the image objects in ``info_path_dict`` with YCbCr channel merged."""
-    mono_behaviour = next(info for info in info_path_dict.values() if info.obj.type == "MonoBehaviour")
+    mono_behaviour = next(info for info in export_info.objects if info.obj.type == "MonoBehaviour")
 
     log("DEBUG", f"Reading mono behaviour data... ({mono_behaviour.container})")
 
@@ -76,15 +73,15 @@ def export_image_story(info_path_dict: "ExportInfoPathDict") -> None:
 
     try:
         channels = get_y_cb_cr_a_from_material(
-            cast(Material, info_path_dict[tree["basePartsData"]["material"]["m_PathID"]].obj),
-            info_path_dict
+            cast(Material, export_info.get_obj_info(tree["basePartsData"]["material"]["m_PathID"]).obj),
+            export_info
         )
     except KeyError as ex:
         raise ValueError(f"Asset {image_name} ({mono_behaviour.container}) has missing object") from ex
 
     log("INFO", f"Exporting {image_name}... ({mono_behaviour.container})")
 
-    export_path = os.path.join(mono_behaviour.export_dir, f"{image_name}.png")
+    export_path = os.path.join(export_info.get_export_dir_of_obj(mono_behaviour), f"{image_name}.png")
 
     log("DEBUG", f"Merging YCbCr of {image_name}... ({mono_behaviour.container})")
 

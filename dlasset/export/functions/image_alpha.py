@@ -5,16 +5,22 @@ from typing import TYPE_CHECKING
 from PIL import Image
 
 from dlasset.log import log
+from .image import export_image
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfoPathDict
+    from dlasset.export import ExportInfo
 
 __all__ = ("export_image_alpha",)
 
 
-def export_image_alpha(info_path_dict: "ExportInfoPathDict") -> None:
-    """Export the image objects in ``info_path_dict`` with alpha channel merged."""
-    material = next(info for info in info_path_dict.values() if info.obj.type == "Material")
+def export_image_alpha(export_info: "ExportInfo") -> None:
+    """Export the image objects in ``export_info`` with alpha channel merged."""
+    material = next((info for info in export_info.objects if info.obj.type == "Material"), None)
+
+    if not material:
+        log("INFO", f"Asset {export_info.asset_name} does not have any `Material` - fallback to normal image export")
+        export_image(export_info)
+        return
 
     log("DEBUG", f"Reading material data... ({material.container})")
 
@@ -25,16 +31,14 @@ def export_image_alpha(info_path_dict: "ExportInfoPathDict") -> None:
     path_id_alpha = texture_envs["_AlphaTex"]["m_Texture"]["m_PathID"]
     path_id_main = texture_envs["_MainTex"]["m_Texture"]["m_PathID"]
 
-    info_main = info_path_dict[path_id_main]
+    info_main = export_info.get_obj_info(path_id_main)
 
-    obj_alpha = info_path_dict[path_id_alpha].obj
+    obj_alpha = export_info.get_obj_info(path_id_alpha).obj
     obj_main = info_main.obj
-
-    export_dir = info_main.export_dir
 
     log("INFO", f"Exporting {obj_main.name}... ({info_main.container})")
 
-    export_path = os.path.join(export_dir, f"{obj_main.name}.png")
+    export_path = os.path.join(export_info.get_export_dir_of_obj(info_main), f"{obj_main.name}.png")
 
     log("DEBUG", f"Merging alpha channel of {obj_main.name}... ({info_main.container})")
 
