@@ -36,26 +36,6 @@ def export_object(
     return EXPORT_FUNCTIONS[obj.type.name](obj, export_dir)
 
 
-def get_objects_to_export(
-        objects: list[Object], export_type: ExportType, filters: Optional[Sequence[AssetTaskFilter]] = None
-) -> list[Object]:
-    """Get a list of asset objects to export."""
-    objects_to_export: list[Object] = []
-
-    for obj in objects:
-        # DON'T use `!=` because this is using `__eq__` override for comparison
-        # `__ne__` is not properly overridden
-        if obj.type not in (export_type,):
-            continue
-
-        if filters and not any(filter_.match_container(obj.container) for filter_ in filters):
-            continue
-
-        objects_to_export.append(obj)
-
-    return objects_to_export
-
-
 def export_asset(
         asset_stream: BinaryIO,
         export_type: ExportType,
@@ -81,7 +61,7 @@ def export_asset(
         log("WARNING", f"Nothing exportable for the asset: {asset_name}")
         return []
 
-    objects_to_export = SELECT_FUNCTIONS[export_type](objects, filters)
+    objects_to_export = SELECT_FUNCTIONS[export_type](asset, filters)
 
     log("INFO", f"{len(objects_to_export)} out of {len(objects)} objects to export.")
 

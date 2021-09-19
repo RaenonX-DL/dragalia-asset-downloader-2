@@ -4,6 +4,7 @@ import os
 from typing import Optional, Sequence
 
 from UnityPy.classes import MonoBehaviour, Object
+from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.config import AssetTaskFilter
 from dlasset.export.types import MonoBehaviourTree
@@ -12,11 +13,11 @@ from dlasset.log import log
 __all__ = ("select_mono_behaviour", "export_mono_behaviour",)
 
 
-def select_mono_behaviour(objects: list[Object], filters: Optional[Sequence[AssetTaskFilter]] = None) -> list[Object]:
+def select_mono_behaviour(asset: UnityAsset, filters: Optional[Sequence[AssetTaskFilter]] = None) -> list[Object]:
     """Get a list of asset ``MonoBehaviour`` objects to export."""
     objects_to_export: list[Object] = []
 
-    for obj in objects:
+    for obj in asset.objects:
         # DON'T use `!=` because this is using `__eq__` override for comparison
         # `__ne__` is not properly overridden
         if obj.type not in ("MonoBehaviour",):

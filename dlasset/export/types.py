@@ -2,6 +2,7 @@
 from typing import Any, Callable, Optional, Sequence, Union
 
 from UnityPy.classes import MonoBehaviour, Object
+from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.config import AssetTaskFilter
 
@@ -9,7 +10,7 @@ __all__ = ("SelectFunction", "ExportFunction", "ExportReturn", "MonoBehaviourTre
 
 MonoBehaviourTree = dict[Any, Any]
 
-SelectFunction = Callable[[list[Object], Optional[Sequence[AssetTaskFilter]]], list[Object]]
+SelectFunction = Callable[[UnityAsset, Optional[Sequence[AssetTaskFilter]]], list[Object]]
 
 MonoBehaviourExportFunction = Callable[[MonoBehaviour, str], Optional[MonoBehaviourTree]]
 
