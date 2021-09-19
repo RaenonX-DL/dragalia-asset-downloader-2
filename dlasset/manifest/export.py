@@ -35,7 +35,7 @@ def export_manifest_all_locale(env: Environment) -> Manifest:
     """
     log_group_start("Manifest exporting")
     results = concurrent_run(
-        export_manifest_of_locale, [[env, locale] for locale in Locale],
+        export_manifest_of_locale, [[env, locale] for locale in Locale], env.config.paths.log,
         key_of_call=lambda _, locale: cast(Locale, locale)
     )
     log_group_end()

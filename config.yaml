@@ -3,6 +3,7 @@ paths:
   lib: lib
   export: .exclude/media
   index: .exclude/index
+  log: .exclude/logs
 
 assets:
 #  - task: Master Assets (all)
@@ -24,16 +25,16 @@ assets:
 #    filter:
 #      - container: /resources/actions/
 #
-#  - task: Action Parts List
-#    name: actions
-#    type: MonoBehaviour
-#    filter:
-#      - container: /resources/actions/actionpartslist.asset
-#
-#  - task: UI Sprites
-#    name: images/ingame/ui
-#    type: Sprite
-#    filter:
+  #  - task: Action Parts List
+  #    name: actions
+  #    type: MonoBehaviour
+  #    filter:
+  #      - container: /resources/actions/actionpartslist.asset
+  #
+  #  - task: UI Sprites
+  #    name: images/ingame/ui
+  #    type: Sprite
+  #    filter:
   #      - container: /resources/images/ingame/ui/atlas/ui.png
   #    isMultiLocale: true
   #

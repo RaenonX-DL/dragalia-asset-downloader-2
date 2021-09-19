@@ -1,12 +1,12 @@
-# Asset processing
-UnityPy
-
-# Image processing
-Pillow
-
 # Config
 pyyaml
 jsonschema
 
 # Data downloading
 requests
+
+# Asset processing
+UnityPy
+
+# Image processing
+Pillow

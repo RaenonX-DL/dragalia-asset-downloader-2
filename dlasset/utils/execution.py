@@ -4,7 +4,7 @@ from concurrent.futures import Future, ProcessPoolExecutor, as_completed
 from functools import wraps
 from typing import Any, Callable, Hashable, Sequence, TypeVar, Union
 
-from dlasset.log import log
+from dlasset.log import init_log, log
 
 __all__ = ("concurrent_run", "concurrent_run_no_return", "time_exec")
 
@@ -12,9 +12,16 @@ K = TypeVar("K", bound=Union[Hashable, None])
 R = TypeVar("R")
 
 
+def on_concurrency_start(log_dir: str) -> None:
+    """Function to call on each concurrency start."""
+    # Each process has a brand new logging factory
+    init_log(log_dir)
+
+
 def concurrent_run(
         fn: Callable[..., R],  # type: ignore
-        args_list: Sequence[Sequence[Any]], /,
+        args_list: Sequence[Sequence[Any]],
+        log_dir: str, /,
         key_of_call: Callable[..., K]  # type: ignore
 ) -> dict[K, R]:
     """
@@ -34,7 +41,7 @@ def concurrent_run(
 
         return inner
 
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(initializer=on_concurrency_start, initargs=(log_dir,)) as executor:
         futures: list[Future] = []
         for args in args_list:
             future = executor.submit(fn, *args)
@@ -47,7 +54,11 @@ def concurrent_run(
     return results
 
 
-def concurrent_run_no_return(fn: Callable[..., R], args_list: Sequence[Sequence[Any]]) -> None:  # type: ignore
+def concurrent_run_no_return(
+        fn: Callable[..., R],
+        args_list: Sequence[Sequence[Any]],
+        log_dir: str
+) -> None:  # type: ignore
     """
     Run ``fn`` concurrently with different set of ``args``.
 
@@ -57,7 +68,7 @@ def concurrent_run_no_return(fn: Callable[..., R], args_list: Sequence[Sequence[
     def key_of_call(*_: Any, **__: Any) -> None:
         return None
 
-    concurrent_run(fn, args_list, key_of_call=key_of_call)
+    concurrent_run(fn, args_list, log_dir, key_of_call=key_of_call)
 
 
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])

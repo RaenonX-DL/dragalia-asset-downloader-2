@@ -31,5 +31,5 @@ def download_manifest_all_locale(env: Environment) -> None:
     Downloaded asset needs decryption.
     """
     log_group_start("Manifest downloading")
-    concurrent_run_no_return(download_manifest_of_locale, [[env, locale] for locale in Locale])
+    concurrent_run_no_return(download_manifest_of_locale, [[env, locale] for locale in Locale], env.config.paths.log)
     log_group_end()

@@ -1,9 +1,11 @@
 """Config path model class."""
 import os
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import cast
 
 from dlasset.enums import Locale
+from dlasset.log import log
 from .base import ConfigBase
 
 __all__ = ("Paths",)
@@ -17,6 +19,7 @@ class Paths(ConfigBase):
     lib: str = field(init=False)
     export: str = field(init=False)
     index: str = field(init=False)
+    log: str = field(init=False)
 
     def __post_init__(self) -> None:
         self.downloaded = cast(str, os.path.normpath(self.json_obj["downloaded"]))
@@ -24,12 +27,29 @@ class Paths(ConfigBase):
         self.export = cast(str, os.path.normpath(self.json_obj["export"]))
         self.index = cast(str, os.path.normpath(self.json_obj["index"]))
 
+        today = datetime.today().strftime("%Y-%m-%d")
+        self.log = cast(str, os.path.normpath(os.path.join(self.json_obj["log"], today)))
+
     def export_asset_dir_of_locale(self, locale: Locale) -> str:
         """Get the root directory for the exported assets of ``locale``."""
         if locale.is_master:
             return self.export
 
         return os.path.join(self.export, "localized", locale.value)
+
+    def init_dirs(self) -> None:
+        """Initialize directories for output."""
+        log("INFO", "Making directory for downloaded files...")
+        os.makedirs(self.downloaded, exist_ok=True)
+
+        log("INFO", "Making directory for exported files...")
+        os.makedirs(self.export, exist_ok=True)
+
+        log("INFO", "Making directory for file index...")
+        os.makedirs(self.index, exist_ok=True)
+
+        log("INFO", "Making directory for logs...")
+        os.makedirs(self.log, exist_ok=True)
 
     @property
     def lib_decrypt_dll_path(self) -> str:

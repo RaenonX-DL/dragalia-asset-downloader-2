@@ -35,5 +35,5 @@ def decrypt_manifest_of_locale(env: Environment, locale: Locale) -> None:
 def decrypt_manifest_all_locale(env: Environment) -> None:
     """Decrypt and store the manifest asset of all locales."""
     log_group_start("Manifest decrypting")
-    concurrent_run_no_return(decrypt_manifest_of_locale, [[env, locale] for locale in Locale])
+    concurrent_run_no_return(decrypt_manifest_of_locale, [[env, locale] for locale in Locale], env.config.paths.log)
     log_group_end()

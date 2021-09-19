@@ -24,13 +24,18 @@
         "index": {
           "type": "string",
           "description": "Root directory for the indexing files."
+        },
+        "log": {
+          "type": "string",
+          "description": "Root directory for the log files."
         }
       },
       "required": [
         "downloaded",
         "lib",
         "export",
-        "index"
+        "index",
+        "log"
       ],
       "additionalProperties": false
     },

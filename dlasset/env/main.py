@@ -1,11 +1,12 @@
 """Implementations for initializing the environment."""
+import logging
 import os.path
 from dataclasses import dataclass, field
 
 from dlasset.config import Config
 from dlasset.const import MANIFEST_NAMES
 from dlasset.enums import Locale
-from dlasset.log import log, log_group_end, log_group_start
+from dlasset.log import PIDFileHandler, log, log_group_end, log_group_start
 from .args import CliArgs
 from .index import FileIndex
 
@@ -53,21 +54,27 @@ class Environment:
         log("INFO", f"File index directory: {self.config.paths.index}")
         log_group_end()
 
+    def init_dirs(self) -> None:
+        """Initialize directories."""
+        self.config.paths.init_dirs()
+
+        log("INFO", "Making directory for manifest assets...")
+        os.makedirs(self.manifest_asset_dir, exist_ok=True)
+        log("INFO", "Making directory for downloaded assets...")
+        os.makedirs(self.downloaded_assets_dir, exist_ok=True)
+
+    def prepare_logging(self) -> None:
+        """Prepare logging factory."""
+        logging.getLogger().addHandler(PIDFileHandler(self.config.paths.log))
+
 
 def init_env(args: CliArgs, config: Config) -> Environment:
     """Initializes the environment."""
     log_group_start("Environment initialization")
-    env = Environment(args, config)
 
-    # Make directories needed if not made yet
-    log("INFO", "Making directory for manifest...")
-    os.makedirs(env.manifest_asset_dir, exist_ok=True)
-    log("INFO", "Making directory for assets...")
-    os.makedirs(env.downloaded_assets_dir, exist_ok=True)
-    log("INFO", "Making directory for export...")
-    os.makedirs(env.config.paths.export, exist_ok=True)
-    log("INFO", "Making directory for index...")
-    os.makedirs(env.config.paths.index, exist_ok=True)
+    env = Environment(args, config)
+    env.init_dirs()
+    env.prepare_logging()
 
     log_group_end()
 
