@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 
 from dlasset.model import JsonModel
 
+__all__ = ("ManifestEntry", "ManifestRawEntry", "ManifestEntryBase",)
+
 
 @dataclass
 class ManifestEntryBase(JsonModel, ABC):
