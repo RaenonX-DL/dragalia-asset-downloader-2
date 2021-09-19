@@ -28,7 +28,7 @@ def get_cli_args() -> CliArgs:
                         help="IV to decrypt the manifest asset")
     parser.add_argument("-key", "--key", type=str,
                         help="Key to decrypt the manifest asset")
-    parser.add_argument("-c", "--config", type=str,
+    parser.add_argument("-c", "--config", type=str, required=True,
                         help="Config file path to use")
     parser.add_argument("-ni", "--no-index", action="store_true", default=False,
                         help="File index will be ignored if this flag is provided")
