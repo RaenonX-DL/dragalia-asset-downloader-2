@@ -1,12 +1,20 @@
 """Type definitions for exporting the assets."""
-from typing import Callable, Literal, TypeVar
+from typing import Any, Callable, Literal, Union
 
-from UnityPy.classes import Object
+from UnityPy.classes import MonoBehaviour
 
-__all__ = ("ObjectType", "ExportFunction")
+__all__ = ("ObjectType", "ExportFunction", "ExportReturn", "MonoBehaviourTree")
 
 ObjectType = Literal["MonoBehaviour"]
 
-T = TypeVar("T", bound=Object)
+MonoBehaviourTree = dict[Any, Any]
 
-ExportFunction = Callable[[T, str], None]
+MonoBehaviourExportFunction = Callable[[MonoBehaviour, str], MonoBehaviourTree]
+
+ExportFunction = Union[
+    MonoBehaviourExportFunction
+]
+
+ExportReturn = Union[
+    MonoBehaviourTree
+]

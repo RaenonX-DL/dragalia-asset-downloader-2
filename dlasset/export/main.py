@@ -1,18 +1,22 @@
 """Implementations to export files from an Unity asset."""
 import os
-from typing import Sequence
+from typing import Any, Sequence
 
 import UnityPy
 
 from dlasset.log import log
 from .lookup import EXPORT_FUNCTIONS
-from .types import ObjectType
+from .types import ExportReturn, ObjectType
 
 __all__ = ("export_asset",)
 
 
-def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_dir: str) -> None:
-    """Export the unity asset with the given criteria to ``export_dir``."""
+def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_dir: str) -> list[ExportReturn]:
+    """
+    Export the unity asset with the given criteria to ``export_dir`` and get the exported data.
+
+    Returns an empty list is nothing exportable.
+    """
     asset = UnityPy.load(asset_path)
 
     log("INFO", f"Exporting asset: {asset_path}")
@@ -22,8 +26,9 @@ def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_
     objects = asset.objects
     if not objects:
         log("WARNING", f"Nothing exportable the asset at {asset_path}")
-        return
+        return []
 
+    exported: list[Any] = []
     for obj in objects:
         if obj.type not in types_to_export:
             continue
@@ -31,7 +36,9 @@ def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_
         obj = obj.read()
         log("INFO", f"Exporting {obj.type} at {asset.path} to {export_dir}")
         os.makedirs(export_dir, exist_ok=True)
-        EXPORT_FUNCTIONS[obj.type.name](obj, export_dir)
+        exported.append(EXPORT_FUNCTIONS[obj.type.name](obj, export_dir))
 
     asset_name = os.path.basename(asset_path)
     log("INFO", f"Done exporting {asset_name} to {export_dir}")
+
+    return exported
