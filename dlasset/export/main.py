@@ -43,22 +43,19 @@ def export_objects(
         filters: Optional[Sequence[AssetTaskFilter]] = None
 ) -> list[ExportReturn]:
     """Export the objects in ``export_info_list``."""
-    results: list[ExportReturn] = []
+    # Get the export info list for export
+    to_export: list[ExportInfo] = []
     for export_info in export_info_list:
         obj = export_info.read_obj()
 
         if filters and not any(filter_.match_filter(export_info.container, obj.name) for filter_ in filters):
             continue
 
-        log("INFO", f"Exporting {obj.name} ({export_info.container})...")
+        to_export.append(export_info)
 
-        result = EXPORT_FUNCTIONS[export_type](export_info)
-        if result is None:
-            # Not to include ``None`` in the result array
-            # - Explicit check to include falsy values like empty array
-            continue
-
-        results.append(result)
+    results = EXPORT_FUNCTIONS[export_type](to_export)
+    if not results:
+        return []
 
     return results
 
