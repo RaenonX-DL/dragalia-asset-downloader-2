@@ -13,6 +13,9 @@ if TYPE_CHECKING:
 
 __all__ = ("export_image_story",)
 
+# Almost same across all the assets
+_parts_image_size = (256, 256)
+
 
 def get_y_cb_cr_a_from_material(
         material: Material,
@@ -29,6 +32,38 @@ def get_y_cb_cr_a_from_material(
     return obj_y, obj_cb, obj_cr, obj_a
 
 
+def crop_parts_image(
+        img: Image, parts_table: list[dict[str, dict[str, int]]], image_name: str, container: str
+) -> Image:
+    """
+    Crop the parts image of ``img`` according to ``parts_table``.
+
+    If no position data is provided in ``parts_table``, default coordinates will be used instead.
+    """
+    is_using_default = False
+    log("DEBUG", f"Cropping image part of {image_name}... ({container})")
+
+    # size = (tl_x, tl_y, rb_x, rb_y)
+    if not parts_table:
+        log("WARNING", f"{image_name} ({container}) does not have parts, using default positions")
+
+        # Use default coordinates because parts table not available
+        size = (296, 21, 808, 533)  # 512 x 512
+        is_using_default = True
+    else:
+        # Use data from parts table
+        parts_position = parts_table[0]["position"]
+        center_x, center_y = parts_position["x"], parts_position["y"]
+        size = (center_x - 128, center_y - 128, center_x + 128, center_y + 128)
+
+    img = crop_image(img, *size)
+
+    if is_using_default:
+        img = img.resize(_parts_image_size, Image.ANTIALIAS)
+
+    return img
+
+
 def export_image_story(info_path_dict: "ExportInfoPathDict") -> None:
     """Export the image objects in ``info_path_dict`` with YCbCr channel merged."""
     mono_behaviour = next(info for info in info_path_dict.values() if info.obj.type == "MonoBehaviour")
@@ -37,15 +72,15 @@ def export_image_story(info_path_dict: "ExportInfoPathDict") -> None:
 
     tree = mono_behaviour.obj.read_typetree()
 
-    parts_base_mat_path = tree["basePartsData"]["material"]["m_PathID"]
-    parts_position = tree["partsDataTable"][0]["position"]
-
-    channels = get_y_cb_cr_a_from_material(
-        cast(Material, info_path_dict[parts_base_mat_path].obj),
-        info_path_dict
-    )
-
     image_name = mono_behaviour.obj.name
+
+    try:
+        channels = get_y_cb_cr_a_from_material(
+            cast(Material, info_path_dict[tree["basePartsData"]["material"]["m_PathID"]].obj),
+            info_path_dict
+        )
+    except KeyError as ex:
+        raise ValueError(f"Asset {image_name} ({mono_behaviour.container}) has missing object") from ex
 
     log("INFO", f"Exporting {image_name}... ({mono_behaviour.container})")
 
@@ -54,8 +89,6 @@ def export_image_story(info_path_dict: "ExportInfoPathDict") -> None:
     log("DEBUG", f"Merging YCbCr of {image_name}... ({mono_behaviour.container})")
 
     img = merge_y_cb_cr_a(*channels)
-
-    x, y = parts_position["x"], parts_position["y"]
-    img = crop_image(img, x - 128, y - 128, x + 128, y + 128)
+    img = crop_parts_image(img, tree["partsDataTable"], image_name, mono_behaviour.container)
 
     img.save(export_path)

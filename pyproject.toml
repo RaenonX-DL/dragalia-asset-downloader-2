@@ -17,8 +17,6 @@ docstring-quote = "double"
 # - i, j, k:     for loops
 # - r, g, b, a:  represents RGBA
 # - y, cb, cr:   represents YCbCr
-# - x, y:        X, Y coordinates
-# - w, h:        "W"idth and "H"eight
 # - K:           type variable name for "K"ey
 # - s:           represents "string"
 # - v:           represents "value"
@@ -27,7 +25,7 @@ docstring-quote = "double"
 # - dt, tz:      datetime handling (dt for datetime, tz for timezone)
 # - ex:          var name of exception caught by try..except
 # - fn:          represents a function
-good-names = "_, T, f, i, j, K, k, r, g, b, a, y, cb, cr, x, y, w, h, s, v, R, iv, dt, ex, fn, tz"
+good-names = "_, T, f, i, j, K, k, r, g, b, a, y, cb, cr, s, v, R, iv, dt, ex, fn, tz"
 
 [tool.pylint.FORMAT]
 max-line-length = 119

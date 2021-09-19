@@ -19,6 +19,6 @@ def merge_y_cb_cr_a(img_y: Image, img_cb: Image, img_cr: Image, img_alpha: Image
     return img
 
 
-def crop_image(img: Image, x: int, y: int, w: int, h: int) -> Image:
-    """Crop ``img`` starting from the top-left corner at ``(x, y)`` with size ``w x h``."""
-    return img.crop((x, y, w, h))
+def crop_image(img: Image, tl_x: int, tl_y: int, rb_x: int, rb_y: int) -> Image:
+    """Crop ``img`` starting from the top-left corner at ``(tl_x, tl_y)`` to the right-bottom at ``(rb_x, rb_y)``."""
+    return img.crop((tl_x, tl_y, rb_x, rb_y))
