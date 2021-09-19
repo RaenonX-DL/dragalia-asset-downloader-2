@@ -14,9 +14,13 @@ class ManifestLocale(JsonModel):
     categories: tuple[ManifestCategory, ...] = field(init=False)
     raw_assets: tuple[ManifestRawEntry, ...] = field(init=False)
 
+    entry_by_name: dict[str, ManifestEntry] = field(init=False)
+
     def __post_init__(self) -> None:
         self.categories = tuple(ManifestCategory(category) for category in self.json_obj["categories"])
         self.raw_assets = tuple(ManifestRawEntry(asset) for asset in self.json_obj["rawAssets"])
+
+        self.entry_by_name = {entry.name: entry for entry in self.entries_across_category}
 
     @property
     def entries_across_category(self) -> Generator[ManifestEntry, None, None]:

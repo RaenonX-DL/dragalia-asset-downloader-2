@@ -1,7 +1,6 @@
 """Main implementations for managing the assets."""
-import contextlib
 import os.path
-from typing import BinaryIO, Generator, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 import requests
 
@@ -11,7 +10,7 @@ from .utils import get_asset_url
 if TYPE_CHECKING:
     from dlasset.manifest import ManifestEntry
 
-__all__ = ("asset_stream",)
+__all__ = ("get_asset_paths",)
 
 
 def download_asset(asset_hash_dir: str, asset_target_path: str, entry: "ManifestEntry") -> None:
@@ -23,14 +22,20 @@ def download_asset(asset_hash_dir: str, asset_target_path: str, entry: "Manifest
         f.write(response.content)
 
 
-@contextlib.contextmanager
-def asset_stream(env: Environment, entry: "ManifestEntry") -> Generator[BinaryIO, None, None]:
-    """Get the asset stream of ``entry``."""
-    asset_hash_dir = os.path.join(env.downloaded_assets_dir, entry.hash_dir)
-    asset_target_path = os.path.join(asset_hash_dir, entry.hash)
+def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> list[str]:
+    """
+    Get a list of asset paths of ``entry``.
 
-    if not os.path.exists(asset_target_path):
-        download_asset(asset_hash_dir, asset_target_path, entry)
+    This automatically download the asset in ``entries`` if not exists.
+    """
+    asset_paths: list[str] = []
+    for entry in entries:
+        asset_hash_dir = os.path.join(env.downloaded_assets_dir, entry.hash_dir)
+        asset_target_path = os.path.join(asset_hash_dir, entry.hash)
 
-    with open(asset_target_path, "rb") as f:
-        yield f
+        if not os.path.exists(asset_target_path):
+            download_asset(asset_hash_dir, asset_target_path, entry)
+
+        asset_paths.append(asset_target_path)
+
+    return asset_paths

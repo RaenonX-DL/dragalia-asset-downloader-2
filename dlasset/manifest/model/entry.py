@@ -16,6 +16,8 @@ class ManifestEntryBase(JsonModel, ABC):
     size: int = field(init=False)
     group: int = field(init=False)
 
+    dependencies: list[str] = field(init=False)
+
     hash_dir: str = field(init=False)
 
     def __post_init__(self) -> None:
@@ -24,6 +26,8 @@ class ManifestEntryBase(JsonModel, ABC):
         self.size = self.json_obj["size"]
         self.group = self.json_obj["group"]
 
+        self.dependencies = self.json_obj.get("dependencies", [])
+
         self.hash_dir = self.hash[:2]
 
 
@@ -31,13 +35,11 @@ class ManifestEntryBase(JsonModel, ABC):
 class ManifestEntry(ManifestEntryBase):
     """Manifest entry model."""
 
-    dependencies: list[str] = field(init=False)
     assets: list[str] = field(init=False)
 
     def __post_init__(self) -> None:
         super().__post_init__()
 
-        self.dependencies = self.json_obj["dependencies"]
         self.assets = self.json_obj["assets"]
 
 

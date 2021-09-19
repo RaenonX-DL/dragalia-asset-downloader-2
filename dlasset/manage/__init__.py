@@ -1,2 +1,2 @@
 """Implementations for managing the assets."""
-from .main import asset_stream
+from .main import get_asset_paths

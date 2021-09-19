@@ -70,7 +70,7 @@
           },
           "filter": {
             "type": "array",
-            "description": "Export the objects that pass one of these filters and all the conditions of a filter.",
+            "description": "Export the objects that pass one of these filters and all the conditions of a filter. Note that these filters are only apply to the main asset. Dependency assets always pass the tests unless it is selected as main assets.",
             "items": {
               "type": "object",
               "description": "A single filter. Objects that pass all conditions of a filter will be exported.",

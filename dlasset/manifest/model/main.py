@@ -1,7 +1,7 @@
 """Manifest model class."""
 import re
 from dataclasses import dataclass, field
-from typing import Callable, Generator, Iterable, Pattern, TypeVar
+from typing import Callable, Generator, Iterable, Pattern, TypeVar, cast
 
 from dlasset.enums import Locale
 from dlasset.export import MonoBehaviourTree
@@ -24,14 +24,26 @@ class Manifest:
     def __post_init__(self) -> None:
         self.manifests = {locale: ManifestLocale(manifest) for locale, manifest in self.data.items()}
 
-    def get_manifest_locale(
+    def get_entries_including_dependencies(
+            self, locale: Locale, parent_entry: T
+    ) -> list[T]:
+        """Get ``parent_entry`` and its dependencies attached at the tail of the returned entry list."""
+        ret = [parent_entry]
+        for dependency in parent_entry.dependencies:
+            dependency_entry = self.manifests[locale].entry_by_name[dependency]
+            ret.extend(self.get_entries_including_dependencies(locale, cast(T, dependency_entry)))
+        return ret
+
+    def get_manifest_entries_of_locale(
             self, regex: Pattern, get_entries: Callable[[ManifestLocale], Iterable[T]], /,
             is_master_only: bool
-    ) -> Generator[tuple[Locale, T], None, None]:
+    ) -> Generator[tuple[Locale, list[T]], None, None]:
         """
         Get a generator yielding locale and the entry with its name matching ``regex`` from ``entries``.
 
         Yields the manifest in the master locale only if ``is_master_only`` is ``True``.
+
+        Resolves asset dependecy.
         """
         for locale, manifest_of_locale in self.manifests.items():
             if is_master_only and not locale.is_master:
@@ -41,14 +53,18 @@ class Manifest:
                 if not re.match(regex, entry.name):
                     continue
 
-                yield locale, entry
+                yield locale, self.get_entries_including_dependencies(locale, entry)
 
     def get_entry_with_regex(
             self, regex: Pattern, /,
             is_master_only: bool
-    ) -> Generator[tuple[Locale, ManifestEntry], None, None]:
-        """Get a generator yielding the manifest entry with its name matching ``regex``."""
-        return self.get_manifest_locale(
+    ) -> Generator[tuple[Locale, list[ManifestEntry]], None, None]:
+        """
+        Get a generator yielding the manifest entry with its name matching ``regex``.
+
+        Resolves asset dependecy.
+        """
+        return self.get_manifest_entries_of_locale(
             regex, lambda manifest: manifest.entries_across_category,
             is_master_only=is_master_only
         )
@@ -56,9 +72,13 @@ class Manifest:
     def get_raw_entry_with_regex(
             self, regex: Pattern, *,
             is_master_only: bool
-    ) -> Generator[tuple[Locale, ManifestRawEntry], None, None]:
-        """Get a generator yielding the manifest entry with its name matching ``regex``."""
-        return self.get_manifest_locale(
+    ) -> Generator[tuple[Locale, list[ManifestRawEntry]], None, None]:
+        """
+        Get a generator yielding the manifest entry with its name matching ``regex``.
+
+        Resolves asset dependecy.
+        """
+        return self.get_manifest_entries_of_locale(
             regex, lambda manifest: manifest.raw_assets,
             is_master_only=is_master_only
         )
