@@ -14,13 +14,16 @@ from .types import ExportReturn
 __all__ = ("export_asset",)
 
 
-def log_asset_export_debug_info(asset_paths: list[str], export_type: ExportType, export_dir: str) -> None:
+def log_asset_export_debug_info(
+        assets: list[UnityAsset], asset_paths: list[str], export_type: ExportType, export_dir: str
+) -> None:
     """Log the debug info about the asset exporting."""
     log("DEBUG", "Exporting asset:")
     for asset_path in asset_paths:
         log("DEBUG", f"- {asset_path}")
     log("DEBUG", f"Export type: {export_type}")
     log("DEBUG", f"Destination: {export_dir}")
+    log("DEBUG", f"Fallback Container: {get_container_fallback(assets)}")
 
 
 def get_container_fallback(assets: list[UnityAsset]) -> str:
@@ -80,7 +83,7 @@ def get_objects_to_export(
 
 def export_objects(
         obj_export: list[ObjectInfo], export_type: ExportType, export_dir: str, /,
-        asset_name: str, filters: Optional[Sequence[AssetTaskFilter]] = None
+        asset_name: str, container_fallback: str, filters: Optional[Sequence[AssetTaskFilter]] = None
 ) -> list[ExportReturn]:
     """
     Export the objects in ``obj_export``.
@@ -101,7 +104,12 @@ def export_objects(
 
         obj_info_to_export.append(obj_info)
 
-    export_info = ExportInfo(export_dir=export_dir, obj_info_list=obj_info_to_export, asset_name=asset_name)
+    export_info = ExportInfo(
+        export_dir=export_dir,
+        obj_info_list=obj_info_to_export,
+        asset_name=asset_name,
+        container_fallback=container_fallback
+    )
     results = EXPORT_FUNCTIONS[export_type](export_info)
 
     if not results:
@@ -127,7 +135,7 @@ def export_asset(
     asset_path_main = asset_paths[0]
     asset_name_main = os.path.basename(asset_path_main)
 
-    log_asset_export_debug_info(asset_paths, export_type, export_dir)
+    log_asset_export_debug_info(assets, asset_paths, export_type, export_dir)
 
     if not any(asset.objects for asset in assets) and not suppress_no_export:
         log("WARNING", f"Nothing exportable for the asset: {asset_name_main}")
@@ -144,7 +152,8 @@ def export_asset(
     log("INFO", f"Found {len(objects_to_export)} objects to export ({asset_path_main}).")
 
     results: list[ExportReturn] = export_objects(
-        objects_to_export, export_type, export_dir, filters=filters, asset_name=asset_name_main
+        objects_to_export, export_type, export_dir,
+        filters=filters, asset_name=asset_name_main, container_fallback=get_container_fallback(assets)
     )
 
     log("DEBUG", f"Done exporting {asset_name_main} to {export_dir}")

@@ -34,6 +34,7 @@ class ExportInfo:
     export_dir: str
     obj_info_list: InitVar[list[ObjectInfo]]
     asset_name: str
+    container_fallback: str
 
     _object_dict: dict[int, ObjectInfo] = field(init=False)
 
@@ -55,7 +56,7 @@ class ExportInfo:
         Raises :class:`ValueError` if no corresponding object.
         """
         if path_id not in self._object_dict:
-            raise ValueError(f"Path ID #{path_id} not exists on {self.asset_name}")
+            raise ValueError(f"Path ID #{path_id} not exists on {self.asset_name} ({self.container_fallback})")
 
         return self._object_dict[path_id]
 
