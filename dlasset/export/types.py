@@ -3,13 +3,15 @@ from typing import Any, Callable, Union
 
 from .model import ExportInfo
 
-__all__ = ("ExportFunction", "ExportReturn", "MonoBehaviourTree")
+__all__ = ("ExportInfoPathDict", "ExportFunction", "ExportReturn", "MonoBehaviourTree")
+
+ExportInfoPathDict = dict[int, ExportInfo]
 
 MonoBehaviourTree = dict[Any, Any]
 
-MonoBehaviourExportFunction = Callable[[list[ExportInfo]], list[MonoBehaviourTree]]
+MonoBehaviourExportFunction = Callable[[ExportInfoPathDict], list[MonoBehaviourTree]]
 
-Texture2DExportFunction = Callable[[list[ExportInfo]], None]
+Texture2DExportFunction = Callable[[ExportInfoPathDict], None]
 
 ExportFunction = Union[
     MonoBehaviourExportFunction,

@@ -11,6 +11,7 @@ from dlasset.log import log
 from .lookup import EXPORT_FUNCTIONS, TYPES_TO_INCLUDE
 from .model import ExportInfo
 from .types import ExportReturn
+from .utils import get_export_info_path_dict
 
 __all__ = ("export_asset",)
 
@@ -53,7 +54,7 @@ def export_objects(
 
         to_export.append(export_info)
 
-    results = EXPORT_FUNCTIONS[export_type](to_export)
+    results = EXPORT_FUNCTIONS[export_type](get_export_info_path_dict(to_export))
     if not results:
         return []
 

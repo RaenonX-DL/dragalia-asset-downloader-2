@@ -7,20 +7,20 @@ from dlasset.export.types import MonoBehaviourTree
 from dlasset.log import log
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfo
+    from dlasset.export import ExportInfoPathDict
 
 __all__ = ("export_mono_behaviour",)
 
 
-def export_mono_behaviour(export_info_list: list["ExportInfo"]) -> list[MonoBehaviourTree]:
+def export_mono_behaviour(info_path_dict: "ExportInfoPathDict") -> list[MonoBehaviourTree]:
     """
-    Export ``MonoBehaviour`` object according to ``export_info``.
+    Export ``MonoBehaviour`` objects in ``ExportInfoPathDict``.
 
     Returns the exported mono behaviour trees.
     """
     trees: list[MonoBehaviourTree] = []
 
-    for export_info in export_info_list:
+    for export_info in info_path_dict.values():
         obj = export_info.obj
 
         log("INFO", f"Exporting {obj.name} ({export_info.container})...")
