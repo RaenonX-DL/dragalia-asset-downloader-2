@@ -1,5 +1,5 @@
 """Type definitions for the config."""
-from typing import Literal, Union
+from typing import Literal
 
 __all__ = ("UnityType", "ExportType",)
 
@@ -11,14 +11,16 @@ UnityType = Literal[
     "AnimatorController",
     "AnimatorOverrideController",
     "Texture2D",
-    "Sprite"
+    "Sprite",
+    "Material"
 ]
 
 # Special types that performs some special actions
 # Names should be in the format of <UNITY_TYPE>-<NAME>.
 ExtendedType = Literal[
-    "Texture2D-Alpha"
+    "Texture2D-Alpha",
+    "Texture2D-Story"
 ]
 
 # Should be the same as the listed enums in the config schema
-ExportType = Union[UnityType, ExtendedType]
+ExportType = Literal[UnityType, ExtendedType]

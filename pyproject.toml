@@ -11,19 +11,23 @@ docstring-quote = "double"
 
 [tool.pylint.BASIC]
 # Reason of the good names:
-# - _:        dummy variable during unpacking
-# - T:        for TypeVar
-# - f:        file stream name
-# - i, j, k:  for loops
-# - K:        type variable name for "K"ey
-# - s:        represents "string"
-# - v:        represents "value"
-# - R:        type variable name for "R"eturn
-# - iv:       "iv" for crypto
-# - dt, tz:   datetime handling (dt for datetime, tz for timezone)
-# - ex:       var name of exception caught by try..except
-# - fn:       represents a function
-good-names = "_,T,f,i,j,K,k,s,v,R,iv,dt,ex,fn,tz"
+# - _:           dummy variable during unpacking
+# - T:           for TypeVar
+# - f:           file stream name
+# - i, j, k:     for loops
+# - r, g, b, a:  represents RGBA
+# - y, cb, cr:   represents YCbCr
+# - x, y:        X, Y coordinates
+# - w, h:        "W"idth and "H"eight
+# - K:           type variable name for "K"ey
+# - s:           represents "string"
+# - v:           represents "value"
+# - R:           type variable name for "R"eturn
+# - iv:          "iv" for crypto
+# - dt, tz:      datetime handling (dt for datetime, tz for timezone)
+# - ex:          var name of exception caught by try..except
+# - fn:          represents a function
+good-names = "_, T, f, i, j, K, k, r, g, b, a, y, cb, cr, x, y, w, h, s, v, R, iv, dt, ex, fn, tz"
 
 [tool.pylint.FORMAT]
 max-line-length = 119
@@ -33,6 +37,9 @@ max-line-length = 119
 # cyclic-import:                 Just let it crash during runtime
 # arguments-differ:              Let it checked by IDE or flake8
 disable = "fixme, too-many-instance-attributes, cyclic-import, arguments-differ"
+
+[tool.pylint.SIMILARITIES]
+ignore-imports="yes"
 
 # -------------------------- pydocstyle --------------------------
 
@@ -64,5 +71,6 @@ disallow_untyped_decorators = true
 module = [
     "UnityPy.*",
     "jsonschema.*",
+    "PIL",
 ]
 ignore_missing_imports = true

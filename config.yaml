@@ -45,10 +45,16 @@ assets:
       - container: /resources/images/icon/
     isMultiLocale: true
 
-  - task: Unit image
+  - task: Unit Image
     name: images/outgame/unitdetail/(amulet|chara|dragon)
     type: Texture2D
     filter:
       - container: /resources/images/outgame/unitdetail
+
+  - task: Story Image
+    name: emotion/story
+    type: Texture2D-Story
+    filter:
+      - container: /resources/emotion/story
 
 raw: [ ]
