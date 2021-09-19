@@ -19,7 +19,10 @@ def export_from_manifest(env: Environment, locale: Locale, entries: list["Manife
     """Export the asset of ``entry`` according to ``task``."""
     log("INFO", f"Exporting ({len(entries)}) {entries[0].name}...")
     asset_paths = get_asset_paths(env, entries)
-    export_asset(asset_paths, task.types, env.config.paths.export_asset_dir_of_locale(locale), filters=task.conditions)
+    export_asset(
+        asset_paths, task.types, env.config.paths.export_asset_dir_of_locale(locale),
+        filters=task.conditions, suppress_no_export=task.suppress_nothing_to_export
+    )
 
 
 def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> None:

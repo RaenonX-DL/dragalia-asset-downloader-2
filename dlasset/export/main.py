@@ -114,7 +114,8 @@ def export_asset(
         asset_paths: list[str],
         export_type: ExportType,
         export_dir: str, /,
-        filters: Optional[Sequence[AssetTaskFilter]] = None
+        filters: Optional[Sequence[AssetTaskFilter]] = None,
+        suppress_no_export: bool = False,
 ) -> Optional[list[ExportReturn]]:
     """
     Export the asset from ``asset_paths`` with the given criteria to ``export_dir`` and get the exported data.
@@ -128,7 +129,7 @@ def export_asset(
 
     log_asset_export_debug_info(asset_paths, export_type, export_dir)
 
-    if not any(asset.objects for asset in assets):
+    if not any(asset.objects for asset in assets) and not suppress_no_export:
         log("WARNING", f"Nothing exportable for the asset: {asset_name_main}")
         return None
 
@@ -136,7 +137,7 @@ def export_asset(
 
     objects_to_export = get_objects_to_export(assets, export_type, filters=filters)
 
-    if not objects_to_export:
+    if not objects_to_export and not suppress_no_export:
         log("WARNING", f"Nothing to export for the asset: {asset_name_main}")
         return None
 

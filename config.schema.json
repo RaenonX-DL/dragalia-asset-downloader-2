@@ -96,6 +96,11 @@
             "type": "boolean",
             "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
             "default": false
+          },
+          "suppressNothingToExport": {
+            "type": "boolean",
+            "description": "If true, the warning of 'nothing to export' will not emit for this task.",
+            "default": false
           }
         },
         "required": [

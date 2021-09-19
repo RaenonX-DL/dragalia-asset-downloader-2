@@ -17,11 +17,13 @@ class AssetTaskBase(ConfigBase, ABC):
     name: str = field(init=False)
     asset_regex: Pattern = field(init=False)
     is_multi_locale: bool = field(init=False)
+    suppress_nothing_to_export: bool = field(init=False)
 
     def __post_init__(self) -> None:
         self.name = cast(str, self.json_obj["task"])
         self.asset_regex = re.compile(self.json_obj["name"])
         self.is_multi_locale = cast(bool, self.json_obj.get("isMultiLocale", False))
+        self.suppress_nothing_to_export = cast(bool, self.json_obj.get("suppressNothingToExport", False))
 
     @property
     def title(self) -> str:
