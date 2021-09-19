@@ -1,10 +1,9 @@
 """Main functions for logging."""
-import logging
 import os
 import time
 from typing import Any, Optional, cast
 
-from .const import COLOR_RESET, LOG_LEVEL_COLOR, LOG_LEVEL_NUM, LogLevel
+from .const import COLOR_RESET, LOGGER_CONSOLE, LOGGER_FILE, LOG_LEVEL_COLOR, LOG_LEVEL_NUM, LogLevel
 
 __all__ = ("log", "log_group_start", "log_group_end")
 
@@ -15,7 +14,10 @@ _GROUP_CURRENT_NAME: Optional[str] = None
 
 def log(level: LogLevel, message: Any) -> None:
     """Log ``message`` at ``level``."""
-    logging.log(LOG_LEVEL_NUM[level], "%s%s%s", LOG_LEVEL_COLOR[level], message, COLOR_RESET)
+    log_level = LOG_LEVEL_NUM[level]
+
+    LOGGER_CONSOLE.log(log_level, "%s%s%s", LOG_LEVEL_COLOR[level], message, COLOR_RESET)
+    LOGGER_FILE.log(log_level, message)
 
 
 def log_group_start(name: str) -> None:

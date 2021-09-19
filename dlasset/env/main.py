@@ -1,12 +1,11 @@
 """Implementations for initializing the environment."""
-import logging
 import os.path
 from dataclasses import dataclass, field
 
 from dlasset.config import Config
 from dlasset.const import MANIFEST_NAMES
 from dlasset.enums import Locale
-from dlasset.log import PIDFileHandler, log, log_group_end, log_group_start
+from dlasset.log import init_log, log, log_group_end, log_group_start
 from .args import CliArgs
 from .index import FileIndex
 
@@ -65,7 +64,7 @@ class Environment:
 
     def prepare_logging(self) -> None:
         """Prepare logging factory."""
-        logging.getLogger().addHandler(PIDFileHandler(self.config.paths.log))
+        init_log(self.config.paths.log)
 
 
 def init_env(args: CliArgs, config: Config) -> Environment:

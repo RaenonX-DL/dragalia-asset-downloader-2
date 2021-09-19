@@ -27,7 +27,7 @@ class Paths(ConfigBase):
         self.export = cast(str, os.path.normpath(self.json_obj["export"]))
         self.index = cast(str, os.path.normpath(self.json_obj["index"]))
 
-        today = datetime.today().strftime("%Y-%m-%d")
+        today = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         self.log = cast(str, os.path.normpath(os.path.join(self.json_obj["log"], today)))
 
     def export_asset_dir_of_locale(self, locale: Locale) -> str:

@@ -1,9 +1,16 @@
 """Constants about logging."""
+import logging
 from typing import Literal
 
-__all__ = ("LogLevel", "LOG_LEVEL_NUM", "LOG_LEVEL_COLOR", "COLOR_RESET")
+__all__ = ("LogLevel", "LOG_LEVEL_NUM", "LOG_LEVEL_COLOR", "COLOR_RESET", "LOGGER_CONSOLE", "LOGGER_FILE")
 
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+
+LOGGER_CONSOLE = logging.getLogger("console")
+LOGGER_CONSOLE.propagate = False  # Console message will have ANSI colors, which is not desired for files
+
+LOGGER_FILE = logging.getLogger("file")
+LOGGER_FILE.propagate = True
 
 LOG_LEVEL_NUM: dict[LogLevel, int] = {
     "CRITICAL": 50,
