@@ -3,7 +3,7 @@ import os
 import time
 from typing import Any, Optional, cast
 
-from .const import COLOR_RESET, LOGGER_CONSOLE, LOGGER_FILE, LOG_LEVEL_COLOR, LOG_LEVEL_NUM, LogLevel
+from .const import COLOR_RESET, LOGGER_CONSOLE, LOGGER_ERROR, LOGGER_FILE, LOG_LEVEL_COLOR, LOG_LEVEL_NUM, LogLevel
 
 __all__ = ("log", "log_group_start", "log_group_end")
 
@@ -18,6 +18,9 @@ def log(level: LogLevel, message: Any, /, exc_info: bool = False) -> None:
 
     LOGGER_CONSOLE.log(log_level, "%s%s%s", LOG_LEVEL_COLOR[level], message, COLOR_RESET, exc_info=exc_info)
     LOGGER_FILE.log(log_level, message, exc_info=exc_info)
+
+    if log_level >= LOG_LEVEL_NUM["ERROR"]:
+        LOGGER_ERROR.error(message, exc_info=exc_info)
 
 
 def log_group_start(name: str) -> None:

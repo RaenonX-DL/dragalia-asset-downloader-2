@@ -1,5 +1,6 @@
 """Implementations for initializing the logging factory."""
 import logging
+import os.path
 import sys
 
 from .const import LOGGER_CONSOLE
@@ -33,3 +34,11 @@ def init_log(log_dir: str) -> None:
 
     # Log everything to PID log file
     logging.getLogger().addHandler(pid_handler)
+
+    # Log error to a specific file
+    file_handler = logging.FileHandler(os.path.join(log_dir, "error.log"))
+    file_handler.setLevel(logging.ERROR)
+    file_handler.setFormatter(default_formatter)
+
+    # Log error to the specific file
+    logging.getLogger().addHandler(file_handler)
