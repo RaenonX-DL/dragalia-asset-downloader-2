@@ -1,8 +1,11 @@
 """Main implementations for managing the assets."""
 import os.path
+from functools import lru_cache
 from typing import TYPE_CHECKING
 
+import UnityPy
 import requests
+from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.env import Environment
 from .utils import get_asset_url
@@ -10,7 +13,7 @@ from .utils import get_asset_url
 if TYPE_CHECKING:
     from dlasset.manifest import ManifestEntry
 
-__all__ = ("get_asset_paths",)
+__all__ = ("get_asset_paths", "get_asset")
 
 
 def download_asset(asset_hash_dir: str, asset_target_path: str, entry: "ManifestEntry") -> None:
@@ -39,3 +42,9 @@ def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> list[st
         asset_paths.append(asset_target_path)
 
     return asset_paths
+
+
+@lru_cache(maxsize=100)
+def get_asset(asset_path: str) -> UnityAsset:
+    """Get the unity asset at ``asset_path``."""
+    return UnityPy.load(asset_path)

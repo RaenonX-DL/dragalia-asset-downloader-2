@@ -2,11 +2,11 @@
 import os
 from typing import Optional, Sequence
 
-import UnityPy
 from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.config import AssetTaskFilter, ExportType
 from dlasset.log import log
+from dlasset.manage import get_asset
 from .lookup import EXPORT_FUNCTIONS, TYPES_TO_INCLUDE
 from .model import ExportInfo, ObjectInfo
 from .types import ExportReturn
@@ -121,7 +121,7 @@ def export_asset(
 
     Returns ``None`` if nothing exportable or exported.
     """
-    assets = [UnityPy.load(asset_path) for asset_path in asset_paths]
+    assets = [get_asset(asset_path) for asset_path in asset_paths]
 
     asset_path_main = asset_paths[0]
     asset_name_main = os.path.basename(asset_path_main)
