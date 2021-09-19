@@ -1,7 +1,7 @@
 """Workflows for processing the assets."""
 from .config import load_config
 from .env import Environment, get_cli_args, init_env
-from .export import export_by_task
+from .export import export_by_task, export_raw_by_task
 from .manifest import Manifest, decrypt_manifest_all_locale, download_manifest_all_locale, export_manifest_all_locale
 
 __all__ = ("initialize", "process_manifest", "export_assets")
@@ -27,5 +27,8 @@ def process_manifest(env: Environment) -> Manifest:
 
 def export_assets(env: Environment, manifest: Manifest) -> None:
     """Perform asset exporting tasks in the config."""
-    for task in env.config.asset_tasks:
-        export_by_task(env, manifest, task)
+    for asset_task in env.config.asset_tasks:
+        export_by_task(env, manifest, asset_task)
+
+    for raw_task in env.config.raw_tasks:
+        export_raw_by_task(env, manifest, raw_task)

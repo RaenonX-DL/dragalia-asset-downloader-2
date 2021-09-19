@@ -10,6 +10,7 @@ assets:
       - MonoBehaviour
     filter:
       - container: /resources/master/
+
   - task: Master assets (text label)
     name: master
     types:
@@ -18,6 +19,4 @@ assets:
       - container: /resources/master/textlabel.asset
     isMultiLocale: true
 
-raw:
-  - task: Audio assets
-    name: .*(acb|awb)
+raw: []

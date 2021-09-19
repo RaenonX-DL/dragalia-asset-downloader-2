@@ -5,7 +5,7 @@ from typing import Callable, Generator, Iterable, Pattern, TypeVar
 
 from dlasset.enums import Locale
 from dlasset.export import MonoBehaviourTree
-from .entry import ManifestEntry, ManifestEntryBase
+from .entry import ManifestEntry, ManifestEntryBase, ManifestRawEntry
 from .locale import ManifestLocale
 
 __all__ = ("Manifest",)
@@ -56,7 +56,7 @@ class Manifest:
     def get_raw_entry_with_regex(
             self, regex: Pattern, *,
             is_master_only: bool
-    ) -> Generator[tuple[Locale, ManifestEntry], None, None]:
+    ) -> Generator[tuple[Locale, ManifestRawEntry], None, None]:
         """Get a generator yielding the manifest entry with its name matching ``regex``."""
         return self.get_manifest_locale(
             regex, lambda manifest: manifest.raw_assets,

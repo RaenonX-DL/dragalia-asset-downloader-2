@@ -100,7 +100,6 @@
         ],
         "additionalProperties": false
       },
-      "minItems": 1,
       "uniqueItems": true
     },
     "raw": {
@@ -130,7 +129,6 @@
         ],
         "additionalProperties": false
       },
-      "minItems": 1,
       "uniqueItems": true
     }
   },
