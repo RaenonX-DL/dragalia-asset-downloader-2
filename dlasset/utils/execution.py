@@ -37,7 +37,10 @@ def concurrent_run(
             args: Sequence[Any]
     ) -> Callable[[Future], None]:
         def inner(future: Future) -> None:
-            results[key_of_call(*args)] = future.result()
+            try:
+                results[key_of_call(*args)] = future.result()
+            except Exception as ex:
+                log("ERROR", ex, exc_info=True)
 
         return inner
 

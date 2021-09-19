@@ -12,12 +12,12 @@ _GROUP_START_TIME: Optional[float] = None
 _GROUP_CURRENT_NAME: Optional[str] = None
 
 
-def log(level: LogLevel, message: Any) -> None:
+def log(level: LogLevel, message: Any, /, exc_info: bool = False) -> None:
     """Log ``message`` at ``level``."""
     log_level = LOG_LEVEL_NUM[level]
 
-    LOGGER_CONSOLE.log(log_level, "%s%s%s", LOG_LEVEL_COLOR[level], message, COLOR_RESET)
-    LOGGER_FILE.log(log_level, message)
+    LOGGER_CONSOLE.log(log_level, "%s%s%s", LOG_LEVEL_COLOR[level], message, COLOR_RESET, exc_info=exc_info)
+    LOGGER_FILE.log(log_level, message, exc_info=exc_info)
 
 
 def log_group_start(name: str) -> None:
