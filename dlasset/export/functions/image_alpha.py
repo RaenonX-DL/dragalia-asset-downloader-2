@@ -32,8 +32,6 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
     path_id_main = texture_envs["_MainTex"]["m_Texture"]["m_PathID"]
 
     info_main = export_info.get_obj_info(path_id_main)
-
-    obj_alpha = export_info.get_obj_info(path_id_alpha).obj
     obj_main = info_main.obj
 
     log("INFO", f"Exporting {obj_main.name}... ({info_main.container})")
@@ -42,7 +40,12 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
 
     log("DEBUG", f"Merging alpha channel of {obj_main.name}... ({info_main.container})")
 
-    r, g, b = obj_main.image.split()[:3]
-    a = obj_alpha.image.split()[3]
-
-    Image.merge("RGBA", (r, g, b, a)).save(export_path)
+    obj_alpha = export_info.get_obj_info(path_id_alpha).obj if path_id_alpha else None
+    if obj_alpha:
+        # Alpha texture exists, merge image
+        r, g, b = obj_main.image.split()[:3]
+        a = obj_alpha.image.split()[3]
+        Image.merge("RGBA", (r, g, b, a)).save(export_path)
+    else:
+        # Alpha texture does not exist, just save it
+        obj_main.image.save(export_path)
