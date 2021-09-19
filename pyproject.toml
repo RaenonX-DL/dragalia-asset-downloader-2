@@ -15,13 +15,15 @@ docstring-quote = "double"
 # - T:        for TypeVar
 # - f:        file stream name
 # - i, j, k:  for loops
+# - K:        type variable name for "K"ey
 # - s:        represents "string"
 # - v:        represents "value"
+# - R:        type variable name for "R"eturn
 # - iv:       "iv" for crypto
 # - dt, tz:   datetime handling (dt for datetime, tz for timezone)
 # - ex:       var name of exception caught by try..except
 # - fn:       represents a function
-good-names = "_,T,f,i,j,k,s,v,iv,dt,ex,fn,tz"
+good-names = "_,T,f,i,j,K,k,s,v,R,iv,dt,ex,fn,tz"
 
 [tool.pylint.FORMAT]
 max-line-length = 119
