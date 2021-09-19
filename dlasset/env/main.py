@@ -39,8 +39,11 @@ class Environment:
     def print_info(self) -> None:
         """Print the info about the current environment."""
         log_group_start("Environment info")
+        log("INFO", f"External library directory: {self.config.paths.lib}")
+        log("INFO", "-" * 20)
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
         log("INFO", f"Downloaded assets directory: {self.assets_dir}")
+        log("INFO", f"Exported assets directory: {self.config.paths.export}")
         log_group_end()
 
 
@@ -54,6 +57,8 @@ def init_env(args: CliArgs, config: Config) -> Environment:
     os.makedirs(env.manifest_asset_dir, exist_ok=True)
     log("INFO", "Making directory for assets...")
     os.makedirs(env.assets_dir, exist_ok=True)
+    log("INFO", "Making directory for export...")
+    os.makedirs(env.config.paths.export, exist_ok=True)
 
     log_group_end()
 
