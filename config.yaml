@@ -39,7 +39,7 @@ assets:
 #
 #  - task: Icons
 #    name: images/icon/
-#    type: Texture2D
+#    type: Texture2D-Alpha
 #    filter:
 #      - container: /resources/images/icon/
 #    isMultiLocale: true

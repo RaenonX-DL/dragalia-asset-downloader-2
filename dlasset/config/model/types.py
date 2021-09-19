@@ -11,5 +11,6 @@ ExportType = Literal[
     "AnimatorController",
     "AnimatorOverrideController",
     "Texture2D",
+    "Texture2D-Alpha",
     "Sprite"
 ]

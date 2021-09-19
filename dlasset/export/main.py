@@ -36,6 +36,32 @@ def export_object(
     return EXPORT_FUNCTIONS[obj.type.name](obj, export_dir)
 
 
+def get_objects_to_export(
+        asset_path: str, objects: list[Object], export_type: ExportType, /,
+        filters: Optional[Sequence[AssetTaskFilter]] = None
+) -> list[Object]:
+    """Get a list of asset objects to export."""
+    objects_to_export: list[Object] = []
+    objects_count = len(objects)
+
+    for obj in objects:
+        # DON'T use `!=` because this is using `__eq__` override for comparison
+        # `__ne__` is not properly overridden
+        if obj.type not in (export_type,):
+            continue
+
+        if filters:
+            if not obj.container:
+                log("CRITICAL", f"Object {obj.name} of {asset_path} does not have container")
+            elif any(filter_.match_container(obj.container) for filter_ in filters):
+                continue
+
+        objects_to_export.append(obj)
+
+    log("INFO", f"{len(objects_to_export)} out of {objects_count} objects to export.")
+    return objects_to_export
+
+
 def export_asset(
         asset_stream: BinaryIO,
         export_type: ExportType,
@@ -61,22 +87,7 @@ def export_asset(
         log("WARNING", f"Nothing exportable for the asset: {asset_name}")
         return []
 
-    objects_to_export: list[Object] = []
-    objects_count = len(objects)
-
-    for obj in objects:
-        # DON'T use `!=` because this is using `__eq__` override for comparison
-        # `__ne__` is not properly overridden
-        if obj.type not in (export_type,):
-            continue
-
-        if filters and not any(filter_.match_container(obj.container) for filter_ in filters):
-            continue
-
-        objects_to_export.append(obj)
-
-    log("INFO", f"{len(objects_to_export)} out of {objects_count} objects to export.")
-
+    objects_to_export = get_objects_to_export(asset_path, objects, export_type)
     exported: list[ExportReturn] = []
 
     for obj in objects_to_export:
