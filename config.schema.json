@@ -7,6 +7,7 @@
   "properties": {
     "paths": {
       "type": "object",
+      "description": "Various I/O paths.",
       "properties": {
         "downloaded": {
           "type": "string",
@@ -25,10 +26,82 @@
         "downloaded",
         "lib",
         "export"
-      ]
+      ],
+      "additionalProperties": false
+    },
+    "assets": {
+      "type": "array",
+      "description": "Asset exporting tasks.",
+      "items": {
+        "type": "object",
+        "description": "A single asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Name of the asset download task."
+          },
+          "name": {
+            "type": "string",
+            "description": "Regex of the asset name to export."
+          },
+          "types": {
+            "type": "array",
+            "description": "Type of the object to export.",
+            "items": {
+              "type": "string",
+              "description": "Name of the object type. Check the documentation of `UnityPy` for its name. This schema does not include all supported object types.",
+              "enum": [
+                "MonoBehaviour",
+                "GameObject",
+                "AnimatorController",
+                "AnimatorOverrideController",
+                "Texture2D",
+                "Sprite"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "filter": {
+            "type": "array",
+            "description": "Export the objects that pass one of these filters and all the conditions of a filter.",
+            "items": {
+              "type": "object",
+              "description": "A single filter. Objects that pass all conditions of a filter will be exported.",
+              "properties": {
+                "container": {
+                  "type": "string",
+                  "description": "Regex test for the container name."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Regex test for the object name."
+                }
+              },
+              "required": [
+                "container"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "task",
+          "name",
+          "types",
+          "filter"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
     }
   },
   "required": [
-    "paths"
-  ]
+    "paths",
+    "assets"
+  ],
+  "additionalProperties": false
 }

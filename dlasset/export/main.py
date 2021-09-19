@@ -4,9 +4,10 @@ from typing import Any, Sequence
 
 import UnityPy
 
+from dlasset.config import ObjectType
 from dlasset.log import log
 from .lookup import EXPORT_FUNCTIONS
-from .types import ExportReturn, ObjectType
+from .types import ExportReturn
 
 __all__ = ("export_asset",)
 

@@ -2,3 +2,11 @@ paths:
   downloaded: .exclude/downloaded
   lib: lib
   export: .exclude/media
+
+assets:
+  - task: Master assets
+    name: master
+    types:
+      - MonoBehaviour
+    filter:
+      - container: /resources/master/

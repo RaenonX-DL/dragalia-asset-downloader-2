@@ -6,7 +6,8 @@ from typing import Any
 __all__ = ("JsonModel",)
 
 
-@dataclass
+# https://github.com/python/mypy/issues/5374
+@dataclass  # type: ignore
 class JsonModel(ABC):
     """A data class that is based on a json object."""
 
