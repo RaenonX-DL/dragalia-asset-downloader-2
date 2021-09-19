@@ -15,6 +15,6 @@ EXPORT_FUNCTIONS: dict[ExportType, ExportFunction] = {
 TYPES_TO_INCLUDE: dict[ExportType, tuple[UnityType, ...]] = {
     "MonoBehaviour": ("MonoBehaviour",),
     "Texture2D": ("Texture2D",),
-    "Texture2D-Alpha": ("Texture2D",),
+    "Texture2D-Alpha": ("Texture2D", "Material"),
     "Sprite": ("Sprite",)
 }
