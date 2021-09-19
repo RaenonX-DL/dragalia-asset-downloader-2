@@ -1,23 +1,15 @@
 """Type definitions for exporting the assets."""
-from typing import Any, Callable, Optional, Sequence, Union
+from typing import Any, Callable, Optional, Union
 
-from UnityPy.environment import Environment as UnityAsset
-
-from dlasset.config import AssetTaskFilter
+from .model import ExportInfo
 
 __all__ = ("ExportFunction", "ExportReturn", "MonoBehaviourTree")
 
 MonoBehaviourTree = dict[Any, Any]
 
-MonoBehaviourExportFunction = Callable[
-    [UnityAsset, str, Optional[Sequence[AssetTaskFilter]]],
-    list[MonoBehaviourTree]
-]
+MonoBehaviourExportFunction = Callable[[ExportInfo], Optional[MonoBehaviourTree]]
 
-Texture2DExportFunction = Callable[
-    [UnityAsset, str, Optional[Sequence[AssetTaskFilter]]],
-    None
-]
+Texture2DExportFunction = Callable[[ExportInfo], None]
 
 ExportFunction = Union[
     MonoBehaviourExportFunction,
@@ -25,6 +17,5 @@ ExportFunction = Union[
 ]
 
 ExportReturn = Union[
-    list[MonoBehaviourTree],
-    None
+    MonoBehaviourTree
 ]

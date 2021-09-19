@@ -57,6 +57,10 @@ class AssetTaskFilter(ConfigBase):
         """Check if the given ``container`` matches the filter."""
         return bool(re.search(self.container_regex, container))
 
+    def match_filter(self, container: str, name: str) -> bool:
+        """Check if both the given ``container`` and ``name`` match the filter."""
+        return self.match_container(container) and self.match_name(name)
+
 
 @dataclass
 class AssetTask(AssetTaskBase):

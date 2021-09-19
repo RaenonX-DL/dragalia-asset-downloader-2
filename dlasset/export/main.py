@@ -1,18 +1,66 @@
 """Implementations to export files from an Unity asset."""
 import os
-from typing import BinaryIO, Optional, Sequence, TypeVar
+from collections import Counter
+from typing import BinaryIO, Optional, Sequence
 
 import UnityPy
-from UnityPy.classes import Object
+from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.config import AssetTaskFilter, ExportType
 from dlasset.log import log
-from .lookup import EXPORT_FUNCTIONS
+from .lookup import EXPORT_FUNCTIONS, TYPES_TO_INCLUDE
+from .model import ExportInfo
 from .types import ExportReturn
 
 __all__ = ("export_asset",)
 
-T = TypeVar("T", bound=Object)
+
+def get_export_info_list(
+        asset: UnityAsset, export_type: ExportType, export_dir: str, /,
+        filters: Optional[Sequence[AssetTaskFilter]] = None
+) -> list[ExportInfo]:
+    """Get the info of the objects in ``asset`` to export."""
+    export_info: list[ExportInfo] = []
+
+    container_fallback: str = Counter(asset.container.keys()).most_common(1)[0][0]
+
+    for obj in asset.objects:
+        # `__ne__` not properly overridden, so `!=` doesn't work
+        if obj.type not in TYPES_TO_INCLUDE[export_type]:
+            continue
+
+        container = obj.container or container_fallback
+        if filters and not any(filter_.match_container(container) for filter_ in filters):
+            continue
+
+        export_info.append(ExportInfo(export_dir=export_dir, obj=obj, container=container))
+
+    return export_info
+
+
+def export_objects(
+        export_info_list: list[ExportInfo], export_type: ExportType, /,
+        filters: Optional[Sequence[AssetTaskFilter]] = None
+) -> list[ExportReturn]:
+    """Export the objects in ``export_info_list``."""
+    results: list[ExportReturn] = []
+    for export_info in export_info_list:
+        obj = export_info.read_obj()
+
+        if filters and not any(filter_.match_filter(export_info.container, obj.name) for filter_ in filters):
+            continue
+
+        log("INFO", f"Exporting {obj.name}...")
+
+        result = EXPORT_FUNCTIONS[export_type](export_info)
+        if result is None:
+            # Not to include ``None`` in the result array
+            # - Explicit check to include falsy values like empty array
+            continue
+
+        results.append(result)
+
+    return results
 
 
 def export_asset(
@@ -20,7 +68,7 @@ def export_asset(
         export_type: ExportType,
         export_dir: str, /,
         filters: Optional[Sequence[AssetTaskFilter]] = None
-) -> Optional[ExportReturn]:
+) -> Optional[list[ExportReturn]]:
     """
     Export the unity asset with the given criteria to ``export_dir`` and get the exported data.
 
@@ -40,10 +88,16 @@ def export_asset(
         log("WARNING", f"Nothing exportable for the asset: {asset_name}")
         return None
 
-    log("INFO", f"{len(objects)} objects at max to export.")
+    log("INFO", "Getting objects to export...")
+    export_info_list = get_export_info_list(asset, export_type, export_dir, filters=filters)
+    if not export_info_list:
+        log("INFO", f"Nothing to export for the asset: {asset_name}")
+        return None
 
-    exported: ExportReturn = EXPORT_FUNCTIONS[export_type](asset, export_dir, filters)
+    log("INFO", f"Found {len(export_info_list)} out of {len(objects)} exportable objects.")
+
+    results: list[ExportReturn] = export_objects(export_info_list, export_type, filters=filters)
 
     log("INFO", f"Done exporting {asset_name} to {export_dir}")
 
-    return exported
+    return results
