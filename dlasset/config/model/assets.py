@@ -34,3 +34,8 @@ class AssetTask(ConfigBase):
         self.asset_regex = cast(str, self.json_obj["name"])
         self.types = cast(tuple[ObjectType], tuple(self.json_obj["types"]))
         self.conditions = tuple(AssetTaskFilter(filter_) for filter_ in self.json_obj["filter"])
+
+    @property
+    def title(self) -> str:
+        """Get a string containg some info of this task."""
+        return f"{self.name} ({self.asset_regex})"

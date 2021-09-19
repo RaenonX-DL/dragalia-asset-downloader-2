@@ -1,18 +1,18 @@
 """Manifest file model classes."""
+import re
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Generator
 
 from dlasset.enums import Locale
 from dlasset.export import MonoBehaviourTree
+from dlasset.model import JsonModel
 
-__all__ = ("Manifest", "ManifestLocale")
+__all__ = ("Manifest", "ManifestLocale", "ManifestEntry")
 
 
 @dataclass
-class ManifestEntry:
+class ManifestEntry(JsonModel):
     """Manifest entry model."""
-
-    data: dict[Any, Any]
 
     name: str = field(init=False)
     hash: str = field(init=False)
@@ -22,38 +22,39 @@ class ManifestEntry:
     assets: list[str] = field(init=False)
 
     def __post_init__(self) -> None:
-        self.name = self.data["name"]
-        self.hash = self.data["hash"]
-        self.dependencies = self.data["dependencies"]
-        self.size = self.data["size"]
-        self.group = self.data["group"]
-        self.assets = self.data["assets"]
+        self.name = self.json_obj["name"]
+        self.hash = self.json_obj["hash"]
+        self.dependencies = self.json_obj["dependencies"]
+        self.size = self.json_obj["size"]
+        self.group = self.json_obj["group"]
+        self.assets = self.json_obj["assets"]
 
 
 @dataclass
-class ManifestCategory:
+class ManifestCategory(JsonModel):
     """Manifest category model."""
 
-    data: dict[Any, Any]
-
     name: str = field(init=False)
-    assets: list[ManifestEntry] = field(init=False)
+    assets: tuple[ManifestEntry, ...] = field(init=False)
 
     def __post_init__(self) -> None:
-        self.name = self.data["name"]
-        self.assets = self.data["assets"]
+        self.name = self.json_obj["name"]
+        self.assets = tuple(ManifestEntry(entry) for entry in self.json_obj["assets"])
 
 
 @dataclass
-class ManifestLocale:
+class ManifestLocale(JsonModel):
     """Manifest model of a locale."""
 
-    data: MonoBehaviourTree
-
-    categories: list[ManifestCategory] = field(init=False)
+    categories: tuple[ManifestCategory, ...] = field(init=False)
 
     def __post_init__(self) -> None:
-        self.categories = self.data["categories"]
+        self.categories = tuple(ManifestCategory(category) for category in self.json_obj["categories"])
+
+    @property
+    def entries_across_locale(self) -> Generator[ManifestEntry, None, None]:
+        """Get a generator yielding the manifest entries across categories."""
+        return (asset for category in self.categories for asset in category.assets)
 
 
 @dataclass
@@ -66,3 +67,12 @@ class Manifest:
 
     def __post_init__(self) -> None:
         self.manifests = {locale: ManifestLocale(manifest) for locale, manifest in self.data.items()}
+
+    def get_entry_with_regex(self, regex: str) -> Generator[ManifestEntry, None, None]:
+        """Get the generator yielding the manifest entry with its name matching ``regex``."""
+        for manifest_of_locale in self.manifests.values():
+            for entry in manifest_of_locale.entries_across_locale:
+                if not re.match(regex, entry.name):
+                    continue
+
+                yield entry
