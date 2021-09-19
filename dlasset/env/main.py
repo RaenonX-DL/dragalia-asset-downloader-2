@@ -1,12 +1,13 @@
 """Implementations for initializing the environment."""
 import os.path
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from dlasset.config import Config
 from dlasset.const import MANIFEST_NAMES
 from dlasset.enums import Locale
 from dlasset.log import log, log_group_end, log_group_start
 from .args import CliArgs
+from .index import FileIndex
 
 __all__ = ("init_env", "Environment")
 
@@ -17,6 +18,11 @@ class Environment:
 
     args: CliArgs
     config: Config
+
+    index: FileIndex = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.index = FileIndex(self.config.paths.index)
 
     def manifest_asset_path_of_locale(self, locale: Locale) -> str:
         """Get the manifest asset path of ``locale``."""
@@ -44,6 +50,7 @@ class Environment:
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
         log("INFO", f"Downloaded assets directory: {self.downloaded_assets_dir}")
         log("INFO", f"Exported files directory: {self.config.paths.export}")
+        log("INFO", f"File index directory: {self.config.paths.index}")
         log_group_end()
 
 
@@ -59,6 +66,8 @@ def init_env(args: CliArgs, config: Config) -> Environment:
     os.makedirs(env.downloaded_assets_dir, exist_ok=True)
     log("INFO", "Making directory for export...")
     os.makedirs(env.config.paths.export, exist_ok=True)
+    log("INFO", "Making directory for index...")
+    os.makedirs(env.config.paths.index, exist_ok=True)
 
     log_group_end()
 

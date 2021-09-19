@@ -30,5 +30,8 @@ def export_assets(env: Environment, manifest: Manifest) -> None:
     for asset_task in env.config.asset_tasks:
         export_by_task(env, manifest, asset_task)
 
+        # Update index file per task
+        env.index.update_index_files()
+
     for raw_task in env.config.raw_tasks:
         export_raw_by_task(env, manifest, raw_task)

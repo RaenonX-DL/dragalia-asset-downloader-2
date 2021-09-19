@@ -5,50 +5,50 @@ paths:
   index: .exclude/index
 
 assets:
-  - task: Master Assets (all)
-    name: master
-    types:
-      - MonoBehaviour
-    filter:
-      - container: /resources/master/
+#  - task: Master Assets (all)
+#    name: master
+#    types:
+#      - MonoBehaviour
+#    filter:
+#      - container: /resources/master/
 
-  - task: Master Assets (text label)
-    name: master
-    types:
-      - MonoBehaviour
-    filter:
-      - container: /resources/master/textlabel.asset
-    isMultiLocale: true
+#  - task: Master Assets (text label)
+#    name: master
+#    types:
+#      - MonoBehaviour
+#    filter:
+#      - container: /resources/master/textlabel.asset
+#    isMultiLocale: true
 
-  - task: Action Scripts
-    name: actions
-    types:
-      - GameObject
-    filter:
-      - container: /resources/actions/
-
-  - task: Action Parts List
-    name: actions
-    types:
-      - MonoBehaviour
-    filter:
-      - container: /resources/actions/actionpartslist.asset
-
-  - task: UI Sprites
-    name: images/ingame/ui
-    types:
-      - Sprite
-    filter:
-      - container: /resources/images/ingame/ui/atlas/ui.png
-    isMultiLocale: true
-
-  - task: Icons
-    name: images/icon/
-    types:
-      - Texture2D
-    filter:
-      - container: /resources/images/icon/
-    isMultiLocale: true
+#  - task: Action Scripts
+#    name: actions
+#    types:
+#      - GameObject
+#    filter:
+#      - container: /resources/actions/
+#
+#  - task: Action Parts List
+#    name: actions
+#    types:
+#      - MonoBehaviour
+#    filter:
+#      - container: /resources/actions/actionpartslist.asset
+#
+#  - task: UI Sprites
+#    name: images/ingame/ui
+#    types:
+#      - Sprite
+#    filter:
+#      - container: /resources/images/ingame/ui/atlas/ui.png
+#    isMultiLocale: true
+#
+#  - task: Icons
+#    name: images/icon/
+#    types:
+#      - Texture2D
+#    filter:
+#      - container: /resources/images/icon/
+#    isMultiLocale: true
 
   - task: Unit image
     name: images/outgame/unitdetail/(amulet|chara|dragon)
