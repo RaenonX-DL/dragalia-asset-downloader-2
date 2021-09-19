@@ -2,11 +2,11 @@
 import os.path
 from dataclasses import dataclass
 
-from dlasset.args import CliArgs
 from dlasset.config import Config
 from dlasset.const import MANIFEST_NAMES
 from dlasset.enums import Locale
 from dlasset.log import log, log_group_end, log_group_start
+from env.args import CliArgs
 
 __all__ = ("init_env", "Environment")
 
