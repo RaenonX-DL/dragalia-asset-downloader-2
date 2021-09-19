@@ -31,10 +31,9 @@ def export_object(
 
     log("INFO", f"Exporting {obj.name}...")
 
-    export_dir_obj = os.path.join(export_dir, os.path.dirname(os.path.normpath(obj.container)))
-    os.makedirs(export_dir_obj, exist_ok=True)
+    os.makedirs(export_dir, exist_ok=True)
 
-    return EXPORT_FUNCTIONS[obj.type.name](obj, export_dir_obj)
+    return EXPORT_FUNCTIONS[obj.type.name](obj, export_dir)
 
 
 def export_asset(

@@ -17,7 +17,8 @@ def export_mono_behaviour(obj: MonoBehaviour, export_dir: str) -> Optional[MonoB
 
     Returns the mono behaviour type tree ``dict`` if exported.
     """
-    export_path: str = os.path.join(export_dir, f"{obj.name}.json")
+    export_dir_obj = os.path.join(export_dir, os.path.dirname(os.path.normpath(obj.container)))
+    export_path: str = os.path.join(export_dir_obj, f"{obj.name}.json")
 
     if not obj.serialized_type.nodes:
         log("WARNING", f"No exportable node for {obj.name}")
