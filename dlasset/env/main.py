@@ -6,7 +6,7 @@ from dlasset.config import Config
 from dlasset.const import MANIFEST_NAMES
 from dlasset.enums import Locale
 from dlasset.log import log, log_group_end, log_group_start
-from env.args import CliArgs
+from .args import CliArgs
 
 __all__ = ("init_env", "Environment")
 
