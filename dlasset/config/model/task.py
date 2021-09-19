@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Pattern, cast
 
 from .base import ConfigBase
-from .types import ObjectType
+from .types import ExportType
 
 __all__ = ("AssetTask", "AssetRawTask", "AssetTaskFilter")
 
@@ -62,13 +62,13 @@ class AssetTaskFilter(ConfigBase):
 class AssetTask(AssetTaskBase):
     """Asset exporting task model."""
 
-    types: tuple[ObjectType, ...] = field(init=False)
+    type: ExportType = field(init=False)
     conditions: tuple[AssetTaskFilter, ...] = field(init=False)
 
     def __post_init__(self) -> None:
         super().__post_init__()
 
-        self.types = cast(tuple[ObjectType], tuple(self.json_obj["types"]))
+        self.types = cast(ExportType, self.json_obj["type"])
         self.conditions = tuple(AssetTaskFilter(filter_) for filter_ in self.json_obj["filter"])
 
 

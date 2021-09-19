@@ -49,23 +49,18 @@
             "type": "string",
             "description": "Regex of the asset name to export. This has to be a full match."
           },
-          "types": {
-            "type": "array",
-            "description": "Type of the object to export.",
-            "items": {
-              "type": "string",
-              "description": "Name of the object type. Check the documentation of `UnityPy` for its name. This schema does not include all supported object types.",
-              "enum": [
-                "MonoBehaviour",
-                "GameObject",
-                "AnimatorController",
-                "AnimatorOverrideController",
-                "Texture2D",
-                "Sprite"
-              ]
-            },
-            "minItems": 1,
-            "uniqueItems": true
+          "type": {
+            "type": "string",
+            "description": "Asset type to export. Not all asset types are supported. Name with `-` has special actions.",
+            "enum": [
+              "MonoBehaviour",
+              "GameObject",
+              "AnimatorController",
+              "AnimatorOverrideController",
+              "Texture2D",
+              "Texture2D-Alpha",
+              "Sprite"
+            ]
           },
           "filter": {
             "type": "array",
@@ -100,7 +95,7 @@
         "required": [
           "task",
           "name",
-          "types",
+          "type",
           "filter"
         ],
         "additionalProperties": false

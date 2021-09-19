@@ -1,4 +1,4 @@
 """Config data model classes."""
 from .main import Config
 from .task import AssetRawTask, AssetTask, AssetTaskFilter
-from .types import ObjectType
+from .types import ExportType

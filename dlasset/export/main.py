@@ -5,7 +5,7 @@ from typing import BinaryIO, Optional, Sequence, TypeVar
 import UnityPy
 from UnityPy.classes import Object
 
-from dlasset.config import AssetTaskFilter, ObjectType
+from dlasset.config import AssetTaskFilter, ExportType
 from dlasset.log import log
 from .lookup import EXPORT_FUNCTIONS
 from .types import ExportReturn
@@ -39,7 +39,7 @@ def export_object(
 
 def export_asset(
         asset_stream: BinaryIO,
-        types_to_export: Sequence[ObjectType],
+        export_type: ExportType,
         export_dir: str, /,
         filters: Optional[Sequence[AssetTaskFilter]] = None
 ) -> list[ExportReturn]:
@@ -54,7 +54,7 @@ def export_asset(
     asset = UnityPy.load(asset_stream)
 
     log("INFO", f"Exporting asset: {asset_path}")
-    log("INFO", f"Object Types: {types_to_export}")
+    log("INFO", f"Export type: {export_type}")
     log("INFO", f"Destination: {export_dir}")
 
     objects = asset.objects
@@ -66,7 +66,9 @@ def export_asset(
     objects_count = len(objects)
 
     for obj in objects:
-        if obj.type not in types_to_export:
+        # DON'T use `!=` because this is using `__eq__` override for comparison
+        # `__ne__` is not properly overridden
+        if obj.type not in (export_type,):
             continue
 
         if filters and not any(filter_.match_container(obj.container) for filter_ in filters):
