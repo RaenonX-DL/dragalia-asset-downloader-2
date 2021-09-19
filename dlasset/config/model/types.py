@@ -14,11 +14,11 @@ UnityType = Literal[
     "Sprite"
 ]
 
-# Should be the same as the listed enums in the config schema
-# Names with `-` are the extended export type for special actions
-ExportType = Union[
-    UnityType,
-    Literal[
-        "Texture2D-Alpha"
-    ],
+# Special types that performs some special actions
+# Names should be in the format of <UNITY_TYPE>-<NAME>.
+ExtendedType = Literal[
+    "Texture2D-Alpha"
 ]
+
+# Should be the same as the listed enums in the config schema
+ExportType = Union[UnityType, ExtendedType]

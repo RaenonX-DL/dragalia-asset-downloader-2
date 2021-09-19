@@ -38,17 +38,17 @@ assets:
   #      - container: /resources/images/ingame/ui/atlas/ui.png
   #    isMultiLocale: true
   #
-  #  - task: Icons
-  #    name: images/icon/
-  #    type: Texture2D-Alpha
-  #    filter:
-  #      - container: /resources/images/icon/
-  #    isMultiLocale: true
-
-  - task: Unit image
-    name: images/outgame/unitdetail/(amulet|chara|dragon)
-    type: Texture2D
+  - task: Icons
+    name: images/icon/
+    type: Texture2D-Alpha
     filter:
-      - container: /resources/images/outgame/unitdetail
+      - container: /resources/images/icon/
+    isMultiLocale: true
+
+#  - task: Unit image
+#    name: images/outgame/unitdetail/(amulet|chara|dragon)
+#    type: Texture2D
+#    filter:
+#      - container: /resources/images/outgame/unitdetail
 
 raw: [ ]
