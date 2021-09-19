@@ -57,9 +57,9 @@ class Environment:
         """Initialize directories."""
         self.config.paths.init_dirs()
 
-        log("INFO", "Making directory for manifest assets...")
+        log("DEBUG", "Making directory for manifest assets...")
         os.makedirs(self.manifest_asset_dir, exist_ok=True)
-        log("INFO", "Making directory for downloaded assets...")
+        log("DEBUG", "Making directory for downloaded assets...")
         os.makedirs(self.downloaded_assets_dir, exist_ok=True)
 
     def prepare_logging(self) -> None:
@@ -72,7 +72,9 @@ def init_env(args: CliArgs, config: Config) -> Environment:
     log_group_start("Environment initialization")
 
     env = Environment(args, config)
+    log("INFO", "Creating directories...")
     env.init_dirs()
+    log("INFO", "Initializing logging...")
     env.prepare_logging()
 
     log_group_end()

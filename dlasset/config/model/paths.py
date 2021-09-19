@@ -39,16 +39,16 @@ class Paths(ConfigBase):
 
     def init_dirs(self) -> None:
         """Initialize directories for output."""
-        log("INFO", "Making directory for downloaded files...")
+        log("DEBUG", "Making directory for downloaded files...")
         os.makedirs(self.downloaded, exist_ok=True)
 
-        log("INFO", "Making directory for exported files...")
+        log("DEBUG", "Making directory for exported files...")
         os.makedirs(self.export, exist_ok=True)
 
-        log("INFO", "Making directory for file index...")
+        log("DEBUG", "Making directory for file index...")
         os.makedirs(self.index, exist_ok=True)
 
-        log("INFO", "Making directory for logs...")
+        log("DEBUG", "Making directory for logs...")
         os.makedirs(self.log, exist_ok=True)
 
     @property

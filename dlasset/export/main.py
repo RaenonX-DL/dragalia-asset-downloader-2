@@ -50,7 +50,7 @@ def export_objects(
         if filters and not any(filter_.match_filter(export_info.container, obj.name) for filter_ in filters):
             continue
 
-        log("INFO", f"Exporting {obj.name}...")
+        log("INFO", f"Exporting {obj.name} ({export_info.container})...")
 
         result = EXPORT_FUNCTIONS[export_type](export_info)
         if result is None:
@@ -79,25 +79,25 @@ def export_asset(
 
     asset = UnityPy.load(asset_stream)
 
-    log("INFO", f"Exporting asset: {asset_path}")
-    log("INFO", f"Export type: {export_type}")
-    log("INFO", f"Destination: {export_dir}")
+    log("DEBUG", f"Exporting asset: {asset_path}")
+    log("DEBUG", f"Export type: {export_type}")
+    log("DEBUG", f"Destination: {export_dir}")
 
     objects = asset.objects
     if not objects:
         log("WARNING", f"Nothing exportable for the asset: {asset_name}")
         return None
 
-    log("INFO", "Getting objects to export...")
+    log("DEBUG", "Getting objects to export...")
     export_info_list = get_export_info_list(asset, export_type, export_dir, filters=filters)
     if not export_info_list:
         log("INFO", f"Nothing to export for the asset: {asset_name}")
         return None
 
-    log("INFO", f"Found {len(export_info_list)} out of {len(objects)} exportable objects.")
+    log("INFO", f"Found {len(export_info_list)} out of {len(objects)} exportable objects ({asset_path}).")
 
     results: list[ExportReturn] = export_objects(export_info_list, export_type, filters=filters)
 
-    log("INFO", f"Done exporting {asset_name} to {export_dir}")
+    log("DEBUG", f"Done exporting {asset_name} to {export_dir}")
 
     return results

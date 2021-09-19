@@ -26,7 +26,7 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
     """Export the assets according to ``task``."""
     log_group_start(task.title)
 
-    log("INFO", f"Types of object to export: {task.types}")
+    log("DEBUG", f"Types of object to export: {task.types}")
 
     log("INFO", "Filtering assets...")
     asset_entries = list(manifest.get_entry_with_regex(task.asset_regex, is_master_only=not task.is_multi_locale))
