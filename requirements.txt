@@ -4,6 +4,9 @@ UnityPy
 # Image processing
 Pillow
 
+# Audio processing
+acb-py
+
 # Config
 pyyaml
 jsonschema

@@ -38,7 +38,7 @@
         "properties": {
           "task": {
             "type": "string",
-            "description": "Name of the asset download task."
+            "description": "Name of the asset exporting task."
           },
           "name": {
             "type": "string",
@@ -102,11 +102,42 @@
       },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "raw": {
+      "type": "array",
+      "description": "Raw asset exporting tasks.",
+      "items": {
+        "type": "object",
+        "description": "A single raw asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Name of the raw asset exporting task."
+          },
+          "name": {
+            "type": "string",
+            "description": "Regex of the asset name to export. This has to be a full match."
+          },
+          "isMultiLocale": {
+            "type": "boolean",
+            "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
+            "default": false
+          }
+        },
+        "required": [
+          "task",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
     }
   },
   "required": [
     "paths",
-    "assets"
+    "assets",
+    "raw"
   ],
   "additionalProperties": false
 }

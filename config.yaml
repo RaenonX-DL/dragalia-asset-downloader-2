@@ -17,3 +17,7 @@ assets:
     filter:
       - container: /resources/master/textlabel.asset
     isMultiLocale: true
+
+raw:
+  - task: Audio assets
+    name: .*(acb|awb)
