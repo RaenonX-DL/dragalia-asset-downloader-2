@@ -1,6 +1,6 @@
 """Implementations to export files from an Unity asset."""
 import os
-from typing import Any, Sequence
+from typing import Any, BinaryIO, Sequence
 
 import UnityPy
 
@@ -12,13 +12,20 @@ from .types import ExportReturn
 __all__ = ("export_asset",)
 
 
-def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_dir: str) -> list[ExportReturn]:
+def export_asset(
+        asset_stream: BinaryIO,
+        types_to_export: Sequence[ObjectType],
+        export_dir: str
+) -> list[ExportReturn]:
     """
     Export the unity asset with the given criteria to ``export_dir`` and get the exported data.
 
     Returns an empty list is nothing exportable.
     """
-    asset = UnityPy.load(asset_path)
+    asset_path = asset_stream.name
+    asset_name = os.path.basename(asset_path)
+
+    asset = UnityPy.load(asset_stream)
 
     log("INFO", f"Exporting asset: {asset_path}")
     log("INFO", f"Object Types: {types_to_export}")
@@ -26,7 +33,7 @@ def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_
 
     objects = asset.objects
     if not objects:
-        log("WARNING", f"Nothing exportable the asset at {asset_path}")
+        log("WARNING", f"Nothing exportable for the asset: {asset_name}")
         return []
 
     exported: list[Any] = []
@@ -39,7 +46,6 @@ def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_
         os.makedirs(export_dir, exist_ok=True)
         exported.append(EXPORT_FUNCTIONS[obj.type.name](obj, export_dir))
 
-    asset_name = os.path.basename(asset_path)
     log("INFO", f"Done exporting {asset_name} to {export_dir}")
 
     return exported
