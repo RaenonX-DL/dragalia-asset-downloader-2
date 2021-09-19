@@ -14,10 +14,17 @@ MonoBehaviourExportFunction = Callable[
     list[MonoBehaviourTree]
 ]
 
+Texture2DExportFunction = Callable[
+    [UnityAsset, str, Optional[Sequence[AssetTaskFilter]]],
+    None
+]
+
 ExportFunction = Union[
-    MonoBehaviourExportFunction
+    MonoBehaviourExportFunction,
+    Texture2DExportFunction
 ]
 
 ExportReturn = Union[
-    list[MonoBehaviourTree]
+    list[MonoBehaviourTree],
+    None
 ]

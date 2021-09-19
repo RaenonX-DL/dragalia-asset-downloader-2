@@ -30,5 +30,3 @@ def export_image(asset: UnityAsset, export_dir: str, filters: Optional[Sequence[
         img.save(export_path)
 
         materials.append(obj)
-
-    return None
