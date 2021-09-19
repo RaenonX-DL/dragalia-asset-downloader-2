@@ -32,9 +32,12 @@ def log_group_start(name: str) -> None:
     _GROUP_CURRENT_NAME = name
 
     if os.environ.get("GITHUB_ACTIONS"):  # Environment variable to indicate that the s
-        print(f"::group::{name}")
+        separator = f"::group::{name}"
     else:
-        print(f"{'-' * 20} {name} {'-' * 20}")
+        separator = f"{'-' * 20} {name} {'-' * 20}"
+
+    print(separator)
+    log("INFO", separator)
 
 
 def log_group_end() -> None:
@@ -47,11 +50,16 @@ def log_group_end() -> None:
     if _GROUP_START_TIME is None:
         raise RuntimeError("Group not started")
 
-    print(f"{_GROUP_CURRENT_NAME} completed in {time.time() - _GROUP_START_TIME:.3f} secs")
+    end_message = f"{_GROUP_CURRENT_NAME} completed in {time.time() - _GROUP_START_TIME:.3f} secs"
+    log("INFO", end_message)
+
     if os.environ.get("GITHUB_ACTIONS"):
-        print("::endgroup::")
+        separator = "::endgroup::"
     else:
-        print("-" * (len(cast(str, _GROUP_CURRENT_NAME)) + 42))
+        separator = "-" * (len(cast(str, _GROUP_CURRENT_NAME)) + 42)
 
     _GROUP_CURRENT_NAME = None
     _GROUP_START_TIME = None
+
+    log("INFO", separator)
+    print(separator)
