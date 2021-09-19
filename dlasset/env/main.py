@@ -43,7 +43,7 @@ class Environment:
         log("INFO", "-" * 20)
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
         log("INFO", f"Downloaded assets directory: {self.assets_dir}")
-        log("INFO", f"Exported assets directory: {self.config.paths.export}")
+        log("INFO", f"Exported files directory: {self.config.paths.export}")
         log_group_end()
 
 

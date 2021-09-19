@@ -22,12 +22,14 @@ class Paths(ConfigBase):
         self.lib = cast(str, os.path.normpath(self.json_obj["lib"]))
         self.export = cast(str, os.path.normpath(self.json_obj["export"]))
 
-    def export_dir_of_locale(self, locale: Locale) -> str:
+    def export_asset_dir_of_locale(self, locale: Locale) -> str:
         """Get the root directory for the exported assets of ``locale``."""
         if locale.is_master:
-            return self.export
+            ret = self.export
+        else:
+            ret = os.path.join(self.export, "localized", locale.value)
 
-        return os.path.join(self.export, "localized", locale.value)
+        return os.path.join(ret, "assets")
 
     @property
     def lib_decrypt_dll_path(self) -> str:
