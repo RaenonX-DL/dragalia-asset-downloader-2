@@ -16,11 +16,13 @@ class Paths(ConfigBase):
     downloaded: str = field(init=False)
     lib: str = field(init=False)
     export: str = field(init=False)
+    index: str = field(init=False)
 
     def __post_init__(self) -> None:
         self.downloaded = cast(str, os.path.normpath(self.json_obj["downloaded"]))
         self.lib = cast(str, os.path.normpath(self.json_obj["lib"]))
         self.export = cast(str, os.path.normpath(self.json_obj["export"]))
+        self.index = cast(str, os.path.normpath(self.json_obj["index"]))
 
     def export_asset_dir_of_locale(self, locale: Locale) -> str:
         """Get the root directory for the exported assets of ``locale``."""

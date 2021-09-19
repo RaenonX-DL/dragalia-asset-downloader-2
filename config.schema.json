@@ -20,12 +20,17 @@
         "export": {
           "type": "string",
           "description": "Root directory for the exported files."
+        },
+        "index": {
+          "type": "string",
+          "description": "Root directory for the indexing files."
         }
       },
       "required": [
         "downloaded",
         "lib",
-        "export"
+        "export",
+        "index"
       ],
       "additionalProperties": false
     },
