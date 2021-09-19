@@ -22,7 +22,7 @@ class Environment:
     index: FileIndex = field(init=False)
 
     def __post_init__(self) -> None:
-        self.index = FileIndex(self.config.paths.index)
+        self.index = FileIndex(self.config.paths.index, enabled=not self.args.no_index)
 
     def manifest_asset_path_of_locale(self, locale: Locale) -> str:
         """Get the manifest asset path of ``locale``."""
@@ -45,6 +45,10 @@ class Environment:
     def print_info(self) -> None:
         """Print the info about the current environment."""
         log_group_start("Environment info")
+
+        if self.args.no_index:
+            log("WARNING", "File indexing is not enabled. Files matching the task criteria will be downloaded.")
+
         log("INFO", f"External library directory: {self.config.paths.lib}")
         log("INFO", "-" * 20)
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
