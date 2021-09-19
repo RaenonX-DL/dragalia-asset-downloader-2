@@ -1,10 +1,10 @@
-"""Various utility functions."""
+"""Utility functions related to execution."""
 import time
 from concurrent.futures import Future, ProcessPoolExecutor, as_completed
 from functools import wraps
 from typing import Any, Callable, Hashable, Sequence, TypeVar, Union
 
-from .log import log
+from dlasset.log import log
 
 __all__ = ("concurrent_run", "concurrent_run_no_return", "time_exec")
 
