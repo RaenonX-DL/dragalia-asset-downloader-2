@@ -85,6 +85,11 @@
             },
             "minItems": 1,
             "uniqueItems": true
+          },
+          "isMultiLocale": {
+            "type": "boolean",
+            "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
+            "default": false
           }
         },
         "required": [

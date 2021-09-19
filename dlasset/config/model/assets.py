@@ -28,12 +28,14 @@ class AssetTask(ConfigBase):
     asset_regex: str = field(init=False)
     types: tuple[ObjectType, ...] = field(init=False)
     conditions: tuple[AssetTaskFilter, ...] = field(init=False)
+    is_multi_locale: bool = field(init=False)
 
     def __post_init__(self) -> None:
         self.name = cast(str, self.json_obj["task"])
         self.asset_regex = cast(str, self.json_obj["name"])
         self.types = cast(tuple[ObjectType], tuple(self.json_obj["types"]))
         self.conditions = tuple(AssetTaskFilter(filter_) for filter_ in self.json_obj["filter"])
+        self.is_multi_locale = cast(bool, self.json_obj.get("isMultiLocale", False))
 
     @property
     def title(self) -> str:
