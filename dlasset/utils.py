@@ -13,9 +13,9 @@ R = TypeVar("R")
 
 
 def concurrent_run(
-        fn: Callable[[..., Any], R],  # type: ignore
+        fn: Callable[..., R],  # type: ignore
         args_list: Sequence[Sequence[Any]], /,
-        key_of_call: Callable[[..., Any], K]  # type: ignore
+        key_of_call: Callable[..., K]  # type: ignore
 ) -> dict[K, R]:
     """
     Run ``fn`` concurrently with different set of ``args``.
@@ -26,7 +26,7 @@ def concurrent_run(
     results: dict[K, R] = {}
 
     def on_done(
-            key_of_call: Callable[[..., Any], K],  # type: ignore
+            key_of_call: Callable[..., K],  # type: ignore
             args: Sequence[Any]
     ) -> Callable[[Future], None]:
         def inner(future: Future) -> None:
@@ -47,7 +47,7 @@ def concurrent_run(
     return results
 
 
-def concurrent_run_no_return(fn: Callable[[..., Any], R], args_list: Sequence[Sequence[Any]]) -> None:  # type: ignore
+def concurrent_run_no_return(fn: Callable[..., R], args_list: Sequence[Sequence[Any]]) -> None:  # type: ignore
     """
     Run ``fn`` concurrently with different set of ``args``.
 

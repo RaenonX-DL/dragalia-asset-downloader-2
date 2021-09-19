@@ -25,11 +25,9 @@ class Paths(ConfigBase):
     def export_asset_dir_of_locale(self, locale: Locale) -> str:
         """Get the root directory for the exported assets of ``locale``."""
         if locale.is_master:
-            ret = self.export
-        else:
-            ret = os.path.join(self.export, "localized", locale.value)
+            return self.export
 
-        return os.path.join(ret, "assets")
+        return os.path.join(self.export, "localized", locale.value)
 
     @property
     def lib_decrypt_dll_path(self) -> str:

@@ -1,21 +1,47 @@
 """Implementations to export files from an Unity asset."""
 import os
-from typing import Any, BinaryIO, Sequence
+from typing import BinaryIO, Optional, Sequence, TypeVar
 
 import UnityPy
+from UnityPy.classes import Object
 
-from dlasset.config import ObjectType
+from dlasset.config import AssetTaskFilter, ObjectType
 from dlasset.log import log
 from .lookup import EXPORT_FUNCTIONS
 from .types import ExportReturn
 
 __all__ = ("export_asset",)
 
+T = TypeVar("T", bound=Object)
+
+
+def export_object(
+        obj: T, export_dir: str, /,
+        filters: Optional[Sequence[AssetTaskFilter]] = None
+) -> Optional[ExportReturn]:
+    """
+    Export a single Unity asset ``obj`` to ``export_dir``.
+
+    Returns ``None`` if the object name does not match any of the ``name`` regex pattern in ``filters``.
+    """
+    obj = obj.read()
+
+    if filters and not any(filter_.match_name(obj.name) for filter_ in filters):
+        return None
+
+    log("INFO", f"Exporting {obj.name}...")
+
+    export_dir_obj = os.path.join(export_dir, os.path.dirname(os.path.normpath(obj.container)))
+    os.makedirs(export_dir_obj, exist_ok=True)
+
+    return EXPORT_FUNCTIONS[obj.type.name](obj, export_dir_obj)
+
 
 def export_asset(
         asset_stream: BinaryIO,
         types_to_export: Sequence[ObjectType],
-        export_dir: str
+        export_dir: str, /,
+        filters: Optional[Sequence[AssetTaskFilter]] = None
 ) -> list[ExportReturn]:
     """
     Export the unity asset with the given criteria to ``export_dir`` and get the exported data.
@@ -36,15 +62,28 @@ def export_asset(
         log("WARNING", f"Nothing exportable for the asset: {asset_name}")
         return []
 
-    exported: list[Any] = []
+    objects_to_export: list[Object] = []
+    objects_count = len(objects)
+
     for obj in objects:
         if obj.type not in types_to_export:
             continue
 
-        obj = obj.read()
-        log("INFO", f"Exporting {obj.type} at {asset.path} to {export_dir}")
-        os.makedirs(export_dir, exist_ok=True)
-        exported.append(EXPORT_FUNCTIONS[obj.type.name](obj, export_dir))
+        if filters and not any(filter_.match_container(obj.container) for filter_ in filters):
+            continue
+
+        objects_to_export.append(obj)
+
+    log("INFO", f"{len(objects_to_export)} out of {objects_count} objects to export.")
+
+    exported: list[ExportReturn] = []
+
+    for obj in objects_to_export:
+        exported_obj = export_object(obj, export_dir, filters=filters)
+        if not exported_obj:
+            continue
+
+        exported.append(exported_obj)
 
     log("INFO", f"Done exporting {asset_name} to {export_dir}")
 

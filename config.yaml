@@ -4,9 +4,16 @@ paths:
   export: .exclude/media
 
 assets:
-  - task: Master assets
+  - task: Master assets (all)
     name: master
     types:
       - MonoBehaviour
     filter:
       - container: /resources/master/
+  - task: Master assets (text label)
+    name: master
+    types:
+      - MonoBehaviour
+    filter:
+      - container: /resources/master/textlabel.asset
+    isMultiLocale: true

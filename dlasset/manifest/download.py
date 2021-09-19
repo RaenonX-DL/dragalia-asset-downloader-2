@@ -19,7 +19,8 @@ def download_manifest_of_locale(env: Environment, locale: Locale) -> None:
     log("INFO", f"Downloading manifest of {locale}...")
     manifest_url = f"{CDN_BASE_URL}/manifests/Android/{env.args.version_code}/{MANIFEST_NAMES[locale]}"
 
-    with requests.get(manifest_url) as response, open(env.manifest_asset_path_of_locale(locale), mode="wb+") as f:
+    response = requests.get(manifest_url)
+    with open(env.manifest_asset_path_of_locale(locale), mode="wb+") as f:
         f.write(response.content)
 
 

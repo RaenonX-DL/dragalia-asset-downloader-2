@@ -1,7 +1,7 @@
 """Manifest file model classes."""
 import re
 from dataclasses import dataclass, field
-from typing import Generator
+from typing import Generator, Pattern
 
 from dlasset.enums import Locale
 from dlasset.export import MonoBehaviourTree
@@ -21,6 +21,8 @@ class ManifestEntry(JsonModel):
     group: int = field(init=False)
     assets: list[str] = field(init=False)
 
+    hash_dir: str = field(init=False)
+
     def __post_init__(self) -> None:
         self.name = self.json_obj["name"]
         self.hash = self.json_obj["hash"]
@@ -28,6 +30,8 @@ class ManifestEntry(JsonModel):
         self.size = self.json_obj["size"]
         self.group = self.json_obj["group"]
         self.assets = self.json_obj["assets"]
+
+        self.hash_dir = self.hash[:2]
 
 
 @dataclass
@@ -52,7 +56,7 @@ class ManifestLocale(JsonModel):
         self.categories = tuple(ManifestCategory(category) for category in self.json_obj["categories"])
 
     @property
-    def entries_across_locale(self) -> Generator[ManifestEntry, None, None]:
+    def entries_across_category(self) -> Generator[ManifestEntry, None, None]:
         """Get a generator yielding the manifest entries across categories."""
         return (asset for category in self.categories for asset in category.assets)
 
@@ -68,11 +72,17 @@ class Manifest:
     def __post_init__(self) -> None:
         self.manifests = {locale: ManifestLocale(manifest) for locale, manifest in self.data.items()}
 
-    def get_entry_with_regex(self, regex: str) -> Generator[ManifestEntry, None, None]:
+    def get_entry_with_regex(
+            self, regex: Pattern, *,
+            is_master_only: bool
+    ) -> Generator[tuple[Locale, ManifestEntry], None, None]:
         """Get the generator yielding the manifest entry with its name matching ``regex``."""
-        for manifest_of_locale in self.manifests.values():
-            for entry in manifest_of_locale.entries_across_locale:
+        for locale, manifest_of_locale in self.manifests.items():
+            if is_master_only and not locale.is_master:
+                continue
+
+            for entry in manifest_of_locale.entries_across_category:
                 if not re.match(regex, entry.name):
                     continue
 
-                yield entry
+                yield locale, entry
