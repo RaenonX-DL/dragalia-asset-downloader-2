@@ -5,7 +5,7 @@ from dlasset.const import CDN_BASE_URL, MANIFEST_NAMES
 from dlasset.enums import Locale
 from dlasset.env import Environment
 from dlasset.log import log, log_group_end, log_group_start
-from dlasset.utils import concurrent_run
+from dlasset.utils import concurrent_run_no_return
 
 __all__ = ("download_manifest_all_locale",)
 
@@ -30,5 +30,5 @@ def download_manifest_all_locale(env: Environment) -> None:
     Downloaded asset needs decryption.
     """
     log_group_start("Manifest downloading")
-    concurrent_run(download_manifest_of_locale, [[env, locale] for locale in Locale])
+    concurrent_run_no_return(download_manifest_of_locale, [[env, locale] for locale in Locale])
     log_group_end()

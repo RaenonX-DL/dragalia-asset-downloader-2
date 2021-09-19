@@ -2,7 +2,7 @@
 from .args import get_cli_args
 from .config import load_config
 from .env import Environment, init_env
-from .manifest import decrypt_manifest_all_locale, download_manifest_all_locale, export_manifest_all_locale
+from .manifest import Manifest, decrypt_manifest_all_locale, download_manifest_all_locale, export_manifest_all_locale
 
 __all__ = ("initialize", "process_manifest")
 
@@ -18,8 +18,8 @@ def initialize() -> Environment:
     return env
 
 
-def process_manifest(env: Environment) -> None:
-    """Process manifest asset."""
+def process_manifest(env: Environment) -> Manifest:
+    """Process manifest asset and return its model."""
     download_manifest_all_locale(env)
     decrypt_manifest_all_locale(env)
-    export_manifest_all_locale(env)
+    return export_manifest_all_locale(env)

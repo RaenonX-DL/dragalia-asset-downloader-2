@@ -1,5 +1,5 @@
 """Type definitions for exporting the assets."""
-from typing import Any, Callable, Literal, Union
+from typing import Any, Callable, Literal, Optional, Union
 
 from UnityPy.classes import MonoBehaviour
 
@@ -9,7 +9,7 @@ ObjectType = Literal["MonoBehaviour"]
 
 MonoBehaviourTree = dict[Any, Any]
 
-MonoBehaviourExportFunction = Callable[[MonoBehaviour, str], MonoBehaviourTree]
+MonoBehaviourExportFunction = Callable[[MonoBehaviour, str], Optional[MonoBehaviourTree]]
 
 ExportFunction = Union[
     MonoBehaviourExportFunction

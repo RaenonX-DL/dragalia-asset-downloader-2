@@ -2,21 +2,21 @@
 import time
 from concurrent.futures import Future, ProcessPoolExecutor, as_completed
 from functools import wraps
-from typing import Any, Callable, Hashable, Optional, Sequence, TypeVar
+from typing import Any, Callable, Hashable, Sequence, TypeVar, Union
 
 from .log import log
 
-__all__ = ("concurrent_run", "time_exec")
+__all__ = ("concurrent_run", "concurrent_run_no_return", "time_exec")
 
-K = TypeVar("K", bound=Hashable)
+K = TypeVar("K", bound=Union[Hashable, None])
 R = TypeVar("R")
 
 
 def concurrent_run(
         fn: Callable[[..., Any], R],  # type: ignore
         args_list: Sequence[Sequence[Any]], /,
-        key_of_call: Optional[Callable[[..., Any], K]] = None  # type: ignore
-) -> Optional[dict[K, R]]:
+        key_of_call: Callable[[..., Any], K]  # type: ignore
+) -> dict[K, R]:
     """
     Run ``fn`` concurrently with different set of ``args``.
 
@@ -25,7 +25,10 @@ def concurrent_run(
     """
     results: dict[K, R] = {}
 
-    def on_done(key_of_call: Callable[[Any, ...], K], args: Sequence[Any]) -> Callable[[Future], None]:  # type: ignore
+    def on_done(
+            key_of_call: Callable[[..., Any], K],  # type: ignore
+            args: Sequence[Any]
+    ) -> Callable[[Future], None]:
         def inner(future: Future) -> None:
             results[key_of_call(*args)] = future.result()
 
@@ -41,10 +44,20 @@ def concurrent_run(
 
         as_completed(futures)
 
-    if key_of_call:
-        return results
+    return results
 
-    return None
+
+def concurrent_run_no_return(fn: Callable[[..., Any], R], args_list: Sequence[Sequence[Any]]) -> None:  # type: ignore
+    """
+    Run ``fn`` concurrently with different set of ``args``.
+
+    Does not return result.
+    """
+
+    def key_of_call(*_: Any, **__: Any) -> None:
+        return None
+
+    concurrent_run(fn, args_list, key_of_call=key_of_call)
 
 
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])
@@ -52,6 +65,7 @@ FuncT = TypeVar("FuncT", bound=Callable[..., Any])
 
 def time_exec(title: str) -> Callable[[FuncT], Any]:
     """Time a function execution and log it."""
+
     def decorator(fn: FuncT) -> Any:
         @wraps(fn)
         def wrapper(*args: Any, **kwargs: Any) -> Any:

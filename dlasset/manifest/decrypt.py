@@ -5,7 +5,7 @@ import subprocess  # nosec
 from dlasset.enums import Locale
 from dlasset.env import Environment
 from dlasset.log import log, log_group_end, log_group_start
-from dlasset.utils import concurrent_run
+from dlasset.utils import concurrent_run_no_return
 
 __all__ = ("decrypt_manifest_all_locale",)
 
@@ -35,5 +35,5 @@ def decrypt_manifest_of_locale(env: Environment, locale: Locale) -> None:
 def decrypt_manifest_all_locale(env: Environment) -> None:
     """Decrypt and store the manifest asset of all locales."""
     log_group_start("Manifest decrypting")
-    concurrent_run(decrypt_manifest_of_locale, [[env, locale] for locale in Locale])
+    concurrent_run_no_return(decrypt_manifest_of_locale, [[env, locale] for locale in Locale])
     log_group_end()
