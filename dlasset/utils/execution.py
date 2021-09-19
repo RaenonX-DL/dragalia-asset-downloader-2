@@ -1,6 +1,7 @@
 """Utility functions related to execution."""
+import sys
 import time
-from concurrent.futures import Future, ProcessPoolExecutor, as_completed
+from concurrent.futures import Future, ProcessPoolExecutor
 from functools import wraps
 from typing import Any, Callable, Hashable, Sequence, TypeVar, Union
 
@@ -41,6 +42,7 @@ def concurrent_run(
                 results[key_of_call(*args)] = future.result()
             except Exception as ex:
                 log("ERROR", ex, exc_info=True)
+                raise ex
 
         return inner
 
@@ -52,7 +54,15 @@ def concurrent_run(
             if key_of_call:
                 future.add_done_callback(on_done(key_of_call, args))
 
-        as_completed(futures)
+            futures.append(future)
+
+    exceptions = [future.exception() for future in futures if future.exception()]
+    if error_count := len(exceptions):
+        log("ERROR", f"{error_count} of {len(futures)} concurrent tasks have error.")
+        log("ERROR", "-" * 20)
+        for exception in exceptions:
+            log("ERROR", f"{exception.__class__.__name__}: {exception}")
+        sys.exit(1)
 
     return results
 
