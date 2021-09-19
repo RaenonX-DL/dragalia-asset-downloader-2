@@ -1,4 +1,5 @@
 """Implementations for exporting the decrypted manifest assets."""
+import sys
 from typing import cast
 
 from dlasset.enums import Locale
@@ -17,6 +18,10 @@ def export_manifest_of_locale(env: Environment, locale: Locale) -> MonoBehaviour
 
     with open(env.manifest_asset_decrypted_path(locale), "rb") as f:
         exported = export_asset(f, "MonoBehaviour", env.config.paths.export_asset_dir_of_locale(locale))
+
+    if not exported:
+        log("ERROR", f"Manifest of {locale} not exported")
+        sys.exit(1)
 
     # Manifest asset only contains one `MonoBehaviour`
     return exported[0]
