@@ -1,16 +1,16 @@
 """Implementations for decrypting the manifest assets."""
-import asyncio
 # The usage of `subprocess` is safe
 import subprocess  # nosec
 
 from dlasset.enums import Locale
 from dlasset.env import Environment
 from dlasset.log import log, log_group_end, log_group_start
+from dlasset.utils import concurrent_run
 
 __all__ = ("decrypt_manifest_all_locale",)
 
 
-async def decrypt_manifest_of_locale(env: Environment, locale: Locale) -> None:
+def decrypt_manifest_of_locale(env: Environment, locale: Locale) -> None:
     """Decrypt and store the manifest asset of ``locale``."""
     log("INFO", f"Decrypting manifest of {locale}...")
 
@@ -32,10 +32,8 @@ async def decrypt_manifest_of_locale(env: Environment, locale: Locale) -> None:
     )
 
 
-async def decrypt_manifest_all_locale(env: Environment) -> None:
+def decrypt_manifest_all_locale(env: Environment) -> None:
     """Decrypt and store the manifest asset of all locales."""
     log_group_start("Manifest decrypting")
-
-    await asyncio.gather(*(decrypt_manifest_of_locale(env, locale) for locale in Locale))
-
+    concurrent_run(decrypt_manifest_of_locale, [[env, locale] for locale in Locale])
     log_group_end()

@@ -9,5 +9,4 @@ pyyaml
 jsonschema
 
 # Data downloading
-aiohttp
-aiofiles
+requests

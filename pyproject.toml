@@ -57,3 +57,10 @@ exclude = "(tests/|script_*)"
 show_error_codes = true
 disallow_untyped_defs = true
 disallow_untyped_decorators = true
+
+[[tool.mypy.overrides]]
+module = [
+    "UnityPy.*",
+    "jsonschema.*",
+]
+ignore_missing_imports = true

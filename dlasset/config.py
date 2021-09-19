@@ -5,7 +5,7 @@ from dataclasses import InitVar, dataclass, field
 from typing import Any, cast
 
 import yaml
-from jsonschema import ValidationError, validate  # type: ignore
+from jsonschema import ValidationError, validate
 
 from dlasset.enums import Locale
 

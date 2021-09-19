@@ -11,7 +11,7 @@ from .types import ObjectType
 __all__ = ("export_asset",)
 
 
-async def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_dir: str):
+def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], export_dir: str) -> None:
     """Export the unity asset with the given criteria to ``export_dir``."""
     asset = UnityPy.load(asset_path)
 
@@ -31,4 +31,7 @@ async def export_asset(asset_path: str, types_to_export: Sequence[ObjectType], e
         obj = obj.read()
         log("INFO", f"Exporting {obj.type} at {asset.path} to {export_dir}")
         os.makedirs(export_dir, exist_ok=True)
-        await EXPORT_FUNCTIONS[obj.type.name](obj, export_dir)
+        EXPORT_FUNCTIONS[obj.type.name](obj, export_dir)
+
+    asset_name = os.path.basename(asset_path)
+    log("INFO", f"Done exporting {asset_name} to {export_dir}")

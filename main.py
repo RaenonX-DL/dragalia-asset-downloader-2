@@ -1,11 +1,10 @@
-import asyncio
 import time
 from functools import wraps
 
 from dlasset.args import get_cli_args
 from dlasset.config import load_config
 from dlasset.env import init_env
-from dlasset.manifest import export_manifest_all_locale
+from dlasset.manifest import decrypt_manifest_all_locale, download_manifest_all_locale, export_manifest_all_locale
 
 
 def time_exec(title: str):
@@ -22,20 +21,18 @@ def time_exec(title: str):
     return decorator
 
 
-@time_exec("Download & preprocess assets")
-async def main():
+@time_exec("Assets downloading & preprocessing")
+def main():
     args = get_cli_args()
     config = load_config(args.config_path)
 
     env = init_env(args, config)
     env.print_info()
 
-    # await download_manifest_all_locale(env)
-    # await decrypt_manifest_all_locale(env)
-    await export_manifest_all_locale(env)
+    download_manifest_all_locale(env)
+    decrypt_manifest_all_locale(env)
+    export_manifest_all_locale(env)
 
 
 if __name__ == '__main__':
-    # https://stackoverflow.com/a/66772242/11571888
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(main())
+    main()
