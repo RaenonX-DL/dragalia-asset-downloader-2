@@ -22,7 +22,7 @@ def on_concurrency_start(log_dir: str) -> None:
 def concurrent_run(
         fn: Callable[..., R],  # type: ignore
         args_list: Sequence[Sequence[Any]],
-        log_dir: str, /,
+        log_dir: str, *,
         key_of_call: Callable[..., K]  # type: ignore
 ) -> dict[K, R]:
     """

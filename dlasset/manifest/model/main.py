@@ -35,7 +35,7 @@ class Manifest:
         return ret
 
     def get_manifest_entries_of_locale(
-            self, regex: Pattern, get_entries: Callable[[ManifestLocale], Iterable[T]], /,
+            self, regex: Pattern, get_entries: Callable[[ManifestLocale], Iterable[T]], *,
             is_master_only: bool
     ) -> Generator[tuple[Locale, list[T]], None, None]:
         """
@@ -56,7 +56,7 @@ class Manifest:
                 yield locale, self.get_entries_including_dependencies(locale, entry)
 
     def get_entry_with_regex(
-            self, regex: Pattern, /,
+            self, regex: Pattern, *,
             is_master_only: bool
     ) -> Generator[tuple[Locale, list[ManifestEntry]], None, None]:
         """

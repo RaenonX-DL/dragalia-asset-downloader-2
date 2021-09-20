@@ -61,7 +61,7 @@ def get_objects_to_export_of_asset(
 
 
 def get_objects_to_export(
-        assets: list[UnityAsset], export_type: ExportType, /,
+        assets: list[UnityAsset], export_type: ExportType, *,
         filters: Optional[Sequence[AssetTaskFilter]] = None
 ) -> list[ObjectInfo]:
     """Get a list of objects to export from all ``assets``."""
@@ -82,7 +82,7 @@ def get_objects_to_export(
 
 
 def export_objects(
-        obj_export: list[ObjectInfo], export_type: ExportType, export_dir: str, /,
+        obj_export: list[ObjectInfo], export_type: ExportType, export_dir: str, *,
         asset_name: str, container_fallback: str, filters: Optional[Sequence[AssetTaskFilter]] = None
 ) -> list[ExportReturn]:
     """
@@ -129,7 +129,7 @@ def export_objects(
 def export_asset(
         asset_paths: list[str],
         export_type: ExportType,
-        export_dir: str, /,
+        export_dir: str, *,
         filters: Optional[Sequence[AssetTaskFilter]] = None,
         suppress_warnings: Sequence[WarningType] = ()
 ) -> Optional[list[ExportReturn]]:

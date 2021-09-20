@@ -12,7 +12,7 @@ _GROUP_START_TIME: Optional[float] = None
 _GROUP_CURRENT_NAME: Optional[str] = None
 
 
-def log(level: LogLevel, message: Any, /, exc_info: bool = False) -> None:
+def log(level: LogLevel, message: Any, *, exc_info: bool = False) -> None:
     """Log ``message`` at ``level``."""
     log_level = LOG_LEVEL_NUM[level]
 
