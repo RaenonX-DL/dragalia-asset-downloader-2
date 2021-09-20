@@ -1,11 +1,9 @@
 """Implementations to download manifest assets."""
-import requests
-
 from dlasset.const import CDN_BASE_URL, MANIFEST_NAMES
 from dlasset.enums import Locale
 from dlasset.env import Environment
 from dlasset.log import log, log_group_end, log_group_start
-from dlasset.utils import concurrent_run_no_return
+from dlasset.utils import concurrent_run_no_return, http_get
 
 __all__ = ("download_manifest_all_locale",)
 
@@ -19,7 +17,7 @@ def download_manifest_of_locale(env: Environment, locale: Locale) -> None:
     log("INFO", f"Downloading manifest of {locale}...")
     manifest_url = f"{CDN_BASE_URL}/manifests/Android/{env.args.version_code}/{MANIFEST_NAMES[locale]}"
 
-    response = requests.get(manifest_url)
+    response = http_get(manifest_url)
     with open(env.manifest_asset_path_of_locale(locale), mode="wb+") as f:
         f.write(response.content)
 
