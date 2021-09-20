@@ -41,8 +41,9 @@ def export_asset(
 
     objects_to_export = asset.get_objects_matching_filter(TYPES_TO_INCLUDE[export_type], filters=filters)
 
-    if not objects_to_export and WarningType.NOTHING_TO_EXPORT not in suppress_warnings:
-        log("WARNING", f"Nothing to export for the asset: {asset.name}")
+    if not objects_to_export:
+        if WarningType.NOTHING_TO_EXPORT not in suppress_warnings:
+            log("WARNING", f"Nothing to export for the asset: {asset.name}")
         return None
 
     log("INFO", f"Found {len(objects_to_export)} objects to export from {asset.name}.")
