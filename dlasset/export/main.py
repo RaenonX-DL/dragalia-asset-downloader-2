@@ -16,7 +16,7 @@ __all__ = ("export_asset",)
 
 def log_asset_export_debug_info(asset_paths: list[str], export_type: ExportType, export_dir: str) -> None:
     """Log the debug info about the asset exporting."""
-    log("DEBUG", "Exporting asset:")
+    log("DEBUG", "Exporting asset info:")
     for asset_path in asset_paths:
         log("DEBUG", f"- {asset_path}")
     log("DEBUG", f"Export type: {export_type}")
@@ -80,7 +80,7 @@ def export_asset(
 
     log_asset_export_debug_info(asset_paths, export_type, export_dir)
 
-    log("DEBUG", "Getting objects to export...")
+    log("DEBUG", f"Getting objects to export from {len(assets)} assets ({asset_name_main})...")
 
     objects_to_export = get_objects_to_export(assets, export_type, filters=filters)
 
@@ -88,7 +88,7 @@ def export_asset(
         log("WARNING", f"Nothing to export for the asset: {asset_name_main}")
         return None
 
-    log("INFO", f"Found {len(objects_to_export)} objects to export ({asset_path_main}).")
+    log("INFO", f"Found {len(objects_to_export)} objects to export from {asset_path_main}.")
 
     results: list[ExportReturn] = export_objects(
         objects_to_export, export_type, export_dir,

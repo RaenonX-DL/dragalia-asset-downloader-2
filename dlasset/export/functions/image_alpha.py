@@ -50,7 +50,7 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
     info_main = export_info.get_obj_info(path_id_main)
     obj_main = info_main.obj
 
-    log("INFO", f"Exporting {obj_main.name}... ({info_main.container})")
+    log("INFO", f"Exporting image with alpha merge of {obj_main.name}... ({info_main.container})")
 
     export_path = os.path.join(export_info.get_export_dir_of_obj(info_main), f"{obj_main.name}.png")
 

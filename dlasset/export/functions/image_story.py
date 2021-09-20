@@ -79,7 +79,7 @@ def export_image_story(export_info: "ExportInfo") -> None:
     except KeyError as ex:
         raise ValueError(f"Asset {image_name} ({mono_behaviour.container}) has missing object") from ex
 
-    log("INFO", f"Exporting {image_name}... ({mono_behaviour.container})")
+    log("INFO", f"Exporting story image of {image_name}... ({mono_behaviour.container})")
 
     export_path = os.path.join(export_info.get_export_dir_of_obj(mono_behaviour), f"{image_name}.png")
 
