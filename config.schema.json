@@ -97,10 +97,17 @@
             "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
             "default": false
           },
-          "suppressNothingToExport": {
-            "type": "boolean",
-            "description": "If true, the warning of 'nothing to export' will not emit for this task.",
-            "default": false
+          "suppressWarnings": {
+            "type": "array",
+            "description": "Types of warning message to suppress.",
+            "items": {
+              "type": "string",
+              "description": "Warning message type to suppress.",
+              "enum": [
+                "nothingToExport",
+                "noMainTexture"
+              ]
+            }
           }
         },
         "required": [

@@ -4,6 +4,7 @@ from abc import ABC
 from dataclasses import dataclass, field
 from typing import Optional, Pattern, cast
 
+from dlasset.enums import WarningType
 from .base import ConfigBase
 from .types import ExportType
 
@@ -17,13 +18,13 @@ class AssetTaskBase(ConfigBase, ABC):
     name: str = field(init=False)
     asset_regex: Pattern = field(init=False)
     is_multi_locale: bool = field(init=False)
-    suppress_nothing_to_export: bool = field(init=False)
+    suppress_warnings: tuple[WarningType, ...] = field(init=False)
 
     def __post_init__(self) -> None:
         self.name = cast(str, self.json_obj["task"])
         self.asset_regex = re.compile(self.json_obj["name"])
         self.is_multi_locale = cast(bool, self.json_obj.get("isMultiLocale", False))
-        self.suppress_nothing_to_export = cast(bool, self.json_obj.get("suppressNothingToExport", False))
+        self.suppress_warnings = tuple(WarningType(type_) for type_ in self.json_obj.get("suppressWarnings", []))
 
     @property
     def title(self) -> str:

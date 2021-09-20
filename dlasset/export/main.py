@@ -5,6 +5,7 @@ from typing import Optional, Sequence
 from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.config import AssetTaskFilter, ExportType
+from dlasset.enums import WarningType
 from dlasset.log import log
 from dlasset.manage import get_asset
 from .lookup import EXPORT_FUNCTIONS, TYPES_TO_INCLUDE
@@ -123,7 +124,7 @@ def export_asset(
         export_type: ExportType,
         export_dir: str, /,
         filters: Optional[Sequence[AssetTaskFilter]] = None,
-        suppress_no_export: bool = False,
+        suppress_warnings: Sequence[WarningType] = ()
 ) -> Optional[list[ExportReturn]]:
     """
     Export the asset from ``asset_paths`` with the given criteria to ``export_dir`` and get the exported data.
@@ -137,7 +138,7 @@ def export_asset(
 
     log_asset_export_debug_info(assets, asset_paths, export_type, export_dir)
 
-    if not any(asset.objects for asset in assets) and not suppress_no_export:
+    if not any(asset.objects for asset in assets) and WarningType.NOTHING_TO_EXPORT not in suppress_warnings:
         log("WARNING", f"Nothing exportable for the asset: {asset_name_main}")
         return None
 
@@ -145,7 +146,7 @@ def export_asset(
 
     objects_to_export = get_objects_to_export(assets, export_type, filters=filters)
 
-    if not objects_to_export and not suppress_no_export:
+    if not objects_to_export and WarningType.NOTHING_TO_EXPORT not in suppress_warnings:
         log("WARNING", f"Nothing to export for the asset: {asset_name_main}")
         return None
 

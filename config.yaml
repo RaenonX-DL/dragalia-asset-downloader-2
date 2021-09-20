@@ -36,14 +36,16 @@ assets:
     type: AnimatorController
     filter:
       - container: /resources/characters/motion/(.*)\.controller
-    suppressNothingToExport: true
+    suppressWarnings:
+      - nothingToExport
 
   - task: Animation Data (Override Controller)
     name: ((characters|dragon)/motion/|meshes/dragon)
     type: AnimatorOverrideController
     filter:
       - container: /resources/characters/motion/(.*)\.overridecontroller
-    suppressNothingToExport: true
+    suppressWarnings:
+      - nothingToExport
 
   - task: UI Sprites
     name: images/ingame/ui

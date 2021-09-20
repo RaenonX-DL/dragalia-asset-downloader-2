@@ -1,7 +1,7 @@
 """Type definitions for the config."""
 from typing import Literal
 
-__all__ = ("UnityType", "ExportType",)
+__all__ = ("UnityType", "ExportType")
 
 # Should follow the naming of `UnityPy`
 # List supported types only
@@ -22,5 +22,5 @@ ExtendedType = Literal[
     "Texture2D-Story"
 ]
 
-# Should be the same as the listed enums in the config schema
+# Should be the same as the listed enums for the field `type`
 ExportType = Literal[UnityType, ExtendedType]

@@ -58,6 +58,15 @@ class Environment:
         log("INFO", f"Downloaded assets directory: {self.downloaded_assets_dir}")
         log("INFO", f"Exported files directory: {self.config.paths.export}")
         log("INFO", f"File index directory: {self.config.paths.index}")
+        log("INFO", "-" * 20)
+        log("INFO", "Suppressed warnings:")
+        for task in self.config.asset_tasks:
+            if not task.suppress_warnings:
+                continue
+
+            log("INFO", f"{task.title}:")
+            for warning_type in task.suppress_warnings:
+                log("INFO", f"- {warning_type}")
 
         log_group_end()
 

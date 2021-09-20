@@ -21,7 +21,7 @@ def export_from_manifest(env: Environment, locale: Locale, entries: list["Manife
     asset_paths = get_asset_paths(env, entries)
     export_asset(
         asset_paths, task.types, env.config.paths.export_asset_dir_of_locale(locale),
-        filters=task.conditions, suppress_no_export=task.suppress_nothing_to_export
+        filters=task.conditions, suppress_warnings=task.suppress_warnings
     )
 
 
