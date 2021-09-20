@@ -44,6 +44,9 @@ class ExportInfo:
     def __hash__(self) -> int:
         return hash((self.export_dir, self.asset_name))
 
+    def __repr__(self):
+        return f"{self.asset_name} ({self.container_fallback})"
+
     @property
     def objects(self) -> Iterable[ObjectInfo]:
         """Get the objects to export."""
