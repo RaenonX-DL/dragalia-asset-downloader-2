@@ -1,5 +1,6 @@
 """Various model classes."""
 import os
+from collections import Counter
 from dataclasses import InitVar, dataclass, field
 from functools import cache
 from typing import Iterable
@@ -18,18 +19,19 @@ class ExportInfo:
     export_dir: str
     obj_info_list: InitVar[list[ObjectInfo]]
     asset_name: str
-    container_fallback: str
 
     _object_dict: dict[int, ObjectInfo] = field(init=False)
+    _main_container: str = field(init=False)
 
     def __post_init__(self, obj_info_list: list[ObjectInfo]) -> None:
         self._object_dict = {obj_info.obj.path_id: obj_info for obj_info in obj_info_list}
+        self._main_container = Counter(obj_info.container for obj_info in obj_info_list).most_common(1)[0][0]
 
     def __hash__(self) -> int:
         return hash((self.export_dir, self.asset_name))
 
     def __repr__(self) -> str:
-        return f"{self.asset_name} ({self.container_fallback})"
+        return f"{self.asset_name} ({self._main_container})"
 
     @property
     def objects(self) -> Iterable[ObjectInfo]:
