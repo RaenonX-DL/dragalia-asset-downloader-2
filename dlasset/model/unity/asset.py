@@ -5,6 +5,7 @@ from typing import Optional, Sequence, TYPE_CHECKING
 from UnityPy.classes import Object
 from UnityPy.environment import Environment
 
+from dlasset.log import log
 from .obj import ObjectInfo
 
 if TYPE_CHECKING:
@@ -17,12 +18,12 @@ __all__ = ("UnityAsset",)
 class UnityAsset:
     """Unity asset model."""
 
-    assets: Environment
+    asset: Environment
 
     _obj_dict: dict[int, Object] = field(init=False)
 
     def __post_init__(self) -> None:
-        self._obj_dict = self.assets.objects
+        self._obj_dict = self.asset.objects
 
     def get_objects_matching_filter(
             self, types: tuple["UnityType", ...], *,
@@ -34,7 +35,9 @@ class UnityAsset:
         If ``filters`` is not provided or set to ``None``, all objects in type of ``types`` will be returned.
         """
         ret: list[ObjectInfo] = []
-        for path, obj in self.assets.container.items():
+        object_count = len(self.asset.container)
+
+        for idx, (path, obj) in enumerate(self.asset.container.items()):
             if obj.type not in types:
                 continue
 
@@ -42,6 +45,9 @@ class UnityAsset:
                 continue
 
             obj = obj.read()
+
+            if idx and idx % 20 == 0:
+                log("INFO", f"Reading {idx} / {object_count} ({idx / object_count:.2%}) objects of {self.asset.path}")
 
             ret.append(ObjectInfo(obj=obj, container=path))
 
