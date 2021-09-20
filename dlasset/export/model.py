@@ -6,25 +6,9 @@ from typing import Iterable
 
 from UnityPy.classes import Object
 
-__all__ = ("ExportInfo", "ObjectInfo")
+from dlasset.model import ObjectInfo
 
-
-@dataclass(unsafe_hash=True)
-class ObjectInfo:
-    """Object info model class."""
-
-    obj: Object
-    container: str
-    is_from_main: bool
-
-    def read_obj(self) -> Object:
-        """
-        Read the object.
-
-        This modified the class attribute ``obj``.
-        """
-        self.obj = self.obj.read()
-        return self.obj
+__all__ = ("ExportInfo",)
 
 
 @dataclass

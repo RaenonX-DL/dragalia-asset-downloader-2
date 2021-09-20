@@ -4,15 +4,16 @@ from typing import TYPE_CHECKING
 
 from dlasset.export.types import MonoBehaviourTree
 from dlasset.log import log
+from dlasset.model import ObjectInfo
 from dlasset.utils import export_json
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfo, ObjectInfo
+    from dlasset.export import ExportInfo
 
 __all__ = ("export_game_object",)
 
 
-def export_single_game_obj(export_info: "ExportInfo", game_obj_info: "ObjectInfo") -> None:
+def export_single_game_obj(export_info: "ExportInfo", game_obj_info: ObjectInfo) -> None:
     """Export a single game object."""
     tree_export: MonoBehaviourTree = {}
 

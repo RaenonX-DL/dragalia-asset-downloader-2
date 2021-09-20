@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING
 
 import UnityPy
 import requests
-from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.env import Environment
+from dlasset.model import UnityAsset
 from .utils import get_asset_url
 
 if TYPE_CHECKING:
@@ -47,4 +47,4 @@ def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> list[st
 @lru_cache(maxsize=100)
 def get_asset(asset_path: str) -> UnityAsset:
     """Get the unity asset at ``asset_path``."""
-    return UnityPy.load(asset_path)
+    return UnityAsset(UnityPy.load(asset_path))

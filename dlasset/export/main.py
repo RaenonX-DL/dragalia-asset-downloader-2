@@ -2,14 +2,13 @@
 import os
 from typing import Optional, Sequence
 
-from UnityPy.environment import Environment as UnityAsset
-
 from dlasset.config import AssetTaskFilter, ExportType
 from dlasset.enums import WarningType
 from dlasset.log import log
 from dlasset.manage import get_asset
+from dlasset.model import ObjectInfo, UnityAsset
 from .lookup import EXPORT_FUNCTIONS, TYPES_TO_INCLUDE
-from .model import ExportInfo, ObjectInfo
+from .model import ExportInfo
 from .types import ExportReturn
 
 __all__ = ("export_asset",)
@@ -94,8 +93,6 @@ def export_objects(
     obj_info_to_export: list[ObjectInfo] = []
 
     for idx, obj_info in enumerate(obj_export):
-        obj = obj_info.read_obj()
-
         if idx > 0 and idx % 500 == 0:
             log(
                 "INFO",
