@@ -56,9 +56,9 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
 
     log("DEBUG", f"Merging alpha channel of {obj_main.name}... ({info_main.container})")
 
+    img_main = obj_main.image
     if obj_alpha := get_alpha_channel_tex(texture_envs, export_info):
         # Alpha texture exists, merge image
-        img_main = obj_main.image
         img_alpha = obj_alpha.image
 
         # Alpha texture could be in a different size
@@ -72,4 +72,4 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
         return
 
     # Alpha texture does not exist, just save it
-    obj_main.image.save(export_path)
+    img_main.save(export_path)
