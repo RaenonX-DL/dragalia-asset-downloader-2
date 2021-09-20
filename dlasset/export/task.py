@@ -17,7 +17,6 @@ __all__ = ("export_by_task",)
 
 def export_from_manifest(env: Environment, locale: Locale, entries: list["ManifestEntry"], task: AssetTask) -> None:
     """Export the asset of ``entry`` according to ``task``."""
-    log("INFO", f"Exporting ({len(entries)}) {entries[0].name}...")
     asset_paths = get_asset_paths(env, entries)
     export_asset(
         asset_paths, task.types, env.config.paths.export_asset_dir_of_locale(locale),

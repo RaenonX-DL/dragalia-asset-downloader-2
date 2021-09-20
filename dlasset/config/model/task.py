@@ -43,26 +43,9 @@ class AssetTaskFilter(ConfigBase):
     def __post_init__(self) -> None:
         self.container_regex = re.compile(self.json_obj["container"])
 
-        if name_regex := self.json_obj.get("name"):
-            self.name_regex = re.compile(name_regex)
-        else:
-            self.name_regex = None
-
-    def match_name(self, name: str) -> bool:
-        """Check if the given ``name`` matches the filter."""
-        if self.name_regex:
-            return bool(re.search(self.name_regex, name))
-
-        # `name_regex` not set, always match
-        return True
-
     def match_container(self, container: str) -> bool:
         """Check if the given ``container`` matches the filter."""
         return bool(re.search(self.container_regex, container))
-
-    def match_filter(self, container: str, name: str) -> bool:
-        """Check if both the given ``container`` and ``name`` match the filter."""
-        return self.match_container(container) and self.match_name(name)
 
 
 @dataclass

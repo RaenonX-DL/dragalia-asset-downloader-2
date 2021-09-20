@@ -3,11 +3,10 @@ import os.path
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-import UnityPy
 import requests
-from UnityPy.environment import Environment as UnityAsset
 
 from dlasset.env import Environment
+from dlasset.model import UnityAsset
 from .utils import get_asset_url
 
 if TYPE_CHECKING:
@@ -25,7 +24,7 @@ def download_asset(asset_hash_dir: str, asset_target_path: str, entry: "Manifest
         f.write(response.content)
 
 
-def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> list[str]:
+def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> tuple[str, ...]:
     """
     Get a list of asset paths of ``entry``.
 
@@ -41,10 +40,10 @@ def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> list[st
 
         asset_paths.append(asset_target_path)
 
-    return asset_paths
+    return tuple(asset_paths)
 
 
 @lru_cache(maxsize=100)
-def get_asset(asset_path: str) -> UnityAsset:
-    """Get the unity asset at ``asset_path``."""
-    return UnityPy.load(asset_path)
+def get_asset(asset_paths: tuple[str]) -> UnityAsset:
+    """Get the unity asset model at ``asset_paths``."""
+    return UnityAsset(asset_paths)

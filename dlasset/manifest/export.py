@@ -17,7 +17,7 @@ def export_manifest_of_locale(env: Environment, locale: Locale) -> MonoBehaviour
     log("INFO", f"Exporting manifest of {locale}...")
 
     exported = export_asset(
-        [env.manifest_asset_decrypted_path(locale)],
+        (env.manifest_asset_decrypted_path(locale),),
         "MonoBehaviour",
         env.config.paths.export_asset_dir_of_locale(locale)
     )

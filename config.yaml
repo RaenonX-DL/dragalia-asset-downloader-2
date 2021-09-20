@@ -63,7 +63,7 @@ assets:
 
   - task: Unit Image
     name: images/outgame/unitdetail/(amulet|chara|dragon)
-    type: Texture2D
+    type: Texture2D-Alpha
     filter:
       - container: /resources/images/outgame/unitdetail
 

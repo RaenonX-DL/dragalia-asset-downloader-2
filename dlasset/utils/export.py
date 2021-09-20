@@ -19,7 +19,7 @@ def round_floats(obj: Any) -> Any:
     return obj
 
 
-def export_json(export_path: str, obj: Any, /, separators: Optional[tuple[str, str]] = None) -> None:
+def export_json(export_path: str, obj: Any, *, separators: Optional[tuple[str, str]] = None) -> None:
     """
     Export the object ``obj`` to ``export_path``.
 

@@ -3,23 +3,24 @@ import os
 from typing import TYPE_CHECKING
 
 from dlasset.export.types import MonoBehaviourTree
-from dlasset.log import log
+from dlasset.log import log, log_periodic
+from dlasset.model import ObjectInfo
 from dlasset.utils import export_json
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfo, ObjectInfo
+    from dlasset.export import ExportInfo
 
 __all__ = ("export_game_object",)
 
 
-def export_single_game_obj(export_info: "ExportInfo", game_obj_info: "ObjectInfo") -> None:
+def export_single_game_obj(export_info: "ExportInfo", game_obj_info: ObjectInfo) -> None:
     """Export a single game object."""
     tree_export: MonoBehaviourTree = {}
 
     object_tree = game_obj_info.obj.read_typetree()
 
     components = [
-        export_info.get_obj_info(component["component"]["m_PathID"]).obj
+        export_info.get_obj_info(component["component"]["m_PathID"], game_obj_info).obj
         for component in object_tree["m_Component"][1:]  # 1st component is always a `Transform` which is omitted
     ]
 
@@ -32,7 +33,7 @@ def export_single_game_obj(export_info: "ExportInfo", game_obj_info: "ObjectInfo
         if script_path_id:
             # Attach script type name if available
             attachment = {
-                "$Script": export_info.get_obj_info(component_tree["m_Script"]["m_PathID"]).obj.name
+                "$Script": export_info.get_obj_info(component_tree["m_Script"]["m_PathID"], game_obj_info).obj.name
             }
         else:
             # Otherwise, attach component name
@@ -59,9 +60,8 @@ def export_game_object(export_info: "ExportInfo") -> None:
     for idx, game_obj_info in enumerate(game_obj_info_list):
         export_single_game_obj(export_info, game_obj_info)
 
-        if idx % 50 == 0:
-            log(
-                "INFO",
-                f"{idx} / {len(game_obj_info_list)} ({idx / len(game_obj_info_list):.2%}) objects exported "
-                f"- {export_info}"
-            )
+        log_periodic(
+            "INFO",
+            f"{idx} / {len(game_obj_info_list)} ({idx / len(game_obj_info_list):.2%}) objects exported "
+            f"- {export_info}"
+        )

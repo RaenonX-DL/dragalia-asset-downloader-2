@@ -15,7 +15,7 @@ def export_image(export_info: "ExportInfo") -> None:
     for obj_info in export_info.objects:
         obj = obj_info.obj
 
-        log("INFO", f"Exporting {obj.name} ({obj_info.container})...")
+        log("INFO", f"Exporting image of {obj.name} ({obj_info.container})...")
 
         export_path = os.path.join(export_info.get_export_dir_of_obj(obj_info), f"{obj.name}.png")
 

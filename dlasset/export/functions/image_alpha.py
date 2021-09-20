@@ -6,6 +6,7 @@ from PIL import Image
 from UnityPy.classes import Texture2D
 
 from dlasset.log import log
+from dlasset.model import ObjectInfo
 from .image import export_image
 
 if TYPE_CHECKING:
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
 __all__ = ("export_image_alpha",)
 
 
-def get_alpha_channel_tex(texture_envs: dict, export_info: "ExportInfo") -> Optional[Texture2D]:
+def get_alpha_channel_tex(texture_envs: dict, export_info: "ExportInfo", material: ObjectInfo) -> Optional[Texture2D]:
     """Get the alpha texture. Returns ``None`` if not available."""
     if "_AlphaTex" not in texture_envs:  # Alpha channel texture not available
         return None
@@ -24,7 +25,7 @@ def get_alpha_channel_tex(texture_envs: dict, export_info: "ExportInfo") -> Opti
     if not path_id_alpha:  # Path ID points to null (path ID = 0)
         return None
 
-    return cast(Texture2D, export_info.get_obj_info(path_id_alpha).obj)
+    return cast(Texture2D, export_info.get_obj_info(path_id_alpha, material).obj)
 
 
 def export_image_alpha(export_info: "ExportInfo") -> None:
@@ -47,18 +48,18 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
     if not path_id_main:  # Main texture points to null file - don't return anything
         return
 
-    info_main = export_info.get_obj_info(path_id_main)
+    info_main = export_info.get_obj_info(path_id_main, material)
     obj_main = info_main.obj
 
-    log("INFO", f"Exporting {obj_main.name}... ({info_main.container})")
+    log("INFO", f"Exporting image with alpha merge of {obj_main.name}... ({info_main.container})")
 
     export_path = os.path.join(export_info.get_export_dir_of_obj(info_main), f"{obj_main.name}.png")
 
     log("DEBUG", f"Merging alpha channel of {obj_main.name}... ({info_main.container})")
 
-    if obj_alpha := get_alpha_channel_tex(texture_envs, export_info):
+    img_main = obj_main.image
+    if obj_alpha := get_alpha_channel_tex(texture_envs, export_info, material):
         # Alpha texture exists, merge image
-        img_main = obj_main.image
         img_alpha = obj_alpha.image
 
         # Alpha texture could be in a different size
@@ -72,4 +73,4 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
         return
 
     # Alpha texture does not exist, just save it
-    obj_main.image.save(export_path)
+    img_main.save(export_path)
