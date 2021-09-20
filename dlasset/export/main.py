@@ -67,7 +67,7 @@ def export_asset(
         export_dir: str, *,
         filters: Optional[Sequence[AssetTaskFilter]] = None,
         suppress_warnings: Sequence[WarningType] = ()
-) -> Optional[list[ExportReturn]]:
+) -> ExportReturn:
     """
     Export the asset from ``asset_paths`` with the given criteria to ``export_dir`` and get the exported data.
 

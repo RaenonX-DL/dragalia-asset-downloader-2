@@ -7,8 +7,9 @@ __all__ = ("ExportFunction", "ExportReturn", "MonoBehaviourTree")
 
 MonoBehaviourTree = dict[Any, Any]
 
-ExportFunction = Callable[[ExportInfo], Optional[list[MonoBehaviourTree]]]
-
 ExportReturn = Union[
-    MonoBehaviourTree
+    list[MonoBehaviourTree],
+    None
 ]
+
+ExportFunction = Callable[[ExportInfo], Optional[list[MonoBehaviourTree]]]
