@@ -1,2 +1,2 @@
 """Data model classes."""
-from .obj import JsonModel
+from .base import JsonModel
