@@ -5,7 +5,7 @@ from typing import Optional, Sequence, TYPE_CHECKING
 from UnityPy.classes import Object
 from UnityPy.environment import Environment
 
-from dlasset.log import log
+from dlasset.log import log_periodic
 from .obj import ObjectInfo
 
 if TYPE_CHECKING:
@@ -46,8 +46,10 @@ class UnityAsset:
 
             obj = obj.read()
 
-            if idx and idx % 20 == 0:
-                log("INFO", f"Reading {idx} / {object_count} ({idx / object_count:.2%}) objects of {self.asset.path}")
+            log_periodic(
+                "INFO",
+                f"Reading {idx} / {object_count} ({idx / object_count:.2%}) objects of {self.asset.path}",
+            )
 
             ret.append(ObjectInfo(obj=obj, container=path))
 

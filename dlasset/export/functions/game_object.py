@@ -3,7 +3,7 @@ import os
 from typing import TYPE_CHECKING
 
 from dlasset.export.types import MonoBehaviourTree
-from dlasset.log import log
+from dlasset.log import log, log_periodic
 from dlasset.model import ObjectInfo
 from dlasset.utils import export_json
 
@@ -60,9 +60,8 @@ def export_game_object(export_info: "ExportInfo") -> None:
     for idx, game_obj_info in enumerate(game_obj_info_list):
         export_single_game_obj(export_info, game_obj_info)
 
-        if idx % 50 == 0:
-            log(
-                "INFO",
-                f"{idx} / {len(game_obj_info_list)} ({idx / len(game_obj_info_list):.2%}) objects exported "
-                f"- {export_info}"
-            )
+        log_periodic(
+            "INFO",
+            f"{idx} / {len(game_obj_info_list)} ({idx / len(game_obj_info_list):.2%}) objects exported "
+            f"- {export_info}"
+        )

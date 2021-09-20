@@ -5,11 +5,13 @@ from typing import Any, Optional, cast
 
 from .const import COLOR_RESET, LOGGER_CONSOLE, LOGGER_ERROR, LOGGER_FILE, LOG_LEVEL_COLOR, LOG_LEVEL_NUM, LogLevel
 
-__all__ = ("log", "log_group_start", "log_group_end")
+__all__ = ("log", "log_periodic", "log_group_start", "log_group_end")
 
 _GROUP_START_TIME: Optional[float] = None
 
 _GROUP_CURRENT_NAME: Optional[str] = None
+
+_PERIOD_LAST_LOG: float = time.time()
 
 
 def log(level: LogLevel, message: Any, *, exc_info: bool = False) -> None:
@@ -21,6 +23,16 @@ def log(level: LogLevel, message: Any, *, exc_info: bool = False) -> None:
 
     if log_level >= LOG_LEVEL_NUM["ERROR"]:
         LOGGER_ERROR.error(message, exc_info=exc_info)
+
+
+def log_periodic(level: LogLevel, message: Any, *, period: float = 0.25, exc_info: bool = False) -> None:
+    """Log ``message`` at ``level`` for every ``period`` second."""
+    global _PERIOD_LAST_LOG  # pylint: disable=global-statement
+    if time.time() - _PERIOD_LAST_LOG < period:
+        return
+
+    log(level, message, exc_info=exc_info)
+    _PERIOD_LAST_LOG = time.time()
 
 
 def log_group_start(name: str) -> None:
