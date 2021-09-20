@@ -78,10 +78,6 @@
                 "container": {
                   "type": "string",
                   "description": "Regex test for the container name. This can be a partial match."
-                },
-                "name": {
-                  "type": "string",
-                  "description": "Regex test for the object name. This can be a partial match."
                 }
               },
               "required": [
