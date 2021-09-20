@@ -58,8 +58,16 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
 
     if obj_alpha := get_alpha_channel_tex(texture_envs, export_info):
         # Alpha texture exists, merge image
-        r, g, b = obj_main.image.split()[:3]
-        a = obj_alpha.image.split()[3]
+        img_main = obj_main.image
+        img_alpha = obj_alpha.image
+
+        # Alpha texture could be in a different size
+        if img_alpha.size != img_main.size:
+            img_alpha = img_alpha.resize(img_main.size)
+
+        r, g, b = img_main.split()[:3]
+        a = img_alpha.split()[3]
+
         Image.merge("RGBA", (r, g, b, a)).save(export_path)
         return
 
