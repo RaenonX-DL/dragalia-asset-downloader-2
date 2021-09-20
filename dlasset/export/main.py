@@ -93,8 +93,15 @@ def export_objects(
     """
     obj_info_to_export: list[ObjectInfo] = []
 
-    for obj_info in obj_export:
+    for idx, obj_info in enumerate(obj_export):
         obj = obj_info.read_obj()
+
+        if idx > 0 and idx % 500 == 0:
+            log(
+                "INFO",
+                f"Reading {idx} / {len(obj_export)} ({idx / len(obj_export):.2%}) object "
+                f"of {asset_name} ({container_fallback})..."
+            )
 
         if (
                 obj_info.is_from_main
@@ -104,6 +111,9 @@ def export_objects(
             continue
 
         obj_info_to_export.append(obj_info)
+
+    if len(obj_export) > 1000:
+        log("INFO", f"Read {len(obj_export)} objects and picked {len(obj_info_to_export)} objects to export.")
 
     export_info = ExportInfo(
         export_dir=export_dir,
