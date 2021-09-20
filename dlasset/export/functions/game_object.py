@@ -1,10 +1,10 @@
 """Implementations to export ``GameObject`` and its component into a single script."""
-import json
 import os
 from typing import TYPE_CHECKING
 
 from dlasset.export.types import MonoBehaviourTree
 from dlasset.log import log
+from dlasset.utils import export_json
 
 if TYPE_CHECKING:
     from dlasset.export import ExportInfo
@@ -52,10 +52,9 @@ def export_game_object(export_info: "ExportInfo") -> None:
 
         export_path: str = os.path.join(export_info.get_export_dir_of_obj(game_obj_info), f"{tree_name}.prefab.json")
 
-        with open(export_path, "w+", encoding="utf-8") as f:
-            f.write(json.dumps(tree_export, ensure_ascii=False, indent=2))
+        export_json(export_path, tree_export)
 
-        if idx % 200 == 0:
+        if idx % 50 == 0:
             log(
                 "INFO",
                 f"{idx} / {len(game_obj_info_list)} ({idx / len(game_obj_info_list):.2%}) objects exported "

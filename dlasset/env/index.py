@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from dlasset.enums import Locale
+from dlasset.utils import export_json
 
 if TYPE_CHECKING:
     from dlasset.manifest import ManifestEntryBase
@@ -73,6 +74,4 @@ class FileIndex:
         for locale, data in self._data.items():
             file_path = self.get_index_file_path(locale)
 
-            with open(file_path, "w+", encoding="utf-8") as f:
-                # `separators` argument for minify
-                json.dump(data, f, separators=(",", ":"))
+            export_json(file_path, data, separators=(",", ":"))
