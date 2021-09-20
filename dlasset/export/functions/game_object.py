@@ -20,7 +20,7 @@ def export_single_game_obj(export_info: "ExportInfo", game_obj_info: ObjectInfo)
     object_tree = game_obj_info.obj.read_typetree()
 
     components = [
-        export_info.get_obj_info(component["component"]["m_PathID"]).obj
+        export_info.get_obj_info(component["component"]["m_PathID"], game_obj_info).obj
         for component in object_tree["m_Component"][1:]  # 1st component is always a `Transform` which is omitted
     ]
 
@@ -33,7 +33,7 @@ def export_single_game_obj(export_info: "ExportInfo", game_obj_info: ObjectInfo)
         if script_path_id:
             # Attach script type name if available
             attachment = {
-                "$Script": export_info.get_obj_info(component_tree["m_Script"]["m_PathID"]).obj.name
+                "$Script": export_info.get_obj_info(component_tree["m_Script"]["m_PathID"], game_obj_info).obj.name
             }
         else:
             # Otherwise, attach component name

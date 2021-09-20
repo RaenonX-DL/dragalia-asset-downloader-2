@@ -24,7 +24,7 @@ def download_asset(asset_hash_dir: str, asset_target_path: str, entry: "Manifest
         f.write(response.content)
 
 
-def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> tuple[str]:
+def get_asset_paths(env: Environment, entries: list["ManifestEntry"]) -> tuple[str, ...]:
     """
     Get a list of asset paths of ``entry``.
 

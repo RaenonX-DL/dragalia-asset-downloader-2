@@ -12,7 +12,7 @@ from .types import ExportReturn
 __all__ = ("export_asset",)
 
 
-def log_asset_export_debug_info(asset_paths: tuple[str], export_type: ExportType, export_dir: str) -> None:
+def log_asset_export_debug_info(asset_paths: tuple[str, ...], export_type: ExportType, export_dir: str) -> None:
     """Log the debug info about the asset exporting."""
     log("DEBUG", "Exporting asset info:")
     for asset_path in asset_paths:
@@ -22,7 +22,7 @@ def log_asset_export_debug_info(asset_paths: tuple[str], export_type: ExportType
 
 
 def export_asset(
-        asset_paths: tuple[str],  # `list` won't allow multiprocessing because it's unhashable
+        asset_paths: tuple[str, ...],  # `list` won't allow multiprocessing because it's unhashable
         export_type: ExportType,
         export_dir: str, *,
         filters: Optional[Sequence[AssetTaskFilter]] = None,
@@ -47,10 +47,8 @@ def export_asset(
 
     log("INFO", f"Found {len(objects_to_export)} objects to export from {asset.name}.")
 
-    results: list[ExportReturn] = export_objects(
-        objects_to_export, export_type, export_dir,
-        asset_name=asset_name_main
-    )
+    export_info = ExportInfo(export_dir=export_dir, obj_info_list=objects_to_export, assets=asset)
+    results = EXPORT_FUNCTIONS[export_type](export_info)
 
     log("DEBUG", f"Done exporting {asset.name} to {export_dir}")
 

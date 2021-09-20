@@ -6,6 +6,7 @@ from PIL import Image
 from UnityPy.classes import Material
 
 from dlasset.log import log
+from dlasset.model import ObjectInfo
 from dlasset.utils import crop_image, merge_y_cb_cr_a
 
 if TYPE_CHECKING:
@@ -17,14 +18,16 @@ __all__ = ("export_image_story",)
 _parts_image_size = (256, 256)
 
 
-def get_y_cb_cr_a_from_material(material: Material, export_info: "ExportInfo") -> tuple[Image, Image, Image, Image]:
+def get_y_cb_cr_a_from_material(
+        material: Material, export_info: "ExportInfo", root_mono_behaviour: ObjectInfo
+) -> tuple[Image, Image, Image, Image]:
     """Get a tuple containing Y, Cb, Cr, alpha image object in order of the material."""
     texture_envs = dict(material.read_typetree()["m_SavedProperties"]["m_TexEnvs"])
 
-    obj_y = cast(Image, export_info.get_obj_info(texture_envs["_TexY"]["m_Texture"]["m_PathID"]).obj.image)
-    obj_cb = cast(Image, export_info.get_obj_info(texture_envs["_TexCb"]["m_Texture"]["m_PathID"]).obj.image)
-    obj_cr = cast(Image, export_info.get_obj_info(texture_envs["_TexCr"]["m_Texture"]["m_PathID"]).obj.image)
-    obj_a = cast(Image, export_info.get_obj_info(texture_envs["_TexA"]["m_Texture"]["m_PathID"]).obj.image)
+    obj_y = export_info.get_obj_info(texture_envs["_TexY"]["m_Texture"]["m_PathID"], root_mono_behaviour).obj.image
+    obj_cb = export_info.get_obj_info(texture_envs["_TexCb"]["m_Texture"]["m_PathID"], root_mono_behaviour).obj.image
+    obj_cr = export_info.get_obj_info(texture_envs["_TexCr"]["m_Texture"]["m_PathID"], root_mono_behaviour).obj.image
+    obj_a = export_info.get_obj_info(texture_envs["_TexA"]["m_Texture"]["m_PathID"], root_mono_behaviour).obj.image
 
     return obj_y, obj_cb, obj_cr, obj_a
 
@@ -73,8 +76,12 @@ def export_image_story(export_info: "ExportInfo") -> None:
 
     try:
         channels = get_y_cb_cr_a_from_material(
-            cast(Material, export_info.get_obj_info(tree["basePartsData"]["material"]["m_PathID"]).obj),
-            export_info
+            cast(
+                Material,
+                export_info.get_obj_info(tree["basePartsData"]["material"]["m_PathID"], mono_behaviour).obj
+            ),
+            export_info,
+            mono_behaviour
         )
     except KeyError as ex:
         raise ValueError(f"Asset {image_name} ({mono_behaviour.container}) has missing object") from ex
