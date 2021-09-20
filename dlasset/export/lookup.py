@@ -1,6 +1,6 @@
 """Exporting function index."""
 from dlasset.config import ExportType, UnityType
-from .functions import export_image, export_image_alpha, export_image_story, export_mono_behaviour
+from .functions import export_game_object, export_image, export_image_alpha, export_image_story, export_mono_behaviour
 from .types import ExportFunction
 
 __all__ = ("EXPORT_FUNCTIONS", "TYPES_TO_INCLUDE")
@@ -11,7 +11,7 @@ EXPORT_FUNCTIONS: dict[ExportType, ExportFunction] = {
     "Texture2D-Alpha": export_image_alpha,
     "Texture2D-Story": export_image_story,
     "Sprite": export_image,
-    "GameObject": export_mono_behaviour,
+    "GameObject": export_game_object,
     "AnimatorController": export_mono_behaviour,
     "AnimatorOverrideController": export_mono_behaviour,
 }
@@ -22,7 +22,7 @@ TYPES_TO_INCLUDE: dict[ExportType, tuple[UnityType, ...]] = {
     "Texture2D-Alpha": ("Texture2D", "Material"),
     "Texture2D-Story": ("Texture2D", "Material", "MonoBehaviour"),
     "Sprite": ("Sprite",),
-    "GameObject": ("GameObject",),
+    "GameObject": ("GameObject", "MonoBehaviour", "MonoScript"),
     "AnimatorController": ("AnimatorController",),
     "AnimatorOverrideController": ("AnimatorOverrideController",),
 }

@@ -1,5 +1,5 @@
 """Type definitions for exporting the assets."""
-from typing import Any, Callable, Union
+from typing import Any, Callable, Optional, Union
 
 from .model import ExportInfo
 
@@ -7,14 +7,7 @@ __all__ = ("ExportFunction", "ExportReturn", "MonoBehaviourTree")
 
 MonoBehaviourTree = dict[Any, Any]
 
-MonoBehaviourExportFunction = Callable[[ExportInfo], list[MonoBehaviourTree]]
-
-Texture2DExportFunction = Callable[[ExportInfo], None]
-
-ExportFunction = Union[
-    MonoBehaviourExportFunction,
-    Texture2DExportFunction
-]
+ExportFunction = Callable[[ExportInfo], Optional[list[MonoBehaviourTree]]]
 
 ExportReturn = Union[
     MonoBehaviourTree

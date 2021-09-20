@@ -7,6 +7,7 @@ __all__ = ("UnityType", "ExportType")
 # List supported types only
 UnityType = Literal[
     "MonoBehaviour",
+    "MonoScript",
     "GameObject",
     "AnimatorController",
     "AnimatorOverrideController",
