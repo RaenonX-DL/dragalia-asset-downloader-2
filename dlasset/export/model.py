@@ -59,7 +59,7 @@ class ExportInfo:
         Raises :class:`ValueError` if no corresponding object.
         """
         if path_id not in self._object_dict:
-            raise ValueError(f"Path ID #{path_id} not exists on {self.asset_name} ({self.container_fallback})")
+            raise ValueError(f"Path ID #{path_id} not exists on {self}")
 
         return self._object_dict[path_id]
 
