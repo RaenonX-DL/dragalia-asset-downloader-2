@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/RaenonX-DL/dragalia-asset-downloader-2/main/config.schema.json",
+  "title": "Dragalia Lost Asset Downloader Config Schema",
+  "description": "JSON Schema for the asset downloader config.",
+  "type": "object",
+  "properties": {
+    "paths": {
+      "type": "object",
+      "description": "Various I/O paths.",
+      "properties": {
+        "downloaded": {
+          "type": "string",
+          "description": "Root directory for storing the downloaded/unextracted assets."
+        },
+        "lib": {
+          "type": "string",
+          "description": "Root directory for the external libraries."
+        },
+        "export": {
+          "type": "string",
+          "description": "Root directory for the exported files."
+        },
+        "index": {
+          "type": "string",
+          "description": "Root directory for the indexing files."
+        },
+        "log": {
+          "type": "string",
+          "description": "Root directory for the log files."
+        }
+      },
+      "required": [
+        "downloaded",
+        "lib",
+        "export",
+        "index",
+        "log"
+      ],
+      "additionalProperties": false
+    },
+    "assets": {
+      "type": "array",
+      "description": "Asset exporting tasks.",
+      "items": {
+        "type": "object",
+        "description": "A single asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Name of the asset exporting task."
+          },
+          "name": {
+            "type": "string",
+            "description": "Regex of the asset name to export. This has to be a full match. Note that the dependency assets of a main asset selected by a task always pass this test."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the export task.",
+            "enum": [
+              "MonoBehaviour",
+              "GameObject",
+              "AnimatorController",
+              "AnimatorOverrideController",
+              "Texture2D",
+              "Texture2D-Alpha",
+              "Texture2D-Story",
+              "Sprite"
+            ]
+          },
+          "filter": {
+            "type": "array",
+            "description": "Export the objects that pass one of these filters and all the conditions of a filter. Note that these filters are only apply to the main asset. Dependency assets always pass the tests unless it is selected as main assets.",
+            "items": {
+              "type": "object",
+              "description": "A single filter. Objects that pass all conditions of a filter will be exported.",
+              "properties": {
+                "container": {
+                  "type": "string",
+                  "description": "Regex test for the container name. This can be a partial match."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Regex test for the object name. This can be a partial match."
+                }
+              },
+              "required": [
+                "container"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "isMultiLocale": {
+            "type": "boolean",
+            "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
+            "default": false
+          },
+          "suppressWarnings": {
+            "type": "array",
+            "description": "Types of warning message to suppress.",
+            "items": {
+              "type": "string",
+              "description": "Warning message type to suppress.",
+              "enum": [
+                "nothingToExport",
+                "noMainTexture"
+              ]
+            }
+          }
+        },
+        "required": [
+          "task",
+          "name",
+          "type",
+          "filter"
+        ],
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "raw": {
+      "type": "array",
+      "description": "Raw asset exporting tasks.",
+      "items": {
+        "type": "object",
+        "description": "A single raw asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Name of the raw asset exporting task."
+          },
+          "name": {
+            "type": "string",
+            "description": "Regex of the asset name to export. This has to be a full match."
+          },
+          "isMultiLocale": {
+            "type": "boolean",
+            "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
+            "default": false
+          }
+        },
+        "required": [
+          "task",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "paths",
+    "assets",
+    "raw"
+  ],
+  "additionalProperties": false
+}

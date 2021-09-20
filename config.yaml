@@ -1,0 +1,82 @@
+paths:
+  downloaded: .exclude/downloaded
+  lib: lib
+  export: .exclude/media
+  index: .exclude/index
+  log: .exclude/logs
+
+assets:
+  - task: Master Assets (all)
+    name: master
+    type: MonoBehaviour
+    filter:
+      - container: /resources/master/
+
+  - task: Master Assets (text label)
+    name: master
+    type: MonoBehaviour
+    filter:
+      - container: /resources/master/textlabel
+    isMultiLocale: true
+
+  - task: Action Scripts
+    name: actions
+    type: GameObject
+    filter:
+      - container: /resources/actions/
+
+  - task: Action Parts List
+    name: actions
+    type: MonoBehaviour
+    filter:
+      - container: /resources/actions/actionpartslist
+
+  - task: Animation Data (Base Controller)
+    name: ((characters|dragon)/motion/|meshes/dragon)
+    type: AnimatorController
+    filter:
+      - container: /resources/characters/motion/(.*)\.controller
+    suppressWarnings:
+      - nothingToExport
+
+  - task: Animation Data (Override Controller)
+    name: ((characters|dragon)/motion/|meshes/dragon)
+    type: AnimatorOverrideController
+    filter:
+      - container: /resources/characters/motion/(.*)\.overridecontroller
+    suppressWarnings:
+      - nothingToExport
+
+  - task: UI Sprites
+    name: images/ingame/ui
+    type: Sprite
+    filter:
+      - container: /resources/images/ingame/ui/atlas/ui
+    isMultiLocale: true
+
+  - task: Icons
+    name: images/icon/
+    type: Texture2D-Alpha
+    filter:
+      - container: /resources/images/icon/
+    isMultiLocale: true
+
+  - task: Unit Image
+    name: images/outgame/unitdetail/(amulet|chara|dragon)
+    type: Texture2D
+    filter:
+      - container: /resources/images/outgame/unitdetail
+
+  - task: Story Image
+    name: emotion/story
+    type: Texture2D-Story
+    filter:
+      - container: /resources/emotion/story
+
+  - task: Story Content
+    name: story/(unit|castle|quest)story/
+    type: MonoBehaviour
+    filter:
+      - container: /resources/story
+
+raw: [ ]

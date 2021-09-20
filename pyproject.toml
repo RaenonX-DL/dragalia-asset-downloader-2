@@ -11,25 +11,21 @@ docstring-quote = "double"
 
 [tool.pylint.BASIC]
 # Reason of the good names:
-# - _
-#   often used as dummy variable during unpacking
-# - T
-#   often used to for TypeVar
-# - f
-#   often used as a file stream name
-# - i, j, k
-#   often used in for loops
-# - s
-#   often used to represent "string"
-# - v
-#   often used to represent "value"
-# - dt, tz
-#   often used in datetime handling (dt for datetime, tz for timezone)
-# - ex
-#   often used as the var name of exception caught by try..except
-# - fn
-#   often used to represent a function
-good-names = "_,T,f,i,j,k,s,v,dt,ex,fn,tz"
+# - _:           dummy variable during unpacking
+# - T:           for TypeVar
+# - f:           file stream name
+# - i, j, k:     for loops
+# - r, g, b, a:  represents RGBA
+# - y, cb, cr:   represents YCbCr
+# - K:           type variable name for "K"ey
+# - s:           represents "string"
+# - v:           represents "value"
+# - R:           type variable name for "R"eturn
+# - iv:          "iv" for crypto
+# - dt, tz:      datetime handling (dt for datetime, tz for timezone)
+# - ex:          var name of exception caught by try..except
+# - fn:          represents a function
+good-names = "_, T, f, i, j, K, k, r, g, b, a, y, cb, cr, s, v, R, iv, dt, ex, fn, tz"
 
 [tool.pylint.FORMAT]
 max-line-length = 119
@@ -39,6 +35,9 @@ max-line-length = 119
 # cyclic-import:                 Just let it crash during runtime
 # arguments-differ:              Let it checked by IDE or flake8
 disable = "fixme, too-many-instance-attributes, cyclic-import, arguments-differ"
+
+[tool.pylint.SIMILARITIES]
+ignore-imports="yes"
 
 # -------------------------- pydocstyle --------------------------
 
@@ -65,4 +64,11 @@ exclude = "(tests/|script_*)"
 show_error_codes = true
 disallow_untyped_defs = true
 disallow_untyped_decorators = true
-disallow_any_expr = true
+
+[[tool.mypy.overrides]]
+module = [
+    "UnityPy.*",
+    "jsonschema.*",
+    "PIL",
+]
+ignore_missing_imports = true

@@ -4,9 +4,14 @@ venv/
 # Cache
 .mypy_cache
 .pytest_cache
+__pycache__
 
 # Project files
 .idea/
 
+# Test files
+config-temp.yaml
+
 # Misc
 .wakatime-project
+.exclude/
