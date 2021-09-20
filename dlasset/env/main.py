@@ -49,12 +49,16 @@ class Environment:
         if self.args.no_index:
             log("WARNING", "File indexing is not enabled. Files matching the task criteria will be downloaded.")
 
+        log("INFO", f"Version code: {self.args.version_code}")
+        log("INFO", f"Config file path: {self.args.config_path}")
+        log("INFO", "-" * 20)
         log("INFO", f"External library directory: {self.config.paths.lib}")
         log("INFO", "-" * 20)
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
         log("INFO", f"Downloaded assets directory: {self.downloaded_assets_dir}")
         log("INFO", f"Exported files directory: {self.config.paths.export}")
         log("INFO", f"File index directory: {self.config.paths.index}")
+
         log_group_end()
 
     def init_dirs(self) -> None:
