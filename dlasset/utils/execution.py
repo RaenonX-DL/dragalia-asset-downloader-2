@@ -60,13 +60,13 @@ def concurrent_run(
 
                 futures.append(future)
 
-    exceptions = [future.exception() for future in futures if future.exception()]
-    if error_count := len(exceptions):
-        log("ERROR", f"{error_count} of {len(futures)} concurrent tasks have error.")
-        log("ERROR", "-" * 20)
-        for exception in exceptions:
-            log("ERROR", f"{exception.__class__.__name__}: {exception}")
-        sys.exit(1)
+        exceptions = [future.exception() for future in futures if future.exception()]
+        if error_count := len(exceptions):
+            log("ERROR", f"{error_count} of {len(futures)} concurrent tasks have error.")
+            log("ERROR", "-" * 20)
+            for exception in exceptions:
+                log("ERROR", f"{exception.__class__.__name__}: {exception}")
+            sys.exit(1)
 
     return results
 
