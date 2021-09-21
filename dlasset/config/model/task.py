@@ -54,7 +54,7 @@ class AssetTaskBase(ConfigBase, ABC):
     @property
     def title(self) -> str:
         """Get a string of the summary of this task."""
-        return f"{self.name} (Regex: {self.asset_regex.pattern}"
+        return f"{self.name} ({self.asset_regex.pattern})"
 
 
 @dataclass

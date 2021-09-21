@@ -30,7 +30,7 @@ def export_from_manifest(
 def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> None:
     """Export the assets according to ``task``."""
     for sub_task in task.tasks:
-        log_group_start(sub_task.title)
+        log_group_start(f"{task.title} // {sub_task.title}")
 
         log("INFO", "Getting asset entry from the manifest...")
         asset_entries = list(
