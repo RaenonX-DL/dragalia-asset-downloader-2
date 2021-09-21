@@ -46,7 +46,7 @@ assets:
   - name: UI Sprites
     asset: images/ingame/ui
     tasks:
-      - container: /resources/images/ingame/ui/atlas/ui
+      - container: /resources/images/ingame/ui/atlas
         type: Sprite
         isMultiLocale: true
 
@@ -71,6 +71,13 @@ assets:
 
   - name: Story Content
     asset: story/(unit|castle|quest)story/
+    tasks:
+      - container: /resources/story
+        type: MonoBehaviour
+        isMultiLocale: true
+
+  - name: Story Functions
+    asset: story/function
     tasks:
       - container: /resources/story
         type: MonoBehaviour
