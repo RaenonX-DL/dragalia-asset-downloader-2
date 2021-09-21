@@ -46,52 +46,57 @@
         "type": "object",
         "description": "A single asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
         "properties": {
-          "task": {
+          "name": {
             "type": "string",
             "description": "Name of the asset exporting task."
           },
-          "name": {
+          "asset": {
             "type": "string",
             "description": "Regex of the asset name to export. This has to be a full match. Note that the dependency assets of a main asset selected by a task always pass this test."
           },
-          "type": {
-            "type": "string",
-            "description": "Type of the export task.",
-            "enum": [
-              "MonoBehaviour",
-              "GameObject",
-              "AnimatorController",
-              "AnimatorOverrideController",
-              "Texture2D",
-              "Texture2D-Alpha",
-              "Texture2D-Story",
-              "Sprite"
-            ]
-          },
-          "filter": {
+          "tasks": {
             "type": "array",
-            "description": "Export the objects that pass one of these filters and all the conditions of a filter. Note that these filters are only apply to the main asset. Dependency assets always pass the tests unless it is selected as main assets.",
+            "description": "List of exporting task to perform.",
             "items": {
               "type": "object",
               "description": "A single filter. Objects that pass all conditions of a filter will be exported.",
               "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the task."
+                },
                 "container": {
                   "type": "string",
-                  "description": "Regex test for the container name. This can be a partial match."
+                  "description": "Regex test for the container name. This can be a partial match. Note that this condition only applies on the main asset. Dependency assets ignore this criteria."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Type of the export task.",
+                  "enum": [
+                    "MonoBehaviour",
+                    "GameObject",
+                    "AnimatorController",
+                    "AnimatorOverrideController",
+                    "Texture2D",
+                    "Texture2D-Alpha",
+                    "Texture2D-Story",
+                    "Sprite"
+                  ]
+                },
+                "isMultiLocale": {
+                  "type": "boolean",
+                  "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
+                  "default": false
                 }
               },
               "required": [
-                "container"
+                "container",
+                "type"
               ],
               "additionalProperties": false
             },
             "minItems": 1,
             "uniqueItems": true
-          },
-          "isMultiLocale": {
-            "type": "boolean",
-            "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
-            "default": false
           },
           "suppressWarnings": {
             "type": "array",
@@ -107,10 +112,9 @@
           }
         },
         "required": [
-          "task",
           "name",
-          "type",
-          "filter"
+          "asset",
+          "tasks"
         ],
         "additionalProperties": false
       },

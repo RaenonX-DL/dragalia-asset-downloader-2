@@ -1,7 +1,7 @@
 """Unity asset model."""
 import os
 from dataclasses import dataclass, field
-from typing import Optional, Sequence, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 import UnityPy
 from UnityPy.classes import Object
@@ -11,7 +11,7 @@ from dlasset.log import log_periodic
 from .obj import ObjectInfo
 
 if TYPE_CHECKING:
-    from dlasset.config import AssetTaskFilter, UnityType
+    from dlasset.config import AssetSubTask, UnityType
 
 __all__ = ("UnityAsset",)
 
@@ -71,7 +71,7 @@ class UnityAsset:
 
     def get_objects_matching_filter(
             self, types: tuple["UnityType", ...], *,
-            filters: Optional[Sequence["AssetTaskFilter"]] = None
+            sub_task: Optional["AssetSubTask"] = None
     ) -> list[ObjectInfo]:
         """
         Get a list of objects in type of ``types`` and match any of the given ``filters``.
@@ -90,7 +90,7 @@ class UnityAsset:
             if obj.type not in types:
                 continue
 
-            if is_main and filters and not any(filter_.match_container(path) for filter_ in filters):
+            if is_main and sub_task and not sub_task.match_container(path):
                 continue
 
             log_periodic("INFO", f"Reading {idx} / {object_count} ({idx / object_count:.2%}) objects")
