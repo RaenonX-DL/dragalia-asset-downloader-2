@@ -21,10 +21,12 @@ class ExportInfo:
     assets: UnityAsset
 
     _object_info_dict: dict[int, ObjectInfo] = field(init=False)
+    _object_info_cache: dict[int, ObjectInfo] = field(init=False)
     _main_container: str = field(init=False)
 
     def __post_init__(self, obj_info_list: list[ObjectInfo]) -> None:
         self._object_info_dict = {obj_info.obj.path_id: obj_info for obj_info in obj_info_list}
+        self._object_info_cache = self._object_info_dict.copy()
         self._main_container = Counter(obj_info.container for obj_info in obj_info_list).most_common(1)[0][0]
 
     def __hash__(self) -> int:
@@ -53,11 +55,11 @@ class ExportInfo:
 
         This will try to search from the underlying asset if it's not found from ``obj_info_list``.
         """
-        if path_id in self._object_info_dict:
-            return self._object_info_dict[path_id]
+        if path_id in self._object_info_cache:
+            return self._object_info_cache[path_id]
 
         if obj_info := self.assets.get_obj_info_at_path_id(path_id, src_obj_info.container):
-            self._object_info_dict[path_id] = obj_info
+            self._object_info_cache[path_id] = obj_info
             return obj_info
 
         raise ValueError(f"Path ID #{path_id} not exists on {self}")

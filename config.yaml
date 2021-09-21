@@ -47,7 +47,7 @@ assets:
     asset: images/ingame/ui
     tasks:
       - container: /resources/images/ingame/ui/atlas
-        type: Sprite
+        type: Sprite-UI
         isMultiLocale: true
 
   - name: Icons
