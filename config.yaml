@@ -83,4 +83,13 @@ assets:
         type: MonoBehaviour
         isMultiLocale: true
 
+  - name: Login Bonus
+    asset: images/outgame/loginbonus
+    tasks:
+      - container: /resources/images/outgame/loginbonus
+        type: Sprite-UI
+        isMultiLocale: true
+    suppressWarnings:
+      - nothingToExport
+
 raw: [ ]
