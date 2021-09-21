@@ -6,6 +6,7 @@ from functools import wraps
 from typing import Any, Callable, Hashable, Sequence, TypeVar, Union
 
 from dlasset.log import init_log, log
+from .misc import split_chunks
 
 __all__ = ("concurrent_run", "concurrent_run_no_return", "time_exec")
 
@@ -46,15 +47,18 @@ def concurrent_run(
 
         return inner
 
-    with ProcessPoolExecutor(initializer=on_concurrency_start, initargs=(log_dir,)) as executor:
-        futures: list[Future] = []
-        for args in args_list:
-            future = executor.submit(fn, *args)
+    # Memory in an executor will only release after the executor has shutdown (exiting the `with` statement)
+    # Therefore splitting args list (tasks) into chunks
+    for args_chunk in split_chunks(args_list, 1000):
+        with ProcessPoolExecutor(initializer=on_concurrency_start, initargs=(log_dir,)) as executor:
+            futures: list[Future] = []
+            for args in args_chunk:
+                future = executor.submit(fn, *args)
 
-            if key_of_call:
-                future.add_done_callback(on_done(key_of_call, args))
+                if key_of_call:
+                    future.add_done_callback(on_done(key_of_call, args))
 
-            futures.append(future)
+                futures.append(future)
 
     exceptions = [future.exception() for future in futures if future.exception()]
     if error_count := len(exceptions):
