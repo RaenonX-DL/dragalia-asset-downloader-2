@@ -24,17 +24,17 @@ class UnityAsset:
 
     _assets: list[Environment] = field(init=False)
 
-    _obj_dict: dict[int, Object] = field(init=False)
-    _obj_info_cache: dict[int, ObjectInfo] = field(init=False)
+    _obj_cache: dict[int, Object] = field(init=False)
+    _obj_read: dict[int, bool] = field(init=False)
 
     def __post_init__(self) -> None:
         self._assets = [UnityPy.load(asset_path) for asset_path in self.asset_paths]
 
-        self._obj_dict = {}
+        self._obj_cache = {}
         for asset in self._assets:
-            self._obj_dict.update({obj.path_id: obj for obj in asset.objects})
+            self._obj_cache.update({obj.path_id: obj for obj in asset.objects})
 
-        self._obj_info_cache = {}
+        self._obj_read = {path_id: False for path_id in self._obj_cache.keys()}
 
     @property
     def asset_count(self) -> int:
@@ -51,6 +51,23 @@ class UnityAsset:
         """Get the name of this asset. This uses the main asset name as the name."""
         return os.path.basename(self.main_path)
 
+    def _get_obj_from_cache(self, path_id: int) -> Optional[Object]:
+        """
+        Get the read object at ``path_id`` from cache.
+
+        If the object is not read, it will be read first.
+
+        Returns ``None`` if the object does not exist.
+        """
+        if path_id not in self._obj_cache:
+            return None
+
+        if not self._obj_read[path_id]:
+            self._obj_cache[path_id] = self._obj_cache[path_id].read()
+            self._obj_read[path_id] = True
+
+        return self._obj_cache[path_id]
+
     def get_obj_info_at_path_id(self, path_id: int, src_path: str) -> Optional[ObjectInfo]:
         """
         Get the object at ``path_id``.
@@ -59,12 +76,8 @@ class UnityAsset:
 
         Returns ``None`` if no such object exists.
         """
-        if obj_info := self._obj_info_cache.get(path_id):
-            return obj_info
-
-        if obj := self._obj_dict.get(path_id):
-            ret = ObjectInfo(obj=obj.read(), container=src_path)
-            self._obj_info_cache[path_id] = ret
+        if obj := self._get_obj_from_cache(path_id):
+            ret = ObjectInfo(obj=obj, container=src_path)
             return ret
 
         return None
@@ -98,6 +111,8 @@ class UnityAsset:
 
             log_periodic("INFO", f"Reading {idx} / {object_count} ({idx / object_count:.2%}) objects")
 
-            ret.append(ObjectInfo(obj=obj.read(), container=path))
+            # Check-in to the cache then get it back not only caches it, but also reads it
+            self._obj_cache[obj.path_id] = obj
+            ret.append(ObjectInfo(obj=self._get_obj_from_cache(obj.path_id), container=path))
 
         return ret
