@@ -29,6 +29,8 @@ def export_from_manifest(
 
 def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> None:
     """Export the assets according to ``task``."""
+    processed_entries = []
+
     for sub_task in task.tasks:
         log_group_start(f"{task.title} // {sub_task.title}")
 
@@ -40,6 +42,7 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
             [env, locale, entries, task, sub_task] for locale, entries in asset_entries
             if any(env.index.is_file_updated(locale, entry) for entry in entries)
         ]
+
         log(
             "INFO",
             f"{len(asset_entries)} assets matching the criteria. "
@@ -48,10 +51,14 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
 
         concurrent_run_no_return(export_from_manifest, args_list, env.config.paths.log)
 
-        # MUST update outside of the concurrent run
-        # Otherwise the index will not update because of the separated memory space
-        for locale, entries in asset_entries:
-            for entry in entries:
-                env.index.update_entry(locale, entry)
+        processed_entries.extend(asset_entries)
 
         log_group_end()
+
+    # MUST update outside of the concurrent run
+    # Otherwise, the index will not update because of the separated memory space
+    # ---------------------------------------------------------------------------------------
+    # Update only if a task is completed, because subtasks are performed on the same asset(s)
+    for locale, entries in processed_entries:
+        for entry in entries:
+            env.index.update_entry(locale, entry)
