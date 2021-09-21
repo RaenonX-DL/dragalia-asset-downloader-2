@@ -27,10 +27,6 @@ def export_mono_behaviour(export_info: "ExportInfo") -> list[MonoBehaviourTree]:
 
         export_path: str = os.path.join(export_info.get_export_dir_of_obj(obj_info), f"{obj.name}.json")
 
-        if not obj.serialized_type.nodes:
-            log("WARNING", f"No exportable data for {obj.name}")
-            continue
-
         tree = obj.read_typetree()
 
         export_json(export_path, tree)
