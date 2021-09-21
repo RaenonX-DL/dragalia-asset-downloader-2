@@ -40,7 +40,11 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
             [env, locale, entries, task, sub_task] for locale, entries in asset_entries
             if any(env.index.is_file_updated(locale, entry) for entry in entries)
         ]
-        log("INFO", f"{len(asset_entries)} assets matching the criteria. {len(args_list)} assets updated.")
+        log(
+            "INFO",
+            f"{len(asset_entries)} assets matching the criteria. "
+            f"{len(args_list)} assets updated{' (force update)' if env.args.no_index else ''}."
+        )
 
         concurrent_run_no_return(export_from_manifest, args_list, env.config.paths.log)
 
