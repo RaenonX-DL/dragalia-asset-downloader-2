@@ -58,6 +58,7 @@ class Environment:
         log("INFO", f"Downloaded assets directory: {self.downloaded_assets_dir}")
         log("INFO", f"Exported files directory: {self.config.paths.export}")
         log("INFO", f"File index directory: {self.config.paths.index}")
+        log("INFO", f"Log root directory: {self.config.paths.log}")
         log("INFO", "-" * 20)
         log("INFO", f"Disable file indexing: {self.args.no_index}")
         log("INFO", "Suppressed warnings:")
