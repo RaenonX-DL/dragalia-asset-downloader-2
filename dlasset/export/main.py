@@ -1,7 +1,7 @@
 """Implementations to export files from an Unity asset."""
 from typing import Optional, Sequence
 
-from dlasset.config import AssetTaskFilter, ExportType
+from dlasset.config import AssetSubTask, ExportType
 from dlasset.enums import WarningType
 from dlasset.log import log
 from dlasset.manage import get_asset
@@ -25,7 +25,7 @@ def export_asset(
         asset_paths: tuple[str, ...],  # `list` won't allow multiprocessing because it's unhashable
         export_type: ExportType,
         export_dir: str, *,
-        filters: Optional[Sequence[AssetTaskFilter]] = None,
+        sub_task: Optional[AssetSubTask] = None,
         suppress_warnings: Sequence[WarningType] = ()
 ) -> ExportReturn:
     """
@@ -39,7 +39,7 @@ def export_asset(
 
     log("DEBUG", f"Getting objects to export from {asset.asset_count} assets ({asset.name})...")
 
-    objects_to_export = asset.get_objects_matching_filter(TYPES_TO_INCLUDE[export_type], filters=filters)
+    objects_to_export = asset.get_objects_matching_filter(TYPES_TO_INCLUDE[export_type], sub_task=sub_task)
 
     if not objects_to_export:
         if WarningType.NOTHING_TO_EXPORT not in suppress_warnings:
