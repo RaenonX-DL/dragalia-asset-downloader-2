@@ -77,20 +77,23 @@ class UnityAsset:
         Get a list of objects in type of ``types`` and match any of the given ``filters``.
 
         If ``filters`` is not provided or set to ``None``, all objects in type of ``types`` will be returned.
+
+        Note that this only include objects coming from the main asset.
+        Objects from the dependency assets are ignored.
         """
         ret: list[ObjectInfo] = []
 
-        objects: list[tuple[bool, Object]] = []
-        for idx, asset in enumerate(self._assets):
-            objects.extend((idx == 0, item) for item in asset.container.items())
+        main_asset = self._assets[0]
+
+        objects: list[tuple[str, Object]] = main_asset.container.items()
 
         object_count = len(objects)
 
-        for idx, (is_main, (path, obj)) in enumerate(objects):
+        for idx, (path, obj) in enumerate(objects):
             if obj.type not in types:
                 continue
 
-            if is_main and sub_task and not sub_task.match_container(path):
+            if sub_task and not sub_task.match_container(path):
                 continue
 
             log_periodic("INFO", f"Reading {idx} / {object_count} ({idx / object_count:.2%}) objects")
