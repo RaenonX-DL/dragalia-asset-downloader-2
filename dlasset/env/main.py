@@ -59,6 +59,7 @@ class Environment:
         log("INFO", f"Exported files directory: {self.config.paths.export}")
         log("INFO", f"File index directory: {self.config.paths.index}")
         log("INFO", "-" * 20)
+        log("INFO", f"Disable file indexing: {self.args.no_index}")
         log("INFO", "Suppressed warnings:")
         for task in self.config.asset_tasks:
             if not task.suppress_warnings:
