@@ -32,7 +32,7 @@ def export_anim_ctrl(export_info: "ExportInfo") -> None:
             clip_obj = export_info.get_obj_info(clip_path_id, obj_info).obj
 
             clips.append({
-                "$PathID": clip["m_PathID"],
+                "$PathID": clip_path_id,
                 "$Name": clip_obj.name,
                 "$StopTime": clip_obj.m_MuscleClip.m_StopTime
             })
