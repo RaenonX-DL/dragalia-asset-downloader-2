@@ -26,8 +26,8 @@ def export_anim_ctrl(export_info: "ExportInfo") -> None:
         tree["m_TOS"] = dict(tree["m_TOS"])
 
         clips = []
-        for clip in tree["m_AnimationClips"]:
-            clip_path_id = clip["m_PathID"]
+        for clip in obj.m_AnimationClips:
+            clip_path_id = clip.path_id
 
             clip_obj = export_info.get_obj_info(clip_path_id, obj_info).obj
 
