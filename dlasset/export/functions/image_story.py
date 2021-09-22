@@ -90,12 +90,16 @@ def export_image_story(export_info: "ExportInfo") -> None:
         raise ValueError(f"Asset {image_name} ({mono_behaviour.container}) has missing object") from ex
 
     log("INFO", f"Exporting story image of {image_name}... ({mono_behaviour.container})")
-
-    export_path = os.path.join(export_info.get_export_dir_of_obj(mono_behaviour), f"{image_name}.png")
+    export_dir = export_info.get_export_dir_of_obj(mono_behaviour)
 
     log("DEBUG", f"Merging YCbCr of {image_name}... ({mono_behaviour.container})")
-
     img = merge_y_cb_cr_a(*channels)
+
+    log("DEBUG", f"Saving merged YCbCr image of {image_name}... ({mono_behaviour.container})")
+    img.save(os.path.join(export_dir, f"{image_name}-full.png"))
+
+    log("DEBUG", f"Cropping parts base of {image_name}... ({mono_behaviour.container})")
     img = crop_parts_image(export_info, img, tree["partsDataTable"], image_name, mono_behaviour.container)
 
-    img.save(export_path)
+    log("DEBUG", f"Saving parts base of {image_name}... ({mono_behaviour.container})")
+    img.save(os.path.join(export_dir, f"{image_name}.png"))
