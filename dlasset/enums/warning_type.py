@@ -13,3 +13,5 @@ class WarningType(Enum):
 
     NOTHING_TO_EXPORT = "nothingToExport"
     NO_MAIN_TEXTURE = "noMainTexture"
+    NO_PARTS_INFO = "noPartsInfo"
+    NO_MATERIAL = "noMaterial"

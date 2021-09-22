@@ -34,10 +34,13 @@ assets:
     asset: ((characters|dragon)/motion/|meshes/dragon)
     tasks:
       - name: Base controller
-        container: /resources/characters/motion/(.*)\.controller
+        container: /resources/(characters|dragon)/motion/(.*)\.controller
         type: AnimatorController
 
-      - name: Override controller
+      # Don't export dragon override controller for now
+      # because it needs re-implmentation on controller at the parser side
+      # https://github.com/RaenonX-DL/dragalia-asset-downloader-2/issues/46
+      - name: Override controller (character)
         container: /resources/characters/motion/(.*)\.overridecontroller
         type: AnimatorOverrideController
     suppressWarnings:
@@ -91,5 +94,11 @@ assets:
         isMultiLocale: true
     suppressWarnings:
       - nothingToExport
+
+  - name: Event CG
+    asset: emotion/eventcg
+    tasks:
+      - container: /resources/emotion/eventcg
+        type: Texture2D-Material
 
 raw: [ ]

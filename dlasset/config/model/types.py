@@ -20,6 +20,7 @@ UnityType = Literal[
 # Names should be in the format of <UNITY_TYPE>-<NAME>.
 ExtendedType = Literal[
     "Texture2D-Alpha",
+    "Texture2D-Material",
     "Texture2D-Story",
     "Sprite-UI"
 ]

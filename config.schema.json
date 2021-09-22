@@ -79,6 +79,7 @@
                     "AnimatorOverrideController",
                     "Texture2D",
                     "Texture2D-Alpha",
+                    "Texture2D-Material",
                     "Texture2D-Story",
                     "Sprite-UI"
                   ]
@@ -111,7 +112,9 @@
               "description": "Warning message type to suppress.",
               "enum": [
                 "nothingToExport",
-                "noMainTexture"
+                "noMainTexture",
+                "noPartsInfo",
+                "noMaterial"
               ]
             }
           }
