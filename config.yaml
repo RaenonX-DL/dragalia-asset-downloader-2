@@ -95,4 +95,10 @@ assets:
     suppressWarnings:
       - nothingToExport
 
+  - name: Event CG
+    asset: emotion/eventcg
+    tasks:
+      - container: /resources/emotion/eventcg
+        type: Texture2D-Material
+
 raw: [ ]

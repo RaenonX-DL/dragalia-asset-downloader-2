@@ -79,6 +79,7 @@
                     "AnimatorOverrideController",
                     "Texture2D",
                     "Texture2D-Alpha",
+                    "Texture2D-Material",
                     "Texture2D-Story",
                     "Sprite-UI"
                   ]
