@@ -5,6 +5,7 @@ from typing import Optional, TYPE_CHECKING, cast
 from PIL import Image
 from UnityPy.classes import Texture2D
 
+from dlasset.enums import WarningType
 from dlasset.log import log
 from dlasset.model import ObjectInfo
 from .image import export_image
@@ -33,7 +34,8 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
     material = next((info for info in export_info.objects if info.obj.type == "Material"), None)
 
     if not material:
-        log("INFO", f"Asset {export_info} does not have any `Material` - fallback to normal image export")
+        if WarningType.NO_MATERIAL not in export_info.suppressed_warnings:
+            log("WARNING", f"Asset {export_info} does not have any `Material` - fallback to normal image export")
         export_image(export_info)
         return
 

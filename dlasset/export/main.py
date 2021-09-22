@@ -48,7 +48,9 @@ def export_asset(
 
     log("INFO", f"Found {len(objects_to_export)} objects to export from {asset.name}.")
 
-    export_info = ExportInfo(export_dir=export_dir, obj_info_list=objects_to_export, assets=asset)
+    export_info = ExportInfo(
+        export_dir=export_dir, obj_info_list=objects_to_export, assets=asset, suppressed_warnings=suppress_warnings
+    )
     results = EXPORT_FUNCTIONS[export_type](export_info)
 
     log("DEBUG", f"Done exporting {asset.name} to {export_dir}")

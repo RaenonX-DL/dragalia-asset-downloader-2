@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, cast
 from PIL import Image
 from UnityPy.classes import Material
 
+from dlasset.enums import WarningType
 from dlasset.log import log
 from dlasset.model import ObjectInfo
 from dlasset.utils import crop_image, merge_y_cb_cr_a
@@ -33,7 +34,8 @@ def get_y_cb_cr_a_from_material(
 
 
 def crop_parts_image(
-        img: Image, parts_table: list[dict[str, dict[str, int]]], image_name: str, container: str
+        export_info: "ExportInfo", img: Image, parts_table: list[dict[str, dict[str, int]]],
+        image_name: str, container: str
 ) -> Image:
     """
     Crop the parts image of ``img`` according to ``parts_table``.
@@ -45,7 +47,8 @@ def crop_parts_image(
 
     # size = (tl_x, tl_y, rb_x, rb_y)
     if not parts_table:
-        log("WARNING", f"{image_name} ({container}) does not have parts, using default positions")
+        if WarningType.NO_PARTS_INFO not in export_info.suppressed_warnings:
+            log("WARNING", f"{image_name} ({container}) does not have parts, using default positions")
 
         # Use default coordinates because parts table not available
         size = (296, 21, 808, 533)  # 512 x 512
@@ -93,6 +96,6 @@ def export_image_story(export_info: "ExportInfo") -> None:
     log("DEBUG", f"Merging YCbCr of {image_name}... ({mono_behaviour.container})")
 
     img = merge_y_cb_cr_a(*channels)
-    img = crop_parts_image(img, tree["partsDataTable"], image_name, mono_behaviour.container)
+    img = crop_parts_image(export_info, img, tree["partsDataTable"], image_name, mono_behaviour.container)
 
     img.save(export_path)

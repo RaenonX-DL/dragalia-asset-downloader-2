@@ -3,10 +3,11 @@ import os
 from collections import Counter
 from dataclasses import InitVar, dataclass, field
 from functools import cache
-from typing import Iterable
+from typing import Iterable, Sequence
 
 from UnityPy.classes import Object
 
+from dlasset.enums import WarningType
 from dlasset.model import ObjectInfo, UnityAsset
 
 __all__ = ("ExportInfo",)
@@ -19,6 +20,7 @@ class ExportInfo:
     export_dir: str
     obj_info_list: InitVar[list[ObjectInfo]]
     assets: UnityAsset
+    suppressed_warnings: Sequence[WarningType]
 
     _object_info_dict: dict[int, ObjectInfo] = field(init=False)
     _object_info_cache: dict[int, ObjectInfo] = field(init=False)

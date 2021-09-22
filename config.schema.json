@@ -111,7 +111,9 @@
               "description": "Warning message type to suppress.",
               "enum": [
                 "nothingToExport",
-                "noMainTexture"
+                "noMainTexture",
+                "noPartsInfo",
+                "noMaterial"
               ]
             }
           }
