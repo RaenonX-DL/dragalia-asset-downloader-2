@@ -39,9 +39,19 @@
       ],
       "additionalProperties": false
     },
-    "processes": {
-      "type": "integer",
-      "description": "Maximum number of the processes to run."
+    "concurrency": {
+      "type": "object",
+      "description": "Various concurrency settings.",
+      "properties": {
+        "processes": {
+          "type": "integer",
+          "description": "Maximum number of the processes to run. Higher number consumes more CPU."
+        },
+        "batchSize": {
+          "type": "integer",
+          "description": "Size of the task batch. Higher number consumes more RAM."
+        }
+      }
     },
     "assets": {
       "type": "array",

@@ -26,13 +26,18 @@ def concurrent_run(
         log_dir: str, *,
         key_of_call: Callable[..., K],  # type: ignore
         max_workers: Optional[int] = None,
+        task_batch_size: Optional[int] = None,
 ) -> dict[K, R]:
     """
     Run ``fn`` concurrently with different set of ``args``.
 
     If ``key_of_call`` is not ``None``, a ``dict`` where
     key is obtained from ``key_of_call`` and the value as the result will be returned.
+
+    Lowering ``task_batch_size`` reduces peak memory usage, but also reduces concurrency utilization.
     """
+    # Most of the local variables comes from the function arguments
+    # pylint: disable=too-many-locals
     results: dict[K, R] = {}
 
     def on_done(
@@ -50,7 +55,7 @@ def concurrent_run(
 
     # Memory in an executor will only release after the executor has shutdown (exiting the `with` statement)
     # Therefore splitting args list (tasks) into chunks
-    for args_chunk in split_chunks(args_list, 1000):
+    for args_chunk in split_chunks(args_list, task_batch_size or 1000):
         with ProcessPoolExecutor(
                 max_workers=max_workers,
                 initargs=(log_dir,),
@@ -81,6 +86,7 @@ def concurrent_run_no_return(
         args_list: Sequence[Sequence[Any]],
         log_dir: str, *,
         max_workers: Optional[int] = None,
+        task_batch_size: Optional[int] = None,
 ) -> None:  # type: ignore
     """
     Run ``fn`` concurrently with different set of ``args``.
@@ -91,7 +97,10 @@ def concurrent_run_no_return(
     def key_of_call(*_: Any, **__: Any) -> None:
         return None
 
-    concurrent_run(fn, args_list, log_dir, key_of_call=key_of_call, max_workers=max_workers)
+    concurrent_run(
+        fn, args_list, log_dir,
+        key_of_call=key_of_call, max_workers=max_workers, task_batch_size=task_batch_size
+    )
 
 
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])

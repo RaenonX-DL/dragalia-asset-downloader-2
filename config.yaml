@@ -5,7 +5,8 @@ paths:
   index: .exclude/index
   log: .exclude/logs
 
-processes: 2
+concurrency:
+  batchSize: 1000
 
 assets:
   - name: Master Assets (all)
