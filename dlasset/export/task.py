@@ -51,7 +51,8 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
 
         concurrent_run_no_return(
             export_from_manifest, args_list, env.config.paths.log,
-            max_workers=env.config.processes
+            max_workers=env.config.concurrency.processes,
+            task_batch_size=env.config.concurrency.batch_size,
         )
 
         processed_entries.extend(asset_entries)

@@ -53,8 +53,10 @@ class Environment:
         log("INFO", f"Config file path: {self.args.config_path}")
         log("INFO", "-" * 20)
         log("INFO", f"External library directory: {self.config.paths.lib}")
-        if self.config.processes:
-            log("INFO", f"Max processes to use: {self.config.processes}")
+        if self.config.concurrency.processes:
+            log("INFO", f"Max processes to use: {self.config.concurrency.processes}")
+        if self.config.concurrency.batch_size:
+            log("INFO", f"Task batch size: {self.config.concurrency.batch_size}")
         log("INFO", "-" * 20)
         log("INFO", f"Manifest asset directory: {self.manifest_asset_dir}")
         log("INFO", f"Downloaded assets directory: {self.downloaded_assets_dir}")
