@@ -5,6 +5,8 @@ paths:
   index: .exclude/index
   log: .exclude/logs
 
+processes: 2
+
 assets:
   - name: Master Assets (all)
     asset: master

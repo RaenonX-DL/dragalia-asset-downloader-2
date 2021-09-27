@@ -49,7 +49,10 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
             f"{len(args_list)} assets updated{' (force update)' if env.args.no_index else ''}."
         )
 
-        concurrent_run_no_return(export_from_manifest, args_list, env.config.paths.log)
+        concurrent_run_no_return(
+            export_from_manifest, args_list, env.config.paths.log,
+            max_workers=env.config.processes
+        )
 
         processed_entries.extend(asset_entries)
 
