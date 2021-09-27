@@ -15,7 +15,5 @@ class Concurrency(ConfigBase):
     batch_size: Optional[int] = field(init=False)
 
     def __post_init__(self) -> None:
-        super().__post_init__()
-
         self.processes = self.json_obj.get("processes")
         self.batch_size = self.json_obj.get("batchSize")
