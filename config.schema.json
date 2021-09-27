@@ -39,6 +39,10 @@
       ],
       "additionalProperties": false
     },
+    "processes": {
+      "type": "integer",
+      "description": "Maximum number of the processes to run."
+    },
     "assets": {
       "type": "array",
       "description": "Asset exporting tasks.",

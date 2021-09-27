@@ -3,7 +3,7 @@ import sys
 import time
 from concurrent.futures import Future, ProcessPoolExecutor
 from functools import wraps
-from typing import Any, Callable, Hashable, Sequence, TypeVar, Union
+from typing import Any, Callable, Hashable, Optional, Sequence, TypeVar, Union
 
 from dlasset.log import init_log, log
 from .misc import split_chunks
@@ -24,7 +24,8 @@ def concurrent_run(
         fn: Callable[..., R],  # type: ignore
         args_list: Sequence[Sequence[Any]],
         log_dir: str, *,
-        key_of_call: Callable[..., K]  # type: ignore
+        key_of_call: Callable[..., K],  # type: ignore
+        max_workers: Optional[int] = None,
 ) -> dict[K, R]:
     """
     Run ``fn`` concurrently with different set of ``args``.
@@ -50,7 +51,11 @@ def concurrent_run(
     # Memory in an executor will only release after the executor has shutdown (exiting the `with` statement)
     # Therefore splitting args list (tasks) into chunks
     for args_chunk in split_chunks(args_list, 1000):
-        with ProcessPoolExecutor(initializer=on_concurrency_start, initargs=(log_dir,)) as executor:
+        with ProcessPoolExecutor(
+                max_workers=max_workers,
+                initargs=(log_dir,),
+                initializer=on_concurrency_start
+        ) as executor:
             futures: list[Future] = []
             for args in args_chunk:
                 future = executor.submit(fn, *args)
@@ -74,7 +79,8 @@ def concurrent_run(
 def concurrent_run_no_return(
         fn: Callable[..., R],
         args_list: Sequence[Sequence[Any]],
-        log_dir: str
+        log_dir: str, *,
+        max_workers: Optional[int] = None,
 ) -> None:  # type: ignore
     """
     Run ``fn`` concurrently with different set of ``args``.
@@ -85,7 +91,7 @@ def concurrent_run_no_return(
     def key_of_call(*_: Any, **__: Any) -> None:
         return None
 
-    concurrent_run(fn, args_list, log_dir, key_of_call=key_of_call)
+    concurrent_run(fn, args_list, log_dir, key_of_call=key_of_call, max_workers=max_workers)
 
 
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])
