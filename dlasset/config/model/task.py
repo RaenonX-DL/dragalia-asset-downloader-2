@@ -19,12 +19,16 @@ class AssetSubTask(ConfigBase):
     container_regex: Pattern = field(init=False)
     type: ExportType = field(init=False)
     is_multi_locale: bool = field(init=False)
+    export_dependency: bool = field(init=False)
+    export_updated_file_index: bool = field(init=False)
 
     def __post_init__(self) -> None:
         self.name = self.json_obj.get("name", "(No Name)")
         self.container_regex = re.compile(self.json_obj["container"])
         self.type = cast(ExportType, self.json_obj["type"])
         self.is_multi_locale = cast(bool, self.json_obj.get("isMultiLocale", False))
+        self.export_dependency = cast(bool, self.json_obj.get("exportDependency", False))
+        self.export_updated_file_index = cast(bool, self.json_obj.get("exportUpdatedFileIndex", False))
 
     def match_container(self, container: str) -> bool:
         """Check if the given ``container`` matches the filter."""
