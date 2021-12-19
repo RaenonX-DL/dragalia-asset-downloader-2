@@ -103,7 +103,7 @@ class UnityAsset:
         object_count = len(objects)
 
         for idx, (path, obj) in enumerate(objects):
-            if obj.type not in types:
+            if obj.type.name not in types:
                 continue
 
             if sub_task and not sub_task.match_container(path):

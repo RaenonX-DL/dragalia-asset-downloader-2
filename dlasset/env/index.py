@@ -1,9 +1,10 @@
 """Implementations for the file index."""
 import json
 import os.path
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
+from typing import DefaultDict, TYPE_CHECKING
 
 from dlasset.config import AssetSubTask, AssetTask
 from dlasset.enums import Locale
@@ -15,6 +16,12 @@ if TYPE_CHECKING:
     from dlasset.manifest import ManifestEntryBase
 
 __all__ = ("FileIndex",)
+
+
+def _get_list_in_default_dict() -> DefaultDict[AssetSubTask, list["ExportResult"]]:
+    # This function is necessary as local lambda function blocks pickling
+    # https://stackoverflow.com/a/2600813/11571888
+    return defaultdict(list)
 
 
 @dataclass
@@ -30,7 +37,7 @@ class FileIndex:
     export_updated_dir: str
 
     _data: dict[Locale, dict[str, str]] = field(init=False)  # key = file name from entry; value = hash
-    _updated: dict[Locale, list[tuple[AssetTask, list[tuple[AssetSubTask, "ExportResult"]]]]] = field(init=False)
+    _updated: dict[Locale, DefaultDict[AssetTask, DefaultDict[AssetSubTask, list["ExportResult"]]]] = field(init=False)
 
     def _init_index_data(self, locale: Locale) -> None:
         index_file_path = self.get_index_file_path(locale)
@@ -44,7 +51,7 @@ class FileIndex:
             self._data[locale] = json.load(f)
 
     def _init_updated_index(self, locale: Locale) -> None:
-        self._updated[locale] = []
+        self._updated[locale] = defaultdict(_get_list_in_default_dict)
 
     def __post_init__(self) -> None:
         self._data = {}
@@ -85,7 +92,7 @@ class FileIndex:
 
     def update_entry(
             self, locale: Locale, task: "AssetTask", entry: "ManifestEntryBase",
-            export_results: list[tuple[AssetSubTask, "ExportResult"]]
+            export_results: dict[AssetSubTask, list["ExportResult"]]
     ) -> None:
         """Update ``entry`` in the index."""
         if not self.enabled:
@@ -95,7 +102,8 @@ class FileIndex:
         self._data[locale][entry.name] = entry.hash
 
         if self.export_updated or task.export_updated_file_index:
-            self._updated[locale].append((task, export_results))
+            for subtask, export_results in export_results.items():
+                self._updated[locale][task][subtask].extend(export_results)
 
     def _export_index(self) -> None:
         for locale, data in self._data.items():
@@ -117,16 +125,20 @@ class FileIndex:
         for locale, task_results in self._updated.items():
             export[locale.value] = []
 
-            for task, subtask_results in task_results:
+            for task, subtask_results in task_results.items():
                 tasks: TaskEntry = {
                     "name": task.title,
                     "subtasks": []
                 }
 
-                for subtask, export_result in subtask_results:
+                for subtask, export_results in subtask_results.items():
                     tasks["subtasks"].append({
                         "name": subtask.title,
-                        "paths": export_result.exported_paths
+                        # Entries are duplicated possibly because of multiprocessing
+                        "paths": sorted(set(
+                            export_path for export_result in export_results
+                            for export_path in export_result.exported_paths
+                        ))
                     })
 
                 export[locale.value].append(tasks)

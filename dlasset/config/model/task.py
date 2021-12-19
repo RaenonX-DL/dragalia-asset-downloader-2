@@ -11,7 +11,7 @@ from .types import ExportType
 __all__ = ("AssetTask", "AssetRawTask", "AssetSubTask")
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class AssetSubTask(ConfigBase):
     """Asset exporting sub task model."""
 
@@ -38,7 +38,7 @@ class AssetSubTask(ConfigBase):
         return f"{self.name} - {self.type} ({'all locale' if self.is_multi_locale else 'master only'})"
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class AssetTaskBase(ConfigBase, ABC):
     """Base class for asset exporting task model."""
 
@@ -55,7 +55,7 @@ class AssetTaskBase(ConfigBase, ABC):
         return f"{self.name} ({self.asset_regex.pattern})"
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class AssetTask(AssetTaskBase):
     """Asset exporting task model."""
 
@@ -71,6 +71,6 @@ class AssetTask(AssetTaskBase):
         self.export_updated_file_index = cast(bool, self.json_obj.get("exportUpdatedFileIndex", False))
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class AssetRawTask(AssetTaskBase):
     """Raw asset exporting task model."""

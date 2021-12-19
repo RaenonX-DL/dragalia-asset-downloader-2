@@ -1,6 +1,6 @@
 """JSON object model class."""
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 __all__ = ("JsonModel",)
@@ -11,7 +11,7 @@ __all__ = ("JsonModel",)
 class JsonModel(ABC):
     """A data class that is based on a json object."""
 
-    json_obj: dict[Any, Any]
+    json_obj: dict[Any, Any] = field(hash=False)
 
     @abstractmethod
     def __post_init__(self) -> None:

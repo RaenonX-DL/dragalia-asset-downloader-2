@@ -1,6 +1,6 @@
 """Implementations for performing an asset exporting task."""
 from collections import defaultdict
-from typing import TYPE_CHECKING
+from typing import DefaultDict, TYPE_CHECKING
 
 from dlasset.config import AssetSubTask, AssetTask
 from dlasset.enums import Locale
@@ -16,10 +16,15 @@ if TYPE_CHECKING:
 
 __all__ = ("export_by_task",)
 
+SingleTaskExportResult = DefaultDict[Locale, DefaultDict[AssetSubTask, list["ExportResult"]]]
+
 
 def export_from_manifest(
         env: Environment, locale: Locale, entries: list["ManifestEntry"],
-        task: AssetTask, sub_task: AssetSubTask
+        task: AssetTask, sub_task: AssetSubTask,
+        *_
+        # For allowing but ignoring additional args,
+        # which might be needed for carrying more information in lazy call
 ) -> "ExportResult":
     """Export the asset of ``entry`` according to ``task``."""
     asset_paths = get_asset_paths(env, entries)
@@ -33,7 +38,7 @@ def export_from_manifest(
 def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> None:
     """Export the assets according to ``task``."""
     processed_entries = []
-    export_results = defaultdict(list)
+    export_results: SingleTaskExportResult = defaultdict(lambda: defaultdict(list))
 
     for sub_task in task.tasks:
         log_group_start(f"{task.title} // {sub_task.title}")
@@ -43,7 +48,7 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
             manifest.get_entry_with_regex(task.asset_regex, is_master_only=not sub_task.is_multi_locale)
         )
         args_list = [
-            [env, locale, entries, task, sub_task] for locale, entries in asset_entries
+            [env, locale, entries, task, sub_task, idx] for idx, (locale, entries) in enumerate(asset_entries)
             if any(env.index.is_file_updated(locale, entry) for entry in entries)
         ]
 
@@ -53,13 +58,14 @@ def export_by_task(env: Environment, manifest: "Manifest", task: AssetTask) -> N
             f"{len(args_list)} assets updated{' (force update)' if env.args.no_index else ''}."
         )
 
-        for locale, export_result in concurrent_run(
+        for (locale, _), export_result in concurrent_run(
                 export_from_manifest, args_list, env.config.paths.log,
-                key_of_call=lambda *args: args[1],
+                # This carryies `locale` via concurrent result key
+                key_of_call=lambda *args: (args[1], args[5]),
                 max_workers=env.config.concurrency.processes,
                 task_batch_size=env.config.concurrency.batch_size,
         ).items():
-            export_results[locale].append((sub_task, export_result))
+            export_results[locale][sub_task].append(export_result)
 
         processed_entries.extend(asset_entries)
 
