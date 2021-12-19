@@ -1,7 +1,7 @@
 """Typings for exporting."""
 from typing import TypedDict
 
-__all__ = ("TaskEntry",)
+__all__ = ("TaskEntry", "UpdatedFileIndexCatalogEntry")
 
 
 class SubTaskEntry(TypedDict):
@@ -16,3 +16,11 @@ class TaskEntry(TypedDict):
 
     name: str
     subtasks: list[SubTaskEntry]
+
+
+class UpdatedFileIndexCatalogEntry(TypedDict):
+    """Entry of an updated file index in the main catalog."""
+
+    timestampIso: str
+    fileName: str
+    versionCode: str

@@ -24,6 +24,7 @@ class Environment:
     def __post_init__(self) -> None:
         self.index = FileIndex(
             index_dir=self.config.paths.index,
+            version_code=self.args.version_code,
             enabled=not self.args.no_index,
             export_updated=self.config.global_.export_updated_file_index,
             export_updated_dir=self.config.paths.updated
