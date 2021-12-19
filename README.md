@@ -6,13 +6,19 @@
 [![downloader-lgtm-loc-badge]][downloader-lgtm-quality-link]
 [![downloader-time-badge]][downloader-time-link]
 
-Main | Dev
-:---: | :---:
-[![downloader-cq-badge-main]][downloader-cq-link-main] | [![downloader-cq-badge-dev]][downloader-cq-link-dev]
+|                          Main                          |                         Dev                          |
+|:------------------------------------------------------:|:----------------------------------------------------:|
+| [![downloader-cq-badge-main]][downloader-cq-link-main] | [![downloader-cq-badge-dev]][downloader-cq-link-dev] |
 
 Python scripts for downloading and pre-processing Dragalia Lost game assets.
 
 Replaces [dragalia-asset-downloader].
+
+```shell
+py main.py -h
+```
+
+Use the command above for checking the usage.
 
 ## Prerequisites
 
