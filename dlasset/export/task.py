@@ -1,6 +1,6 @@
 """Implementations for performing an asset exporting task."""
 from collections import defaultdict
-from typing import DefaultDict, TYPE_CHECKING
+from typing import Any, DefaultDict, TYPE_CHECKING
 
 from dlasset.config import AssetSubTask, AssetTask
 from dlasset.enums import Locale
@@ -22,7 +22,7 @@ SingleTaskExportResult = DefaultDict[Locale, DefaultDict[AssetSubTask, list["Exp
 def export_from_manifest(
         env: Environment, locale: Locale, entries: list["ManifestEntry"],
         task: AssetTask, sub_task: AssetSubTask,
-        *_
+        *_: list[Any]
         # For allowing but ignoring additional args,
         # which might be needed for carrying more information in lazy call
 ) -> "ExportResult":

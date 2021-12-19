@@ -92,7 +92,7 @@ class FileIndex:
 
     def update_entry(
             self, locale: Locale, task: "AssetTask", entry: "ManifestEntryBase",
-            export_results: dict[AssetSubTask, list["ExportResult"]]
+            subtask_results: dict[AssetSubTask, list["ExportResult"]]
     ) -> None:
         """Update ``entry`` in the index."""
         if not self.enabled:
@@ -102,7 +102,7 @@ class FileIndex:
         self._data[locale][entry.name] = entry.hash
 
         if self.export_updated or task.export_updated_file_index:
-            for subtask, export_results in export_results.items():
+            for subtask, export_results in subtask_results.items():
                 self._updated[locale][task][subtask].extend(export_results)
 
     def _export_index(self) -> None:
