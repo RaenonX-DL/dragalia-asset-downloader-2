@@ -22,12 +22,12 @@ def export_manifest_of_locale(env: Environment, locale: Locale) -> MonoBehaviour
         env.config.paths.export_asset_dir_of_locale(locale)
     )
 
-    if not exported:
+    if not exported.tree:
         log("ERROR", f"Manifest of {locale} not exported")
         sys.exit(1)
 
     # Manifest asset only contains one `MonoBehaviour`
-    return exported[0]
+    return exported.tree[0]
 
 
 def export_manifest_all_locale(env: Environment) -> Manifest:

@@ -6,6 +6,7 @@ from PIL import Image
 from UnityPy.classes import Texture2D
 
 from dlasset.enums import WarningType
+from dlasset.export.result import ExportResult
 from dlasset.log import log
 from dlasset.model import ObjectInfo
 from .image import export_image
@@ -29,15 +30,14 @@ def get_alpha_channel_tex(texture_envs: dict, export_info: "ExportInfo", materia
     return cast(Texture2D, export_info.get_obj_info(path_id_alpha, material).obj)
 
 
-def export_image_alpha(export_info: "ExportInfo") -> None:
+def export_image_alpha(export_info: "ExportInfo") -> ExportResult:
     """Export the image objects in ``export_info`` with alpha channel merged."""
     material = next((info for info in export_info.objects if info.obj.type == "Material"), None)
 
     if not material:
         if WarningType.NO_MATERIAL not in export_info.suppressed_warnings:
             log("WARNING", f"Asset {export_info} does not have any `Material` - fallback to normal image export")
-        export_image(export_info)
-        return
+        return export_image(export_info)
 
     log("DEBUG", f"Reading material data... ({material.container})")
 
@@ -48,7 +48,7 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
     path_id_main = texture_envs["_MainTex"]["m_Texture"]["m_PathID"]
 
     if not path_id_main:  # Main texture points to null file - don't return anything
-        return
+        return ExportResult()
 
     info_main = export_info.get_obj_info(path_id_main, material)
     obj_main = info_main.obj
@@ -72,7 +72,8 @@ def export_image_alpha(export_info: "ExportInfo") -> None:
         a = img_alpha.split()[3]
 
         Image.merge("RGBA", (r, g, b, a)).save(export_path)
-        return
+        return ExportResult(exported_paths=[export_path])
 
     # Alpha texture does not exist, just save it
     img_main.save(export_path)
+    return ExportResult(exported_paths=[export_path])

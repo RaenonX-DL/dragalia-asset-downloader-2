@@ -8,7 +8,7 @@ __all__ = ("export_json",)
 def round_floats(obj: Any) -> Any:
     """Round the ``float`` in ``obj``."""
     if isinstance(obj, float):
-        return float(format(obj, ".9g"))
+        return float(format(obj, ".7g"))
 
     if isinstance(obj, dict):
         return {k: round_floats(v) for k, v in obj.items()}

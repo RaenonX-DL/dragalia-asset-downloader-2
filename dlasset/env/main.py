@@ -22,7 +22,13 @@ class Environment:
     index: FileIndex = field(init=False)
 
     def __post_init__(self) -> None:
-        self.index = FileIndex(self.config.paths.index, enabled=not self.args.no_index)
+        self.index = FileIndex(
+            index_dir=self.config.paths.index,
+            version_code=self.args.version_code,
+            enabled=not self.args.no_index,
+            export_updated=self.config.global_.export_updated_file_index,
+            export_updated_dir=self.config.paths.updated
+        )
 
     def manifest_asset_path_of_locale(self, locale: Locale) -> str:
         """Get the manifest asset path of ``locale``."""

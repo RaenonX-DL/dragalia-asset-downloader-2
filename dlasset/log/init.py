@@ -15,9 +15,8 @@ logging.basicConfig(
 
 FORMAT = "{asctime}.{msecs:03.0f} PID-{process:>5} [{levelname:>8}]: {message}"
 FORMAT_DATE = "%Y-%m-%d %H:%M:%S"
-FORMAT_STYLE = "{"
 
-default_formatter = logging.Formatter(FORMAT, style=FORMAT_STYLE, datefmt=FORMAT_DATE)
+default_formatter = logging.Formatter(FORMAT, style="{", datefmt=FORMAT_DATE)
 
 console_handler = logging.StreamHandler(sys.stdout)
 console_handler.setLevel(logging.INFO)

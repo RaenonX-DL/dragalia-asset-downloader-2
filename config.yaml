@@ -4,9 +4,13 @@ paths:
   export: .exclude/media
   index: .exclude/index
   log: .exclude/logs
+  updated: .exclude/updated
 
 concurrency:
   batchSize: 1000
+
+global:
+  exportUpdatedFileIndex: true
 
 assets:
   - name: Master Assets (all)

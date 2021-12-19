@@ -28,6 +28,10 @@
         "log": {
           "type": "string",
           "description": "Root directory for the log files."
+        },
+        "updated": {
+          "type": "string",
+          "description": "Root directory for the updated file index."
         }
       },
       "required": [
@@ -35,8 +39,21 @@
         "lib",
         "export",
         "index",
-        "log"
+        "log",
+        "updated"
       ],
+      "additionalProperties": false
+    },
+    "global": {
+      "type": "object",
+      "description": "Global config options. This overrides the properties of a sub task.",
+      "properties": {
+        "exportUpdatedFileIndex": {
+          "type": "boolean",
+          "description": "If true, all updated file index of every sub task will be exported.",
+          "default": false
+        }
+      },
       "additionalProperties": false
     },
     "concurrency": {
@@ -107,6 +124,11 @@
                   "type": "boolean",
                   "description": "If true, dependency asset will be listed as an object.",
                   "default": false
+                },
+                "exportUpdatedFileIndex": {
+                  "type": "boolean",
+                  "description": "If true, updated file index will be exported.",
+                  "default": false
                 }
               },
               "required": [
@@ -131,6 +153,11 @@
                 "noMaterial"
               ]
             }
+          },
+          "exportUpdatedFileIndex": {
+            "type": "boolean",
+            "description": "If true, updated file index of the task will be exported.",
+            "default": false
           }
         },
         "required": [
@@ -149,18 +176,13 @@
         "type": "object",
         "description": "A single raw asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
         "properties": {
-          "task": {
+          "name": {
             "type": "string",
             "description": "Name of the raw asset exporting task."
           },
-          "name": {
+          "asset": {
             "type": "string",
-            "description": "Regex of the asset name to export. This has to be a full match."
-          },
-          "isMultiLocale": {
-            "type": "boolean",
-            "description": "If true, the task will perform on all locale. Otherwise, the task only perform on the master (JP) locale.",
-            "default": false
+            "description": "Regex of the asset name to export. This has to be a full match. Note that the dependency assets of a main asset selected by a task always pass this test."
           }
         },
         "required": [

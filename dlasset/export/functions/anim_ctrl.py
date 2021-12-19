@@ -2,6 +2,7 @@
 import os
 from typing import TYPE_CHECKING
 
+from dlasset.export.result import ExportResult
 from dlasset.log import log
 from dlasset.utils import export_json
 
@@ -11,8 +12,10 @@ if TYPE_CHECKING:
 __all__ = ("export_anim_ctrl",)
 
 
-def export_anim_ctrl(export_info: "ExportInfo") -> None:
+def export_anim_ctrl(export_info: "ExportInfo") -> ExportResult:
     """Export ``AnimatorController`` objects in ``export_info``."""
+    export_paths = []
+
     for obj_info in export_info.objects:
         obj = obj_info.obj
 
@@ -40,3 +43,7 @@ def export_anim_ctrl(export_info: "ExportInfo") -> None:
         export = {"$Controller": tree, "$Clips": clips}
 
         export_json(export_path, export)
+
+        export_paths.append(export_path)
+
+    return ExportResult(exported_paths=export_paths)

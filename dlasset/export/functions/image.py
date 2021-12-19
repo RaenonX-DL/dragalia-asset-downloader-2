@@ -2,6 +2,7 @@
 import os
 from typing import TYPE_CHECKING
 
+from dlasset.export.result import ExportResult
 from dlasset.log import log
 from dlasset.model import ObjectInfo
 
@@ -11,8 +12,8 @@ if TYPE_CHECKING:
 __all__ = ("export_image", "export_image_of_obj")
 
 
-def export_image_of_obj(export_info: "ExportInfo", obj_info: ObjectInfo) -> None:
-    """Export the image in ``obj_info``."""
+def export_image_of_obj(export_info: "ExportInfo", obj_info: ObjectInfo) -> str:
+    """Export the image in ``obj_info`` and return the path of the exported image."""
     obj = obj_info.obj
 
     log("INFO", f"Exporting image of {obj.name} ({obj_info.container})...")
@@ -22,8 +23,14 @@ def export_image_of_obj(export_info: "ExportInfo", obj_info: ObjectInfo) -> None
     img = obj.image
     img.save(export_path)
 
+    return export_path
 
-def export_image(export_info: "ExportInfo") -> None:
+
+def export_image(export_info: "ExportInfo") -> ExportResult:
     """Export the image objects in ``export_info``."""
+    exported_paths = []
+
     for obj_info in export_info.objects:
-        export_image_of_obj(export_info, obj_info)
+        exported_paths.append(export_image_of_obj(export_info, obj_info))
+
+    return ExportResult(exported_paths=exported_paths)
