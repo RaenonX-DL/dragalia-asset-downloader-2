@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from dlasset.config import AssetSubTask, AssetTask
 from dlasset.enums import Locale
 from dlasset.utils import export_json
+from .exportype import TaskEntry
 
 if TYPE_CHECKING:
     from dlasset.export import ExportResult
@@ -59,6 +60,7 @@ class FileIndex:
         return os.path.join(self.index_dir, f"index-{locale.value}.json")
 
     def get_updated_index_file_path(self) -> str:
+        """Get the updated index file path."""
         return os.path.join(self.export_updated_dir, "updated.json")
 
     def is_file_updated(self, locale: Locale, entry: "ManifestEntryBase") -> bool:
@@ -95,7 +97,7 @@ class FileIndex:
             export_json(file_path, data, separators=(",", ":"))
 
     def _export_updated_index(self) -> None:
-        export = {}
+        export: dict[str, list[TaskEntry]] = {}
         file_path = self.get_updated_index_file_path()
 
         # Using `locale.value` instead of `locale` for json exporting
@@ -103,7 +105,7 @@ class FileIndex:
             export[locale.value] = []
 
             for task, subtask_results in task_results:
-                tasks = {
+                tasks: TaskEntry = {
                     "name": task.title,
                     "subtasks": []
                 }
