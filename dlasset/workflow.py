@@ -1,4 +1,5 @@
 """Workflows for processing the assets."""
+
 from .config import load_config
 from .env import Environment, get_cli_args, init_env
 from .export import export_by_task, export_raw_by_task
@@ -31,7 +32,7 @@ def export_assets(env: Environment, manifest: Manifest) -> None:
         export_by_task(env, manifest, asset_task)
 
         # Update index file per task
-        env.index.update_index_files()
+        env.index.update_index_files(env.init_time)
 
     for raw_task in env.config.raw_tasks:
         export_raw_by_task(env, manifest, raw_task)

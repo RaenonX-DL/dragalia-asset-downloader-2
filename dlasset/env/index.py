@@ -111,15 +111,19 @@ class FileIndex:
 
             export_json(file_path, data, separators=(",", ":"))
 
-    def _export_updated_index(self) -> None:
-        filename = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+    def _export_updated_index(self, init_time: datetime) -> None:
+        filename = init_time.strftime("%Y%m%d-%H%M%S")
 
         self._export_updated_index_file(filename)
         self._export_updated_index_catalog(filename)
 
     def _export_updated_index_file(self, filename: str) -> None:
-        export: dict[str, list[TaskEntry]] = {}
         file_path = self.get_updated_index_file_path(filename)
+
+        export: dict[str, list[TaskEntry]] = {}
+        if os.path.exists(file_path):
+            with open(file_path, "r", encoding="utf-8") as f:
+                export = json.load(f)
 
         # Using `locale.value` instead of `locale` for json exporting
         for locale, task_results in self._updated.items():
@@ -150,23 +154,40 @@ class FileIndex:
 
         catalog: list[UpdatedFileIndexCatalogEntry] = []
 
+        # Load the catalog if exists
         if os.path.exists(file_path):
             with open(file_path, "r", encoding="utf-8") as f:
                 catalog = json.load(f)
 
-        catalog.append({
-            "timestampIso": datetime.utcnow().replace(tzinfo=timezone.utc).isoformat(),
-            "fileName": filename,
-            "versionCode": self.version_code,
-        })
+        # Find the entry in the catalog to update
+        mod_idx = -1  # -1 to represent catalog entry to modify not found
+        for idx, entry in enumerate(catalog):
+            if entry["fileName"] != filename:
+                continue
+
+            mod_idx = idx
+            break
+
+        # Get current timestamp in ISO
+        iso_utc_now = datetime.utcnow().replace(tzinfo=timezone.utc).isoformat()
+
+        # Add new entry if not found in catalog, otherwise update ISO timestamp
+        if mod_idx == -1:
+            catalog.append({
+                "timestampIso": iso_utc_now,
+                "fileName": filename,
+                "versionCode": self.version_code,
+            })
+        else:
+            catalog[mod_idx]["timestampIso"] = iso_utc_now
 
         export_json(file_path, catalog, separators=(",", ":"))
 
-    def update_index_files(self) -> None:
+    def update_index_files(self, init_time: datetime) -> None:
         """Push the updated file index to its corresponding file."""
         if not self.enabled:
             # Do nothing if not enabled
             return
 
         self._export_index()
-        self._export_updated_index()
+        self._export_updated_index(init_time)
