@@ -2,23 +2,24 @@
 import os
 from typing import TYPE_CHECKING
 
-from dlasset.export.types import MonoBehaviourTree
+from dlasset.export.result import ExportResult
 from dlasset.log import log
 from dlasset.utils import export_json
 
 if TYPE_CHECKING:
-    from dlasset.export import ExportInfo
+    from dlasset.export import ExportInfo, MonoBehaviourTree
 
 __all__ = ("export_mono_behaviour",)
 
 
-def export_mono_behaviour(export_info: "ExportInfo") -> list[MonoBehaviourTree]:
+def export_mono_behaviour(export_info: "ExportInfo") -> ExportResult:
     """
     Export ``MonoBehaviour`` objects in ``export_info``.
 
     Returns the exported mono behaviour trees.
     """
-    trees: list[MonoBehaviourTree] = []
+    trees: list["MonoBehaviourTree"] = []
+    export_paths: list[str] = []
 
     for obj_info in export_info.objects:
         obj = obj_info.obj
@@ -32,5 +33,6 @@ def export_mono_behaviour(export_info: "ExportInfo") -> list[MonoBehaviourTree]:
         export_json(export_path, tree)
 
         trees.append(tree)
+        export_paths.append(export_path)
 
-    return trees
+    return ExportResult(exported_paths=export_paths, tree=trees)

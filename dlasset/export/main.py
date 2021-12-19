@@ -7,7 +7,7 @@ from dlasset.log import log
 from dlasset.manage import get_asset
 from .lookup import EXPORT_FUNCTIONS, TYPES_TO_INCLUDE
 from .model import ExportInfo
-from .types import ExportReturn
+from .result import ExportResult
 
 __all__ = ("export_asset",)
 
@@ -27,7 +27,7 @@ def export_asset(
         export_dir: str, *,
         sub_task: Optional[AssetSubTask] = None,
         suppress_warnings: Sequence[WarningType] = ()
-) -> ExportReturn:
+) -> ExportResult:
     """
     Export the asset from ``asset_paths`` with the given criteria to ``export_dir`` and get the exported data.
 
@@ -44,7 +44,7 @@ def export_asset(
     if not objects_to_export:
         if WarningType.NOTHING_TO_EXPORT not in suppress_warnings:
             log("WARNING", f"Nothing to export for the asset: {asset.name}")
-        return None
+        return ExportResult()
 
     log("INFO", f"Found {len(objects_to_export)} objects to export from {asset.name}.")
 

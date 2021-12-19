@@ -6,6 +6,7 @@ from PIL import Image
 from UnityPy.classes import Material
 
 from dlasset.enums import WarningType
+from dlasset.export.result import ExportResult
 from dlasset.log import log
 from dlasset.model import ObjectInfo
 from dlasset.utils import crop_image, merge_y_cb_cr_a
@@ -67,7 +68,7 @@ def crop_parts_image(
     return img
 
 
-def export_image_story(export_info: "ExportInfo", /, crop_parts_base: bool = True) -> None:
+def export_image_story(export_info: "ExportInfo", /, crop_parts_base: bool = True) -> ExportResult:
     """
     Export the image objects in ``export_info`` with YCbCr channel merged.
 
@@ -86,7 +87,7 @@ def export_image_story(export_info: "ExportInfo", /, crop_parts_base: bool = Tru
     if not meterial_path_id:
         if WarningType.NO_MATERIAL not in export_info.suppressed_warnings:
             log("WARNING", f"Material not available for {image_name} ({mono_behaviour.container})")
-        return
+        return ExportResult()
 
     try:
         channels = get_y_cb_cr_a_from_material(
@@ -99,19 +100,26 @@ def export_image_story(export_info: "ExportInfo", /, crop_parts_base: bool = Tru
 
     log("INFO", f"Exporting story image of {image_name}... ({mono_behaviour.container})")
     export_dir = export_info.get_export_dir_of_obj(mono_behaviour)
+    export_paths = []
 
     log("DEBUG", f"Merging YCbCr of {image_name}... ({mono_behaviour.container})")
     img = merge_y_cb_cr_a(*channels)
 
     log("DEBUG", f"Saving merged YCbCr image of {image_name}... ({mono_behaviour.container})")
-    img.save(os.path.join(export_dir, f"{image_name}{'-full' if crop_parts_base else ''}.png"))
+    export_path_merged = os.path.join(export_dir, f"{image_name}{'-full' if crop_parts_base else ''}.png")
+    export_paths.append(export_path_merged)
+    img.save(export_path_merged)
 
     if not crop_parts_base:
         # Early terminate if not to crop the parts
-        return
+        return ExportResult(exported_paths=export_paths)
 
     log("DEBUG", f"Cropping parts base of {image_name}... ({mono_behaviour.container})")
     img = crop_parts_image(export_info, img, tree["partsDataTable"], image_name, mono_behaviour.container)
 
     log("DEBUG", f"Saving parts base of {image_name}... ({mono_behaviour.container})")
-    img.save(os.path.join(export_dir, f"{image_name}.png"))
+    export_path_image = os.path.join(export_dir, f"{image_name}.png")
+    export_paths.append(export_path_image)
+    img.save(export_path_image)
+
+    return ExportResult(exported_paths=export_paths)

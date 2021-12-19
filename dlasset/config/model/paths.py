@@ -20,6 +20,7 @@ class Paths(ConfigBase):
     export: str = field(init=False)
     index: str = field(init=False)
     log: str = field(init=False)
+    updated: str = field(init=False)
 
     def __post_init__(self) -> None:
         self.downloaded = cast(str, os.path.normpath(self.json_obj["downloaded"]))
@@ -29,6 +30,7 @@ class Paths(ConfigBase):
 
         today = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         self.log = cast(str, os.path.normpath(os.path.join(self.json_obj["log"], today)))
+        self.updated = cast(str, os.path.normpath(self.json_obj["updated"]))
 
     def export_asset_dir_of_locale(self, locale: Locale) -> str:
         """Get the root directory for the exported assets of ``locale``."""
@@ -50,6 +52,9 @@ class Paths(ConfigBase):
 
         log("DEBUG", "Making directory for logs...")
         os.makedirs(self.log, exist_ok=True)
+
+        log("DEBUG", "Making directory for updated file index...")
+        os.makedirs(self.updated, exist_ok=True)
 
     @property
     def lib_decrypt_dll_path(self) -> str:
