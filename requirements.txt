@@ -6,7 +6,7 @@ jsonschema
 requests
 
 # Asset processing
-UnityPy
+UnityPy==1.7.19
 
 # Image processing
 Pillow
