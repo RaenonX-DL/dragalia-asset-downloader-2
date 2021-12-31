@@ -32,10 +32,12 @@ class ManifestEntryBase(JsonModel, ABC):
 
         self.hash_dir = self.hash[:2]
 
-    def get_actual_asset_dir(self, env: Environment):
+    def get_actual_asset_dir(self, env: Environment) -> str:
+        """Get the directory where the downloaded asset is located."""
         return os.path.join(env.downloaded_assets_dir, self.hash_dir)
 
-    def get_asset_path(self, env: Environment):
+    def get_asset_path(self, env: Environment) -> str:
+        """Get the complete path of the downloader asset."""
         asset_hash_dir = self.get_actual_asset_dir(env)
         return os.path.join(asset_hash_dir, self.hash)
 

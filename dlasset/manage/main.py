@@ -1,7 +1,7 @@
 """Main implementations for managing the assets."""
 import os.path
 from functools import lru_cache
-from typing import TYPE_CHECKING
+from typing import Sequence, TYPE_CHECKING
 
 from dlasset.env import Environment
 from dlasset.model import UnityAsset
@@ -23,7 +23,7 @@ def download_asset(asset_hash_dir: str, asset_target_path: str, entry: "Manifest
         f.write(response.content)
 
 
-def get_asset_paths(env: Environment, entries: list["ManifestEntryBase"]) -> tuple[str, ...]:
+def get_asset_paths(env: Environment, entries: Sequence["ManifestEntryBase"]) -> tuple[str, ...]:
     """
     Get a list of asset paths of ``entries``.
 
