@@ -5,6 +5,7 @@ paths:
   index: .exclude/index
   log: .exclude/logs
   updated: .exclude/updated
+  temp: .exclude/temp
 
 concurrency:
   batchSize: 1000
@@ -108,4 +109,6 @@ assets:
       - container: /resources/emotion/eventcg
         type: Texture2D-Material
 
-raw: [ ]
+audio:
+  enabled: true
+  exportDir: .exclude/audio

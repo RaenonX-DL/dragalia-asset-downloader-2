@@ -32,6 +32,10 @@
         "updated": {
           "type": "string",
           "description": "Root directory for the updated file index."
+        },
+        "temp": {
+          "type": "string",
+          "description": "Root directory for any types of temporary files."
         }
       },
       "required": [
@@ -40,7 +44,8 @@
         "export",
         "index",
         "log",
-        "updated"
+        "updated",
+        "temp"
       ],
       "additionalProperties": false
     },
@@ -169,35 +174,29 @@
       },
       "uniqueItems": true
     },
-    "raw": {
-      "type": "array",
-      "description": "Raw asset exporting tasks.",
-      "items": {
-        "type": "object",
-        "description": "A single raw asset exporting task. Note that the objects will be exported only if it pass all the regex tests in its task.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the raw asset exporting task."
-          },
-          "asset": {
-            "type": "string",
-            "description": "Regex of the asset name to export. This has to be a full match. Note that the dependency assets of a main asset selected by a task always pass this test."
-          }
+    "audio": {
+      "type": "object",
+      "description": "Configurations for audio exporting.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Determines if the audio exporting task should be enabled."
         },
-        "required": [
-          "task",
-          "name"
-        ],
-        "additionalProperties": false
+        "exportDir": {
+          "type": "string",
+          "description": "Directory for storing the exported audio files."
+        }
       },
-      "uniqueItems": true
+      "required": [
+        "enabled",
+        "exportDir"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
     "paths",
-    "assets",
-    "raw"
+    "assets"
   ],
   "additionalProperties": false
 }

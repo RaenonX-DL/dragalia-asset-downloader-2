@@ -1,7 +1,9 @@
 """Manifest entry model classes."""
+import os
 from abc import ABC
 from dataclasses import dataclass, field
 
+from dlasset.env import Environment
 from dlasset.model import JsonModel
 
 __all__ = ("ManifestEntry", "ManifestRawEntry", "ManifestEntryBase",)
@@ -29,6 +31,13 @@ class ManifestEntryBase(JsonModel, ABC):
         self.dependencies = self.json_obj.get("dependencies", [])
 
         self.hash_dir = self.hash[:2]
+
+    def get_actual_asset_dir(self, env: Environment):
+        return os.path.join(env.downloaded_assets_dir, self.hash_dir)
+
+    def get_asset_path(self, env: Environment):
+        asset_hash_dir = self.get_actual_asset_dir(env)
+        return os.path.join(asset_hash_dir, self.hash)
 
 
 @dataclass

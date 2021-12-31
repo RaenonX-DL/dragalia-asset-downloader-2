@@ -8,7 +8,7 @@ from dlasset.enums import WarningType
 from .base import ConfigBase
 from .types import ExportType
 
-__all__ = ("AssetTask", "AssetRawTask", "AssetSubTask")
+__all__ = ("AssetTask", "AssetAudioTask", "AssetSubTask")
 
 
 @dataclass(unsafe_hash=True)
@@ -72,5 +72,12 @@ class AssetTask(AssetTaskBase):
 
 
 @dataclass(unsafe_hash=True)
-class AssetRawTask(AssetTaskBase):
-    """Raw asset exporting task model."""
+class AssetAudioTask(ConfigBase):
+    """Audio asset exporting task model."""
+
+    enabled: bool = field(init=False)
+    export_dir: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.enabled = cast(bool, self.json_obj.get("enabled", False))
+        self.export_dir = cast(str, self.json_obj.get("exportDir", False))
