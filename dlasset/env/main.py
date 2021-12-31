@@ -96,8 +96,10 @@ class Environment:
         os.makedirs(self.manifest_asset_dir, exist_ok=True)
         log("DEBUG", "Making directory for downloaded assets...")
         os.makedirs(self.downloaded_assets_dir, exist_ok=True)
-        log("DEBUG", "Making directory for exported audio...")
-        os.makedirs(self.config.audio_task.export_dir, exist_ok=True)
+
+        if self.config.audio_task:
+            log("DEBUG", "Making directory for exported audio...")
+            os.makedirs(self.config.audio_task.export_dir, exist_ok=True)
 
     def prepare_logging(self) -> None:
         """Prepare logging factory."""
