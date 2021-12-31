@@ -1,5 +1,6 @@
 """Implementations for initializing the environment."""
 import os.path
+import shutil
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -96,9 +97,22 @@ class Environment:
         log("DEBUG", "Making directory for downloaded assets...")
         os.makedirs(self.downloaded_assets_dir, exist_ok=True)
 
+        if self.config.audio_task:
+            log("DEBUG", "Making directory for exported audio...")
+            os.makedirs(self.config.audio_task.export_dir, exist_ok=True)
+
     def prepare_logging(self) -> None:
         """Prepare logging factory."""
         init_log(self.config.paths.log)
+
+    def cleanup(self) -> None:
+        """Perform cleanup tasks."""
+        log_group_start("Clean Up")
+
+        log("INFO", "Cleaning up temp file directory...")
+        shutil.rmtree(self.config.paths.temp)
+
+        log_group_end()
 
 
 def init_env(args: CliArgs, config: Config) -> Environment:

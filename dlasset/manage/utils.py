@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from dlasset.const import CDN_BASE_URL
 
 if TYPE_CHECKING:
-    from dlasset.manifest import ManifestEntry
+    from dlasset.manifest import ManifestEntryBase
 
 __all__ = ("get_asset_url",)
 
 
-def get_asset_url(entry: "ManifestEntry") -> str:
+def get_asset_url(entry: "ManifestEntryBase") -> str:
     """Get the URL of the manifest ``entry``."""
     return f"{CDN_BASE_URL}/assetbundles/Android/{entry.hash_dir}/{entry.hash}"

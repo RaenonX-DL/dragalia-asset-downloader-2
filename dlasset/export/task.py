@@ -1,6 +1,6 @@
 """Implementations for performing an asset exporting task."""
 from collections import defaultdict
-from typing import Any, DefaultDict, TYPE_CHECKING
+from typing import Any, DefaultDict, Sequence, TYPE_CHECKING
 
 from dlasset.config import AssetSubTask, AssetTask
 from dlasset.enums import Locale
@@ -11,7 +11,7 @@ from dlasset.utils import concurrent_run
 from .main import export_asset
 
 if TYPE_CHECKING:
-    from dlasset.manifest import Manifest, ManifestEntry
+    from dlasset.manifest import Manifest, ManifestEntryBase
     from dlasset.export import ExportResult
 
 __all__ = ("export_by_task",)
@@ -20,7 +20,7 @@ SingleTaskExportResult = DefaultDict[Locale, DefaultDict[AssetSubTask, list["Exp
 
 
 def export_from_manifest(
-        env: Environment, locale: Locale, entries: list["ManifestEntry"],
+        env: Environment, locale: Locale, entries: Sequence["ManifestEntryBase"],
         task: AssetTask, sub_task: AssetSubTask,
         *_: list[Any]
         # For allowing but ignoring additional args,

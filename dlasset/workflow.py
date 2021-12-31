@@ -1,8 +1,7 @@
 """Workflows for processing the assets."""
-
 from .config import load_config
 from .env import Environment, get_cli_args, init_env
-from .export import export_by_task, export_raw_by_task
+from .export import export_audio, export_by_task
 from .manifest import Manifest, decrypt_manifest_all_locale, download_manifest_all_locale, export_manifest_all_locale
 
 __all__ = ("initialize", "process_manifest", "export_assets")
@@ -34,5 +33,10 @@ def export_assets(env: Environment, manifest: Manifest) -> None:
         # Update index file per task
         env.index.update_index_files(env.init_time)
 
-    for raw_task in env.config.raw_tasks:
-        export_raw_by_task(env, manifest, raw_task)
+    if env.config.audio_task:
+        export_audio(env, manifest, env.config.audio_task)
+
+        # Update index file per task
+        env.index.update_index_files(env.init_time)
+
+    env.cleanup()
