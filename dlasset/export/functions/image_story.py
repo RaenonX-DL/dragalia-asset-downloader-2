@@ -74,7 +74,7 @@ def export_image_story(export_info: "ExportInfo", /, crop_parts_base: bool = Tru
 
     Parts base is also cropped if ``crop_parts_base`` is not specified or ``True``.
     """
-    mono_behaviour = next(info for info in export_info.objects if info.obj.type == "MonoBehaviour")
+    mono_behaviour = next(info for info in export_info.objects if info.obj.type.name == "MonoBehaviour")
 
     log("DEBUG", f"Reading mono behaviour data... ({mono_behaviour.container})")
 

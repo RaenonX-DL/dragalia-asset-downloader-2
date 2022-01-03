@@ -36,7 +36,7 @@ def export_sprite_ui(export_info: "ExportInfo") -> ExportResult:
     export_paths = []
 
     for obj_info in export_info.objects:
-        obj_type = obj_info.obj.type
+        obj_type = obj_info.obj.type.name
 
         if obj_type == "MonoBehaviour":
             export_paths.extend(export_sprites_from_mono_behaviour(export_info, obj_info))

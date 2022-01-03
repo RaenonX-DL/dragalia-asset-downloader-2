@@ -32,7 +32,7 @@ def get_alpha_channel_tex(texture_envs: dict, export_info: "ExportInfo", materia
 
 def export_image_alpha(export_info: "ExportInfo") -> ExportResult:
     """Export the image objects in ``export_info`` with alpha channel merged."""
-    material = next((info for info in export_info.objects if info.obj.type == "Material"), None)
+    material = next((info for info in export_info.objects if info.obj.type.name == "Material"), None)
 
     if not material:
         if WarningType.NO_MATERIAL not in export_info.suppressed_warnings:
